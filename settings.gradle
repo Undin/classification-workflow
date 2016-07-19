@@ -1,2 +1,3 @@
 rootProject.name = 'classification-workflow'
 include 'core'
+include 'baseline'

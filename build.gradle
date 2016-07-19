@@ -12,3 +12,8 @@ allprojects {
         jcenter()
     }
 }
+
+ext.libraries = [
+        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.3',
+        weka                        : 'nz.ac.waikato.cms.weka:weka-stable:3.8.0',
+]

@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'kotlin'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile project(':core')
+    compile libraries.kotlin
+    compile libraries.kotlinxSupportJdk8
+    compile libraries.weka
+    compile libraries.wekaLibSVM
+}

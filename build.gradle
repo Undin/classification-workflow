@@ -15,6 +15,8 @@ allprojects {
 
 ext.libraries = [
         kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.3',
+        kotlinxSupportJdk8          : 'org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3',
         weka                        : 'nz.ac.waikato.cms.weka:weka-stable:3.8.0',
+        wekaLibSVM                  : 'nz.ac.waikato.cms.weka:LibSVM:1.0.8',
         jackson                     : 'com.fasterxml.jackson.core:jackson-databind:2.8.0',
 ]

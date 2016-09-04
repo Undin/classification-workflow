@@ -8,6 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty
  */
 data class Config @JsonCreator constructor(
         @JsonProperty("dataset") val dataset: String,
-        @JsonProperty("classifiers") val classifiers: List<Algorithm.Classifier>,
-        @JsonProperty("transformers") val transformers: List<Algorithm.Transformer>
+        @JsonProperty("classifiers") val classifiers: List<AlgorithmConfiguration.ClassifierConfiguration>,
+        @JsonProperty("transformers") val transformers: List<AlgorithmConfiguration.TransformerConfiguration>
 )

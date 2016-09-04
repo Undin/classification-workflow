@@ -1,6 +1,8 @@
 package com.warrior.classification.workflow
 
 import com.warrior.classification.workflow.core.Algorithm
+import com.warrior.classification.workflow.core.AlgorithmConfiguration.ClassifierConfiguration
+import com.warrior.classification.workflow.core.AlgorithmConfiguration.TransformerConfiguration
 import com.warrior.classification.workflow.core.ComputationManager
 import com.warrior.classification.workflow.core.Config
 import com.warrior.classification.workflow.core.Workflow
@@ -19,8 +21,22 @@ class GeneticAlgorithm(
     var survivedPart = 0.1
     var tournamentProbability = 0.8
     var pointCrossoverProbability = 0.5
+    var structureMutationProbability = 0.5
 
     private val algorithms = config.classifiers + config.transformers
+    private val classifiers: Map<String, ClassifierConfiguration>
+    private val transformers: Map<String, TransformerConfiguration>
+
+    init {
+        classifiers = HashMap(config.classifiers.size)
+        for (c in config.classifiers) {
+            classifiers[c.name] = c
+        }
+        transformers = HashMap(config.transformers.size)
+        for (t in config.transformers) {
+            transformers[t.name] = t
+        }
+    }
 
     fun search(populationSize: Int, iteration: Int): Individual {
         val initialAlgorithms = (1..populationSize).map { generate() }
@@ -38,21 +54,24 @@ class GeneticAlgorithm(
                     .map { result -> Individual(result.workflow, result.measure) }
             population = selection(population, children)
             println("--- iteration $i ---")
-            population.forEach { println(it.result) }
+            population.forEach {
+                println(it.result)
+                println(it.workflow)
+            }
         }
         return population[0]
     }
 
     private fun generateParents(population: List<Individual>): Pair<Individual, Individual> {
-        val first = population.randomElement()
-        val second = population.randomElement()
+        val first = population.randomElement(random)
+        val second = population.randomElement(random)
         return Pair(first, second)
     }
 
     private fun generate(): Workflow {
         val size = random.nextInt(maxSize - 1)
-        val flow = (1..size).map { algorithms.randomElement() }
-        val classifier = config.classifiers.randomElement()
+        val flow = (1..size).map { algorithms.randomElement(random).randomAlgorithm(random) }
+        val classifier = config.classifiers.randomElement(random).randomClassifier(random)
         return Workflow(flow, classifier)
     }
 
@@ -95,15 +114,15 @@ class GeneticAlgorithm(
         val firstAlgorithms = first.allAlgorithms
         val secondAlgorithms = second.allAlgorithms
 
-        var firstRange = randomRange(firstAlgorithms.size)
-        var secondRange = randomRange(secondAlgorithms.size)
+        var firstRange = randomRange(firstAlgorithms.size, random)
+        var secondRange = randomRange(secondAlgorithms.size, random)
 
         while (firstRange.endInclusive == firstAlgorithms.lastIndex && secondAlgorithms[secondRange.endInclusive] !is Algorithm.Classifier ||
                secondRange.endInclusive == secondAlgorithms.lastIndex && firstAlgorithms[firstRange.endInclusive] !is Algorithm.Classifier) {
             if (firstRange.endInclusive == firstAlgorithms.lastIndex) {
-                secondRange = randomRange(secondAlgorithms.size)
+                secondRange = randomRange(secondAlgorithms.size, random)
             } else {
-                firstRange = randomRange(firstAlgorithms.size)
+                firstRange = randomRange(firstAlgorithms.size, random)
             }
         }
 
@@ -124,13 +143,35 @@ class GeneticAlgorithm(
     }
 
     private fun mutation(workflow: Workflow): Workflow {
-        return pointStructureMutation(workflow)
+        return if (random.nextDouble() < structureMutationProbability) {
+            pointStructureMutation(workflow)
+        } else {
+            paramMutation(workflow)
+        }
     }
 
     private fun pointStructureMutation(workflow: Workflow): Workflow {
         val newAlgorithms = ArrayList(workflow.allAlgorithms)
         val index = random.nextInt(newAlgorithms.size)
-        newAlgorithms[index] = if (index == newAlgorithms.lastIndex) { config.classifiers.randomElement() } else { algorithms.randomElement() }
+        val configuration = if (index == newAlgorithms.lastIndex) { config.classifiers } else { algorithms }
+        newAlgorithms[index] = configuration.randomElement(random).randomAlgorithm(random)
+        return Workflow(newAlgorithms)
+    }
+
+    private fun paramMutation(workflow: Workflow): Workflow {
+        val newAlgorithms = ArrayList(workflow.allAlgorithms)
+        val index = random.nextInt(newAlgorithms.size)
+        val algo = newAlgorithms[index]
+        newAlgorithms[index] = when (algo) {
+            is Algorithm.Classifier -> {
+                val classifierConfiguration = classifiers[algo.name]!!
+                classifierConfiguration.randomClassifier(random)
+            }
+            is Algorithm.Transformer -> {
+                val transformerConfiguration = transformers[algo.name]!!
+                transformerConfiguration.randomTransformer(random)
+            }
+        }
         return Workflow(newAlgorithms)
     }
 
@@ -157,26 +198,9 @@ class GeneticAlgorithm(
         return newPopulation.sortedDescending()
     }
 
-    private fun <T> List<T>.randomElement(): T = get(random.nextInt(size))
-
-    private fun randomRange(bound: Int): IntRange {
-        var left = random.nextInt(bound)
-        var right = random.nextInt(bound)
-
-        if (left > right) {
-            val c = left
-            left = right
-            right = c
-        }
-        return IntRange(left, right)
-    }
-
     private fun IntRange.length(): Int = endInclusive - start + 1
 
     data class Individual(val workflow: Workflow, var result: Double): Comparable<Individual> {
         override operator fun compareTo(other: Individual): Int = result.compareTo(other.result)
     }
 }
-
-
-

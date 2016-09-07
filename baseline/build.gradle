@@ -9,4 +9,7 @@ dependencies {
     compile libraries.kotlin
     compile libraries.weka
     compile libraries.jackson
+
+    compile libraries.hibernate
+    compile libraries.postgresql
 }

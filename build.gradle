@@ -19,4 +19,7 @@ ext.libraries = [
         weka                        : 'nz.ac.waikato.cms.weka:weka-stable:3.8.0',
         wekaLibSVM                  : 'nz.ac.waikato.cms.weka:LibSVM:1.0.8',
         jackson                     : 'com.fasterxml.jackson.core:jackson-databind:2.8.0',
+
+        hibernate                   : 'org.hibernate:hibernate-core:5.2.2.Final',
+        postgresql                  : 'org.postgresql:postgresql:9.4.1209'
 ]

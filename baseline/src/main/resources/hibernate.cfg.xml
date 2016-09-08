@@ -9,6 +9,6 @@
         <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="com.warrior.classification.workflow.baseline.ResultsEntity" />
+        <mapping class="com.warrior.classification.workflow.baseline.ResultEntity" />
     </session-factory>
 </hibernate-configuration>

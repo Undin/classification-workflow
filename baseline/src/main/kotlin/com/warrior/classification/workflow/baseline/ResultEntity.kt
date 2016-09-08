@@ -7,7 +7,7 @@ import javax.persistence.*
  */
 @Entity
 @Table(name = "results", schema = "public", catalog = "workflow-results")
-class ResultsEntity {
+class ResultEntity() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,11 +29,18 @@ class ResultsEntity {
     @Column(name = "value")
     var value: Double = 0.toDouble()
 
+    constructor(datasetName: String, algorithm: String, measure: String, value: Double) : this() {
+        this.datasetName = datasetName
+        this.algorithm = algorithm
+        this.measure = measure
+        this.value = value
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
 
-        val that = other as ResultsEntity
+        val that = other as ResultEntity
 
         if (id != that.id) return false
         if (java.lang.Double.compare(that.value, value) != 0) return false

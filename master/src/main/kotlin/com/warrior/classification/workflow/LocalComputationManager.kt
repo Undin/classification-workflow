@@ -27,7 +27,12 @@ class LocalComputationManager : ComputationManager {
 
     private fun compute(workflow: Workflow, instances: Instances): Double {
         val eval = Evaluation(instances)
-        eval.crossValidateModel(workflow, instances, numFolds, random)
+        try {
+            eval.crossValidateModel(workflow, instances, numFolds, random)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return 0.0
+        }
         return eval.unweightedMacroFmeasure()
     }
 }

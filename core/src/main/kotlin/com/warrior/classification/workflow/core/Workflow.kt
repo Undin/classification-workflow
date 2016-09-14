@@ -2,13 +2,12 @@ package com.warrior.classification.workflow.core
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
-import weka.attributeSelection.ASEvaluation
-import weka.attributeSelection.ASSearch
 import weka.attributeSelection.AttributeTransformer
 import weka.classifiers.AbstractClassifier
 import weka.classifiers.Classifier
 import weka.core.Instance
 import weka.core.Instances
+import weka.core.Utils
 import weka.filters.Filter
 import weka.filters.unsupervised.attribute.Remove
 import java.util.*
@@ -24,7 +23,8 @@ class Workflow @JsonCreator constructor(
     val allAlgorithms = algorithms + classifier
 
     private val builtClassifiers: MutableMap<Int, Classifier> = HashMap()
-    private val builtTransformers: MutableMap<Int, Pair<ASSearch, ASEvaluation>> = HashMap()
+    private val builtTransformers: MutableMap<Int, AttributeTransformer> = HashMap()
+    private val buildIndices: MutableMap<Int, IntArray> = HashMap()
     private lateinit var builtFinalClassifier: Classifier
 
     constructor(algorithms: List<Algorithm>) : this(
@@ -58,22 +58,32 @@ class Workflow @JsonCreator constructor(
                     } else {
                         builtClassifiers[i]!!
                     }
-                    addClassificationsResult(classifier, currentData)
+                    addClassificationsResult(classifier, currentData, i)
                 }
                 is Algorithm.Transformer -> {
-                    val (search, eval) = if (needBuildFirst) {
-                        val searchAndEval = algo()
-                        searchAndEval.second.buildEvaluator(currentData)
-                        builtTransformers[i] = searchAndEval
-                        searchAndEval
+                    if (needBuildFirst) {
+                        val (search, eval) = algo()
+                        eval.buildEvaluator(currentData)
+                        if (eval is AttributeTransformer) {
+                            currentData = eval.transformedData(currentData)
+                            val indices = usefulAttributes(currentData)
+                            if (indices.size != currentData.numAttributes()) {
+                                currentData = filter(currentData, indices)
+                            }
+
+                            builtTransformers[i] = eval
+                            buildIndices[i] = indices
+                        } else {
+                            val indices = search.search(eval, currentData)
+                            currentData = filter(currentData, indices)
+                            buildIndices[i] = indices
+                        }
                     } else {
-                        builtTransformers[i]!!
-                    }
-                    if (eval is AttributeTransformer) {
-                        currentData = eval.transformedData(currentData)
-                    } else {
-                        val indices = search.search(eval, currentData)
-                        currentData = filter(currentData, indices)
+                        currentData = builtTransformers[i]?.transformedData(currentData) ?: currentData
+                        val indices = buildIndices[i]!!
+                        if (indices.size != currentData.numAttributes()) {
+                            currentData = filter(currentData, indices)
+                        }
                     }
                 }
             }
@@ -81,14 +91,14 @@ class Workflow @JsonCreator constructor(
         return currentData
     }
 
-    private fun addClassificationsResult(builtClassifier: Classifier, instances: Instances) {
+    private fun addClassificationsResult(builtClassifier: Classifier, instances: Instances, iteration: Int) {
         val classificationResults = DoubleArray(instances.size)
         for ((i, inst) in instances.withIndex()) {
             classificationResults[i] = builtClassifier.classifyInstance(inst)
         }
 
         val index = instances.classIndex()
-        val attrs = instances.classAttribute().copy("${builtClassifier.javaClass.simpleName}-$index")
+        val attrs = instances.classAttribute().copy("${builtClassifier.javaClass.simpleName}-$iteration")
         instances.insertAttributeAt(attrs, index)
 
         for ((i, inst) in instances.withIndex()) {
@@ -97,8 +107,15 @@ class Workflow @JsonCreator constructor(
     }
 
     private fun filter(instances: Instances, indices: IntArray): Instances {
+        var finalIndices = indices
+        if (!finalIndices.contains(instances.classIndex())) {
+            val newIndices = IntArray(indices.size + 1)
+            System.arraycopy(indices, 0, newIndices, 0, indices.size)
+            newIndices[newIndices.lastIndex] = instances.classIndex()
+            finalIndices = newIndices
+        }
         val remove = Remove()
-        remove.setAttributeIndicesArray(indices)
+        remove.setAttributeIndicesArray(finalIndices)
         remove.invertSelection = true
         remove.setInputFormat(instances)
         val filteredInstances = Filter.useFilter(instances, remove)
@@ -106,6 +123,31 @@ class Workflow @JsonCreator constructor(
             throw IllegalStateException("filteredInstances.classIndex() < 0")
         }
         return filteredInstances
+    }
+
+    private fun usefulAttributes(instances: Instances): IntArray {
+        val usefulAttributes = ArrayList<Int>(instances.numAttributes())
+        for (i in 0 until instances.numAttributes()) {
+            val attr = instances.attribute(i)
+            if (!attr.isNumeric) {
+                usefulAttributes += i
+            } else {
+                var numValues = 0
+                var prevValue = Double.NaN
+                for (inst in instances) {
+                    val value = inst.value(i)
+                    if (!Utils.isMissingValue(value) && value != prevValue) {
+                        prevValue = value
+                        numValues++
+                    }
+                    if (numValues > 1) {
+                        usefulAttributes += i
+                        break
+                    }
+                }
+            }
+        }
+        return usefulAttributes.toIntArray()
     }
 
     override fun toString(): String{

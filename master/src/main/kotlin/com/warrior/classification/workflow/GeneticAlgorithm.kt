@@ -17,12 +17,6 @@ class GeneticAlgorithm(
         val random: Random = Random()
 ) {
 
-    var maxSize = 10
-    var survivedPart = 0.1
-    var tournamentProbability = 0.8
-    var pointCrossoverProbability = 0.5
-    var structureMutationProbability = 0.5
-
     private val algorithms = config.classifiers + config.transformers
     private val classifiers: Map<String, ClassifierConfiguration>
     private val transformers: Map<String, TransformerConfiguration>
@@ -69,14 +63,14 @@ class GeneticAlgorithm(
     }
 
     private fun generate(): Workflow {
-        val size = random.nextInt(maxSize - 1)
+        val size = random.nextInt(config.maxWorkflowSize - 1)
         val flow = (1..size).map { algorithms.randomElement(random).randomAlgorithm(random) }
         val classifier = config.classifiers.randomElement(random).randomClassifier(random)
         return Workflow(flow, classifier)
     }
 
     private fun crossover(first: Workflow, second: Workflow): List<Workflow> {
-        return if (random.nextDouble() < pointCrossoverProbability) {
+        return if (random.nextDouble() < config.pointCrossoverProbability) {
             pointCrossover(first, second)
         } else {
             intervalCrossover(first, second)
@@ -143,11 +137,14 @@ class GeneticAlgorithm(
     }
 
     private fun mutation(workflow: Workflow): Workflow {
-        return if (random.nextDouble() < structureMutationProbability) {
-            pointStructureMutation(workflow)
-        } else {
-            paramMutation(workflow)
+        if (random.nextDouble() < config.mutationProbability) {
+            return if (random.nextDouble() < config.structureMutationProbability) {
+                pointStructureMutation(workflow)
+            } else {
+                paramMutation(workflow)
+            }
         }
+        return workflow
     }
 
     private fun pointStructureMutation(workflow: Workflow): Workflow {
@@ -178,7 +175,7 @@ class GeneticAlgorithm(
     private fun selection(currentPopulation: List<Individual>, children: List<Individual>): List<Individual> {
         val size = currentPopulation.size
         val newPopulation = ArrayList<Individual>(size)
-        val survivedCount = Math.max(1.0, size * survivedPart).toInt()
+        val survivedCount = Math.max(1.0, size * config.survivedPart).toInt()
         newPopulation += currentPopulation.subList(0, survivedCount)
         val other = ArrayList<Individual>(size - survivedCount + children.size)
         other += currentPopulation.subList(survivedCount, size)
@@ -192,7 +189,7 @@ class GeneticAlgorithm(
                 first = second
                 second = c
             }
-            val index = if (random.nextDouble() < tournamentProbability) { first } else { second }
+            val index = if (random.nextDouble() < config.tournamentProbability) { first } else { second }
             newPopulation.add(other.removeAt(index))
         }
         return newPopulation.sortedDescending()

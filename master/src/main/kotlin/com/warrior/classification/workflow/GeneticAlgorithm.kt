@@ -1,11 +1,12 @@
 package com.warrior.classification.workflow
 
-import com.warrior.classification.workflow.core.Algorithm
+import com.fasterxml.jackson.databind.MapperFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.warrior.classification.workflow.core.*
 import com.warrior.classification.workflow.core.AlgorithmConfiguration.ClassifierConfiguration
 import com.warrior.classification.workflow.core.AlgorithmConfiguration.TransformerConfiguration
-import com.warrior.classification.workflow.core.ComputationManager
-import com.warrior.classification.workflow.core.Config
-import com.warrior.classification.workflow.core.Workflow
+import java.io.File
+import java.io.PrintWriter
 import java.util.*
 
 /**
@@ -32,11 +33,18 @@ class GeneticAlgorithm(
         }
     }
 
-    fun search(populationSize: Int, iteration: Int): Individual {
+    fun search(populationSize: Int, iteration: Int): Result {
+        val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
+        logs.mkdir()
+
         val initialAlgorithms = (1..populationSize).map { generate() }
         var population = computationManager.compute(initialAlgorithms, config.dataset)
-                .map { result -> Individual(result.workflow, result.measure) }
                 .sortedDescending()
+
+        val mapper = ObjectMapper()
+        mapper.disable(MapperFeature.AUTO_DETECT_FIELDS,
+                MapperFeature.AUTO_DETECT_GETTERS,
+                MapperFeature.AUTO_DETECT_IS_GETTERS)
 
         for (i in 1..iteration) {
             val childrenWorkflows = (1..populationSize).flatMap {
@@ -45,18 +53,21 @@ class GeneticAlgorithm(
             }.map { mutation(it) }
 
             val children = computationManager.compute(childrenWorkflows, config.dataset)
-                    .map { result -> Individual(result.workflow, result.measure) }
             population = selection(population, children)
+
+            PrintWriter(File(logs, "$i.json")).use {
+                mapper.writeValue(it, population)
+            }
             println("--- iteration $i ---")
             population.forEach {
-                println(it.result)
-                println(it.workflow)
+                println(it.measure)
+                println(mapper.writeValueAsString(it.workflow))
             }
         }
         return population[0]
     }
 
-    private fun generateParents(population: List<Individual>): Pair<Individual, Individual> {
+    private fun generateParents(population: List<Result>): Pair<Result, Result> {
         val first = population.randomElement(random)
         val second = population.randomElement(random)
         return Pair(first, second)
@@ -172,12 +183,12 @@ class GeneticAlgorithm(
         return Workflow(newAlgorithms)
     }
 
-    private fun selection(currentPopulation: List<Individual>, children: List<Individual>): List<Individual> {
+    private fun selection(currentPopulation: List<Result>, children: List<Result>): List<Result> {
         val size = currentPopulation.size
-        val newPopulation = ArrayList<Individual>(size)
+        val newPopulation = ArrayList<Result>(size)
         val survivedCount = Math.max(1.0, size * config.survivedPart).toInt()
         newPopulation += currentPopulation.subList(0, survivedCount)
-        val other = ArrayList<Individual>(size - survivedCount + children.size)
+        val other = ArrayList<Result>(size - survivedCount + children.size)
         other += currentPopulation.subList(survivedCount, size)
         other += children
 
@@ -196,8 +207,4 @@ class GeneticAlgorithm(
     }
 
     private fun IntRange.length(): Int = endInclusive - start + 1
-
-    data class Individual(val workflow: Workflow, var result: Double): Comparable<Individual> {
-        override operator fun compareTo(other: Individual): Int = result.compareTo(other.result)
-    }
 }

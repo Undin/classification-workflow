@@ -10,36 +10,39 @@ import java.io.Serializable
 /**
  * Created by warrior on 27/08/16.
  */
-sealed class AlgorithmConfiguration(val name: String) : Serializable {
+sealed class AlgorithmConfiguration(@get:JsonProperty("name") val name: String) : Serializable {
     class ClassifierConfiguration @JsonCreator constructor(
             @JsonProperty("name") name: String,
-            @JsonProperty("classifier_class") val classifierClass: String,
-            @JsonProperty("classifier_options") val classifierOptions: Map<String, List<String>>
+            @get:JsonProperty("classifier_class") @param:JsonProperty("classifier_class") val classifierClass: String,
+            @get:JsonProperty("classifier_options") @param:JsonProperty("classifier_options") val classifierOptions: Map<String, List<String>>
     ) : AlgorithmConfiguration(name)
 
     class TransformerConfiguration @JsonCreator constructor(
             @JsonProperty("name") name: String,
-            @JsonProperty("search_class") val searchClass: String,
-            @JsonProperty("search_options") val searchOptions: Map<String, List<String>>,
-            @JsonProperty("evaluation_class") val evaluationClass: String,
-            @JsonProperty("evaluation_options") val evaluationOptions: Map<String, List<String>>
+            @get:JsonProperty("search_class") @param:JsonProperty("search_class") val searchClass: String,
+            @get:JsonProperty("search_options") @param:JsonProperty("search_options") val searchOptions: Map<String, List<String>>,
+            @get:JsonProperty("evaluation_class") @param:JsonProperty("evaluation_class") val evaluationClass: String,
+            @get:JsonProperty("evaluation_options") @param:JsonProperty("evaluation_options") val evaluationOptions: Map<String, List<String>>
     ) : AlgorithmConfiguration(name)
 }
 
 sealed class Algorithm() : Serializable {
-    class Classifier(val name: String,
-                     val classifierClass: String,
-                     val options: Map<String, String>) : Algorithm() {
-
+    class Classifier @JsonCreator constructor(
+            @get:JsonProperty("name") @param:JsonProperty("name") val name: String,
+            @get:JsonProperty("classifier_class") @param:JsonProperty("classifier_class") val classifierClass: String,
+            @get:JsonProperty("classifier_options") @param:JsonProperty("classifier_options") val options: Map<String, String>
+    ) : Algorithm() {
         operator fun invoke(): weka.classifiers.Classifier = AbstractClassifier.forName(classifierClass, options.toStringArray())
         override fun toString(): String = "$name$options"
     }
 
-    class Transformer(val name: String,
-                      val searchClass: String,
-                      val searchOptions: Map<String, String>,
-                      val evaluationClass: String,
-                      val evaluationOptions: Map<String, String>) : Algorithm() {
+    class Transformer @JsonCreator constructor(
+            @get:JsonProperty("name") @param:JsonProperty("name") val name: String,
+            @get:JsonProperty("search_class") @param:JsonProperty("search_class") val searchClass: String,
+            @get:JsonProperty("search_options") @param:JsonProperty("search_options") val searchOptions: Map<String, String>,
+            @get:JsonProperty("evaluation_class") @param:JsonProperty("evaluation_class") val evaluationClass: String,
+            @get:JsonProperty("evaluation_options") @param:JsonProperty("evaluation_options") val evaluationOptions: Map<String, String>
+    ) : Algorithm() {
 
         operator fun invoke(): Pair<ASSearch, ASEvaluation> = Pair(
                 ASSearch.forName(searchClass, searchOptions.toStringArray()),
@@ -49,7 +52,7 @@ sealed class Algorithm() : Serializable {
         override fun toString(): String {
             return "$name{" +
                     "searchOptions=$searchOptions, " +
-                    "evaluationOptions=$evaluationOptions"
+                    "evaluationOptions=$evaluationOptions}"
         }
     }
 

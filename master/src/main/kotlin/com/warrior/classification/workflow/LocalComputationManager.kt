@@ -1,6 +1,7 @@
 package com.warrior.classification.workflow
 
 import com.warrior.classification.workflow.core.ComputationManager
+import com.warrior.classification.workflow.core.Result
 import com.warrior.classification.workflow.core.Workflow
 import com.warrior.classification.workflow.core.load
 import kotlinx.support.jdk8.collections.parallelStream
@@ -20,13 +21,13 @@ class LocalComputationManager(val threads: Int) : ComputationManager {
     private val numFolds = 10
     private val random = Random()
 
-    override fun compute(tasks: List<Workflow>, dataset: String): List<ComputationManager.Result> {
+    override fun compute(tasks: List<Workflow>, dataset: String): List<Result> {
         val instances = load("$datasetFolder/$dataset")
         val pool = ForkJoinPool(threads)
         return pool.submit(Callable {
             tasks.parallelStream()
-                    .map { w -> ComputationManager.Result(w, compute(w, instances)) }
-                    .collect(Collectors.toList<ComputationManager.Result>())
+                    .map { w -> Result(w, compute(w, instances)) }
+                    .collect(Collectors.toList<Result>())
         }).get()
     }
 

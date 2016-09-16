@@ -20,5 +20,6 @@ data class Config @JsonCreator constructor(
         @JsonProperty("mutation_probability") val mutationProbability: Double,
         @JsonProperty("tournament_probability") val tournamentProbability: Double,
         @JsonProperty("point_crossover_probability") val pointCrossoverProbability: Double,
-        @JsonProperty("structure_mutation_probability") val structureMutationProbability: Double
+        @JsonProperty("structure_mutation_probability") val structureMutationProbability: Double,
+        @JsonProperty("log_folder") val logFolder: String
 )

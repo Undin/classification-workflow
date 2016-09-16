@@ -16,8 +16,8 @@ import java.util.*
  * Created by warrior on 12/07/16.
  */
 class Workflow @JsonCreator constructor(
-        @JsonProperty("algorithms") val algorithms: List<Algorithm>,
-        @JsonProperty("classifier") val classifier: Algorithm.Classifier
+        @get:JsonProperty("algorithms") @param:JsonProperty("algorithms") var algorithms: List<Algorithm>,
+        @get:JsonProperty("classifier") @param:JsonProperty("classifier") val classifier: Algorithm.Classifier
 ) : AbstractClassifier() {
 
     val allAlgorithms = algorithms + classifier
@@ -150,7 +150,7 @@ class Workflow @JsonCreator constructor(
         return usefulAttributes.toIntArray()
     }
 
-    override fun toString(): String{
+    override fun toString(): String {
         return "Workflow(" +
                 "algorithms=$algorithms," +
                 "classifier=$classifier" +

@@ -13,6 +13,7 @@ internal fun <T> Session.saveInTransaction(t: T) {
         save(t)
         transaction.commit()
     } catch (e: Exception) {
+        e.printStackTrace()
         if (transaction != null) {
             transaction.rollback()
         }

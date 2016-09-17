@@ -1,0 +1,86 @@
+{
+    "dataset" : "zoo.arff",
+    "log_folder" : "logs",
+    "threads" : 4,
+    "population_size" : 10,
+    "generations" : 20,
+    "max_workflow_size" : 2,
+    "survived_part" : 0.1,
+    "mutation_probability": 0.3,
+    "tournament_probability" : 0.8,
+    "point_crossover_probability" : 0.5,
+    "structure_mutation_probability" : 0.5,
+    "classifiers" : [
+        {
+            "name" : "NaiveBayes",
+            "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+            "classifier_options" : {}
+        },
+        {
+            "name" : "C4.5",
+            "classifier_class" : "weka.classifiers.trees.J48",
+            "classifier_options" : {
+                "-M": ["1", "2", "5", "10", "20"]
+            }
+        },
+        {
+            "name" : "SVM",
+            "classifier_class" : "weka.classifiers.functions.LibSVM",
+            "classifier_options": {
+                "-C": ["0.1", "0.5", "1.0", "2", "5", "10", "15"],
+                "-G": ["0.0001", "0.001", "0.01", "0.1", "0.5"],
+                "-E": ["0.0001", "0.001", "0.01"]
+            }
+        },
+        {
+            "name" : "Logistic",
+            "classifier_class" : "weka.classifiers.functions.Logistic",
+            "classifier_options" : {}
+        }
+    ],
+    "transformers" : [
+        {
+            "name" : "PCA",
+            "search_class" : "weka.attributeSelection.Ranker",
+            "search_options" : {},
+            "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+            "evaluation_options" : {}
+        },
+        {
+            "name" : "CFS-BestFirst",
+            "search_class" : "weka.attributeSelection.BestFirst",
+            "search_options" : {
+                "-D" : ["0", "1", "2"]
+            },
+            "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+            "evaluation_options" : {}
+        },
+        {
+            "name" : "Cons-BestFirst",
+            "search_class" : "weka.attributeSelection.BestFirst",
+            "search_options" : {
+                "-D" : ["0", "1", "2"]
+            },
+            "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+            "evaluation_options" : {}
+        },
+        {
+            "name" : "Relief-F",
+            "search_class" : "weka.attributeSelection.Ranker",
+            "search_options" : {
+                "-T" : ["0.01"]
+            },
+            "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+            "evaluation_options" : {}
+        },
+        {
+            "name" : "Signific",
+            "search_class" : "weka.attributeSelection.Ranker",
+            "search_options" : {
+                "-T" : ["0.01"]
+            },
+            "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+            "evaluation_options" : {}
+        }
+    ]
+}

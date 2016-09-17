@@ -33,11 +33,11 @@ class GeneticAlgorithm(
         }
     }
 
-    fun search(populationSize: Int, iteration: Int): Result {
+    fun search(): Result {
         val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
         logs.mkdir()
 
-        val initialAlgorithms = (1..populationSize).map { generate() }
+        val initialAlgorithms = (1..config.populationSize).map { generate() }
         var population = computationManager.compute(initialAlgorithms, config.dataset)
                 .sortedDescending()
 
@@ -46,8 +46,8 @@ class GeneticAlgorithm(
                 MapperFeature.AUTO_DETECT_GETTERS,
                 MapperFeature.AUTO_DETECT_IS_GETTERS)
 
-        for (i in 1..iteration) {
-            val childrenWorkflows = (1..populationSize).flatMap {
+        for (i in 1..config.generations) {
+            val childrenWorkflows = (1..config.populationSize).flatMap {
                 val (first, second) = generateParents(population)
                 crossover(first.workflow, second.workflow)
             }.map { mutation(it) }

@@ -1,7 +1,7 @@
 package com.warrior.classification.workflow
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.warrior.classification.workflow.core.Config
+import com.warrior.classification.workflow.Config
 import org.kohsuke.args4j.CmdLineException
 import org.kohsuke.args4j.CmdLineParser
 import org.kohsuke.args4j.Option

@@ -1,4 +1,4 @@
-package com.warrior.classification.workflow.core
+package com.warrior.classification.workflow
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty

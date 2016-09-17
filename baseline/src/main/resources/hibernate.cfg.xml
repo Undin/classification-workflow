@@ -10,5 +10,6 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="com.warrior.classification.workflow.baseline.ResultEntity" />
+        <mapping class="com.warrior.classification.workflow.baseline.dataset_info.DatasetInfo" />
     </session-factory>
 </hibernate-configuration>

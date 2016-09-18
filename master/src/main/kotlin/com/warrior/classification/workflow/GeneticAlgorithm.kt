@@ -37,14 +37,15 @@ class GeneticAlgorithm(
         val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
         logs.mkdir()
 
-        val initialAlgorithms = (1..config.populationSize).map { generate() }
-        var population = computationManager.compute(initialAlgorithms, config.dataset)
-                .sortedDescending()
-
         val mapper = ObjectMapper()
         mapper.disable(MapperFeature.AUTO_DETECT_FIELDS,
                 MapperFeature.AUTO_DETECT_GETTERS,
                 MapperFeature.AUTO_DETECT_IS_GETTERS)
+
+        val initialAlgorithms = (1..config.populationSize).map { generate() }
+        var population = computationManager.compute(initialAlgorithms, config.dataset)
+                .sortedDescending()
+        writeLogs(population, logs, 0, mapper)
 
         for (i in 1..config.generations) {
             val childrenWorkflows = (1..config.populationSize).flatMap {
@@ -55,16 +56,20 @@ class GeneticAlgorithm(
             val children = computationManager.compute(childrenWorkflows, config.dataset)
             population = selection(population, children)
 
-            PrintWriter(File(logs, "$i.json")).use {
-                mapper.writeValue(it, population)
-            }
-            println("--- iteration $i ---")
-            population.forEach {
-                println(it.measure)
-                println(mapper.writeValueAsString(it.workflow))
-            }
+            writeLogs(population, logs, i, mapper)
         }
         return population[0]
+    }
+
+    private fun writeLogs(population: List<Result>, logs: File, iteration: Int, mapper: ObjectMapper) {
+        PrintWriter(File(logs, "$iteration.json")).use {
+            mapper.writeValue(it, population)
+        }
+        println("--- iteration $iteration ---")
+        population.forEach {
+            println(it.measure)
+            println(mapper.writeValueAsString(it.workflow))
+        }
     }
 
     private fun generateParents(population: List<Result>): Pair<Result, Result> {

@@ -7,10 +7,13 @@ targetCompatibility = 1.8
 dependencies {
     compile project(':core')
     compile libraries.kotlin
-    compile libraries.args4j
-    compile libraries.weka
-    compile libraries.wekaLibSVM
+    compile libraries.kotlinxSupportJdk8
 
     compile libraries.hibernate
     compile libraries.postgresql
+
+    compile libraries.args4j
+
+    compile libraries.weka
+    compile libraries.wekaLibSVM
 }

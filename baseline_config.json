@@ -1,0 +1,13 @@
+{
+    "threads" : 4,
+    "save_strategy": "json",
+    "classifiers" : [
+        {
+            "name" : "C4.5",
+            "classifier_class" : "weka.classifiers.trees.J48",
+            "classifier_options" : {
+                "-M": ["1", "2", "5", "10", "20"]
+            }
+        }
+    ]
+}

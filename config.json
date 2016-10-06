@@ -1,10 +1,10 @@
 {
-    "dataset" : "zoo.arff",
+    "dataset" : "wilt.arff",
     "log_folder" : "logs",
     "threads" : 4,
-    "population_size" : 10,
+    "population_size" : 20,
     "generations" : 20,
-    "max_workflow_size" : 2,
+    "max_workflow_size" : 10,
     "survived_part" : 0.1,
     "mutation_probability": 0.3,
     "tournament_probability" : 0.8,

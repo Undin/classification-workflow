@@ -1,0 +1,44 @@
+[
+    {
+        "id" : 0,
+        "dataset_name" : "wilt",
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : "f-measure",
+        "value" : 0.9224924550252062
+    },
+    {
+        "id" : 0,
+        "dataset_name" : "wilt",
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "RandomForest",
+                "classifier_class" : "weka.classifiers.trees.RandomForest",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : "f-measure",
+        "value" : 0.9183131502492159
+    },
+    {
+        "id" : 0,
+        "dataset_name" : "wilt",
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : "f-measure",
+        "value" : 0.5089239343393279
+    }
+]

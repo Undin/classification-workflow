@@ -1,0 +1,372 @@
+[
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7496948132720066
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.749176269607682
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7482655012291723
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7477638743505777
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7444575991828586
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7436475786238674
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.743078626799557
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7430062909918351
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7424242424242424
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7418354675672896
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7410538009530399
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7397280700565279
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7381757988393058
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7380602032761965
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7363335850981392
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7357610079806377
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.734491184277603
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.734491184277603
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7308960037058814
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7297045412987442
+    }
+]

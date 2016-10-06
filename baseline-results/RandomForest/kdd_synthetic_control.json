@@ -1,0 +1,1 @@
+{"name":"kdd_synthetic_control","algorithm":"weka.classifiers.trees.RandomForest","fmeasure":0.9816478617138737}

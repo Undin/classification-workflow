@@ -9,7 +9,18 @@ jar {
         attributes 'Main-Class': 'com.warrior.classification.workflow.MainKt'
     }
     from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.compile.collect {
+            if (it.isDirectory()) {
+                return it
+            } else {
+                try {
+                    return zipTree(it)
+                } catch (Exception e) {
+                    e.printStackTrace()
+                    return fileTree {}
+                }
+            }
+        }
     }
 }
 

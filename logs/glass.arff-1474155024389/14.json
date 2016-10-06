@@ -1,0 +1,905 @@
+[
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.7400087253719922
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.7369204001470765
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "5",
+                        "-G" : "0.1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.7209724077633672
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6996080587117002
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6972748020166377
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6872481306495128
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6816894678074399
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6772913677254614
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6762420446758065
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6754964589045016
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.670102950783053
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "5",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.6618118834240033
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.6555903653505663
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6553923951124077
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6507535220999986
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6409890821181145
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "5",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6381813684956423
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.6245539782912044
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "2"
+                }
+            }
+        },
+        "measure" : 0.6225857344130195
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "0.5",
+                    "-G" : "0.01"
+                }
+            }
+        },
+        "measure" : 0.3679376438680858
+    }
+]

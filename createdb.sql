@@ -1,0 +1,7 @@
+CREATE TABLE results (
+    id SERIAL PRIMARY KEY,
+	dataset_name TEXT NOT NULL,
+	workflow JSONB NOT NULL,
+	measure TEXT NOT NULL,
+	value DOUBLE PRECISION NOT NULL
+);

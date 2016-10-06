@@ -1,0 +1,1 @@
+{"name":"kdd_ipums_la_99-small","algorithm":"weka.classifiers.trees.RandomForest","fmeasure":0.10989585997804063}

@@ -1,0 +1,910 @@
+[
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.01",
+                        "-C" : "0.1",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.86463120693853
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.863732074965661
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8548845466951965
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "2",
+                        "-G" : "0.5"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.8291850323304497
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "1.0",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8260709075025056
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8072453809440848
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7855898599165998
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "10"
+                    }
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7801870292151444
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "1"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7575165997708202
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.746619554154784
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "2",
+                        "-G" : "0.5"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.7437272564358572
+    },
+    {
+        "workflow" : {
+            "algorithms" : [],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7154134961310917
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "10"
+                    }
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "1"
+                }
+            }
+        },
+        "measure" : 0.7124036933020599
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "2"
+                    }
+                },
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "2",
+                        "-G" : "0.5"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.7088609820395441
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "5"
+                    }
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.6724638422006842
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.6605846322746062
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.6438417602384101
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.6390431646695767
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "PCA",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {},
+                    "evaluation_class" : "weka.attributeSelection.PrincipalComponents",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "0"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.5792084144313089
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "1.0",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "Cons-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ConsistencySubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.001",
+                        "-C" : "1.0",
+                        "-G" : "0.1"
+                    }
+                },
+                {
+                    "name" : "CFS-BestFirst",
+                    "search_class" : "weka.attributeSelection.BestFirst",
+                    "search_options" : {
+                        "-D" : "2"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.CfsSubsetEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                },
+                {
+                    "name" : "Logistic",
+                    "classifier_class" : "weka.classifiers.functions.Logistic",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.09462081128747796
+    }
+]

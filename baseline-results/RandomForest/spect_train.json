@@ -1,0 +1,1 @@
+{"name":"spect_train","algorithm":"weka.classifiers.trees.RandomForest","fmeasure":0.675}

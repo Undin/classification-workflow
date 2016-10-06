@@ -5,9 +5,17 @@
         {
             "name" : "C4.5",
             "classifier_class" : "weka.classifiers.trees.J48",
-            "classifier_options" : {
-                "-M": ["1", "2", "5", "10", "20"]
-            }
+            "classifier_options" : {}
+        },
+        {
+            "name" : "SVM",
+            "classifier_class" : "weka.classifiers.functions.LibSVM",
+            "classifier_options": {}
+        },
+        {
+            "name" : "RandomForest",
+            "classifier_class" : "weka.classifiers.trees.RandomForest",
+            "classifier_options": {}
         }
     ]
 }

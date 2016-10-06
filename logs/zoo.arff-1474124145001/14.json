@@ -1,0 +1,536 @@
+[
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.0001",
+                        "-C" : "5",
+                        "-G" : "0.001"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9682539682539683
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9431216931216931
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.0001",
+                        "-C" : "0.1",
+                        "-G" : "0.0001"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9158903186441913
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "NaiveBayes",
+                    "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                    "classifier_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.0001",
+                    "-C" : "10",
+                    "-G" : "0.1"
+                }
+            }
+        },
+        "measure" : 0.9049130763416479
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8918543279380718
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8918543279380718
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.01",
+                    "-C" : "5",
+                    "-G" : "0.01"
+                }
+            }
+        },
+        "measure" : 0.8642897453044875
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.0001",
+                        "-C" : "10",
+                        "-G" : "0.1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8519389598657892
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                },
+                {
+                    "name" : "C4.5",
+                    "classifier_class" : "weka.classifiers.trees.J48",
+                    "classifier_options" : {
+                        "-M" : "1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "NaiveBayes",
+                "classifier_class" : "weka.classifiers.bayes.NaiveBayes",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.8351022251719116
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "C4.5",
+                "classifier_class" : "weka.classifiers.trees.J48",
+                "classifier_options" : {
+                    "-M" : "5"
+                }
+            }
+        },
+        "measure" : 0.7413815767853036
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.01",
+                    "-C" : "5",
+                    "-G" : "0.01"
+                }
+            }
+        },
+        "measure" : 0.7209530405938657
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "SVM",
+                    "classifier_class" : "weka.classifiers.functions.LibSVM",
+                    "classifier_options" : {
+                        "-E" : "0.0001",
+                        "-C" : "0.1",
+                        "-G" : "0.1"
+                    }
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.7112465356512975
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Signific",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.SignificanceAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "Logistic",
+                "classifier_class" : "weka.classifiers.functions.Logistic",
+                "classifier_options" : {}
+            }
+        },
+        "measure" : 0.6543756620847213
+    },
+    {
+        "workflow" : {
+            "algorithms" : [
+                {
+                    "name" : "Relief-F",
+                    "search_class" : "weka.attributeSelection.Ranker",
+                    "search_options" : {
+                        "-T" : "0.01"
+                    },
+                    "evaluation_class" : "weka.attributeSelection.ReliefFAttributeEval",
+                    "evaluation_options" : {}
+                }
+            ],
+            "classifier" : {
+                "name" : "SVM",
+                "classifier_class" : "weka.classifiers.functions.LibSVM",
+                "classifier_options" : {
+                    "-E" : "0.001",
+                    "-C" : "5",
+                    "-G" : "0.001"
+                }
+            }
+        },
+        "measure" : 0.3453781512605042
+    }
+]

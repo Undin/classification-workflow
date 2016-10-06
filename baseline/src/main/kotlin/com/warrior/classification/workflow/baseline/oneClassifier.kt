@@ -41,7 +41,7 @@ private fun doClassification(config: Config) {
     // disable libSVM logs
     libsvm.svm.svm_set_print_string_function { it -> }
 
-    val files = File("datasets").listFiles(ExtensionFileFilter("arff", "")) ?: return
+    val files = File("datasets-tmp").listFiles(ExtensionFileFilter("arff", "")) ?: return
 
     File(RESULT_FOLDER).mkdir()
     val saveStrategy = when (config.saveStrategy) {

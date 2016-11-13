@@ -8,7 +8,7 @@ targetCompatibility = 1.8
 shadowJar {
     classifier = null
     manifest {
-        attributes 'Main-Class' : 'com.warrior.classification.workflow.baseline.OneClassifierKt'
+        attributes 'Main-Class' : 'com.warrior.classification_workflow.baseline.OneClassifierKt'
     }
 }
 

@@ -6,10 +6,10 @@
     <session-factory>
         <property name="connection.url">jdbc:postgresql://localhost:5432/workflow-results?stringtype=unspecified</property>
         <property name="connection.driver_class">org.postgresql.Driver</property>
-        <property name="dialect">com.warrior.classification.workflow.baseline.json.JsonbPostgreSQLDialect</property>
+        <property name="dialect">com.warrior.classification_workflow.baseline.json.JsonbPostgreSQLDialect</property>
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="com.warrior.classification.workflow.baseline.ResultEntity" />
-        <mapping class="com.warrior.classification.workflow.baseline.dataset_info.DatasetInfo" />
+        <mapping class="com.warrior.classification_workflow.baseline.ResultEntity" />
+        <mapping class="com.warrior.classification_workflow.baseline.dataset_info.DatasetInfo" />
     </session-factory>
 </hibernate-configuration>

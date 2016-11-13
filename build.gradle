@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.3"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5"
     }
 }
 
@@ -14,7 +14,7 @@ allprojects {
 }
 
 ext.libraries = [
-        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.3',
+        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.5',
         kotlinxSupportJdk8          : 'org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3',
 
         hibernate                   : 'org.hibernate:hibernate-core:5.2.2.Final',
@@ -23,7 +23,7 @@ ext.libraries = [
         jackson                     : 'com.fasterxml.jackson.core:jackson-databind:2.8.0',
         args4j                      : 'args4j:args4j:2.33',
 
-        weka                        : 'nz.ac.waikato.cms.weka:weka-stable:3.8.0',
+        weka                        : 'nz.ac.waikato.cms.weka:weka-dev:3.9.0',
         wekaLibSVM                  : 'nz.ac.waikato.cms.weka:LibSVM:1.0.8',
         wekaCSE                     : 'nz.ac.waikato.cms.weka:consistencySubsetEval:1.0.4',
         wekaSignific                : 'nz.ac.waikato.cms.weka:probabilisticSignificanceAE:1.0.2',

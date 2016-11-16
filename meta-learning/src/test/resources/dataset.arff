@@ -1,0 +1,12 @@
+@RELATION test-dataset
+
+@ATTRIBUTE attr1 numeric
+@ATTRIBUTE attr2 numeric
+@ATTRIBUTE attr3 numeric
+@ATTRIBUTE class {"first","second"}
+
+@DATA
+1,1,0,"first"
+2,2,1,"first"
+0,0,1,"second"
+1,1,2,"second"

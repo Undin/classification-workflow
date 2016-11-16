@@ -5,4 +5,6 @@ dependencies {
 
     compile libraries.weka
     compile libraries.apacheMath
+
+    testCompile libraries.junit
 }

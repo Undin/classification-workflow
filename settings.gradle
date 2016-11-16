@@ -2,3 +2,5 @@ rootProject.name = 'classification-workflow'
 include 'core'
 include 'baseline'
 include 'master'
+include 'meta-learning'
+

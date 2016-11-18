@@ -6,11 +6,23 @@ import java.util.*
 /**
  * Created by warrior on 11/15/16.
  */
-abstract class AbstractAttributeMetaFeature(private val aggregator: Aggregator) : AbstractMetaFeature() {
+abstract class AbstractAttributeMetaFeature(protected val aggregator: Aggregator) : AbstractMetaFeature() {
 
-    private val attributeMap: MutableMap<Attribute, Double> = HashMap()
+    protected val attributeMap: MutableMap<Attribute, Double> = HashMap()
 
     override fun compute(): Double {
+        return if (attributeMap.isEmpty()) {
+            initialCompute()
+        } else {
+            incrementalCompute()
+        }
+    }
+
+    open protected fun initialCompute(): Double = internalCompute()
+
+    private fun incrementalCompute(): Double = internalCompute()
+
+    private fun internalCompute(): Double {
         val values = ArrayList<Double>()
         for (attr in instances.enumerateAttributes()) {
             if (isSuitable(attr)) {

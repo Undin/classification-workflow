@@ -20,7 +20,7 @@ abstract class AbstractAttributeMetaFeature(protected val aggregator: Aggregator
 
     open protected fun initialCompute(): Double = internalCompute()
 
-    private fun incrementalCompute(): Double = internalCompute()
+    protected fun incrementalCompute(): Double = internalCompute()
 
     private fun internalCompute(): Double {
         val values = ArrayList<Double>()

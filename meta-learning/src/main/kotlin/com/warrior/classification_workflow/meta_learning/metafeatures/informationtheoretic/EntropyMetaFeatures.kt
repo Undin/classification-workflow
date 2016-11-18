@@ -11,9 +11,27 @@ import java.util.*
 /**
  * Created by warrior on 11/18/16.
  */
-abstract class EntropyMetaFeature(aggregator: Aggregator) : AbstractAttributeMetaFeature(aggregator) {
+abstract class EntropyMetaFeature(aggregator: Aggregator) :
+        AbstractAttributeMetaFeature(aggregator), EntropyCache {
 
-    override fun computeAttributeValue(attribute: Attribute): Double = entropy(instances, attribute).normalizedEntropy
+    protected var cache: MutableMap<Attribute, EntropyResult>? = null
+
+    override fun setEntropyCache(cache: MutableMap<Attribute, EntropyResult>) {
+        this.cache = cache
+    }
+
+    override fun compute(): Double {
+        return if (attributeMap.isEmpty() && cache?.isEmpty() ?: true) {
+            initialCompute()
+        } else {
+            incrementalCompute()
+        }
+    }
+
+    override fun computeAttributeValue(attribute: Attribute): Double {
+        val entropyResult = getFromCacheOrPut(attribute) { entropy(instances, attribute) }
+        return entropyResult.value()
+    }
 
     override fun initialCompute(): Double {
         val discretize = Discretize()
@@ -26,13 +44,19 @@ abstract class EntropyMetaFeature(aggregator: Aggregator) : AbstractAttributeMet
             if (isSuitable(attr)) {
                 val discreteAttribute = discreteInstances.attribute(attr.index())
                 val attributeValues = discreteInstances.attributeToDoubleArray(attr.index())
-                val value = entropy(attributeValues, discreteAttribute.numValues()).value()
+                val entropyResult = entropy(attributeValues, discreteAttribute.numValues())
+                cache?.put(attr, entropyResult)
+                val value = entropyResult.value()
                 attributeMap[attr] = value
                 values += value
             }
         }
 
         return aggregator.aggregate(values)
+    }
+
+    protected inline fun getFromCacheOrPut(attribute: Attribute, defaultValue: () -> EntropyResult): EntropyResult {
+        return cache?.getOrPut(attribute, defaultValue) ?: defaultValue()
     }
 
     abstract protected fun EntropyResult.value(): Double

@@ -11,9 +11,26 @@ import java.util.*
 /**
  * Created by warrior on 11/18/16.
  */
-abstract class MutualInformation(aggregator: Aggregator) : AbstractAttributeMetaFeature(aggregator) {
+abstract class MutualInformation(aggregator: Aggregator) :
+        AbstractAttributeMetaFeature(aggregator), MutualInformationCache {
 
-    override fun computeAttributeValue(attribute: Attribute): Double = mutualInformation(instances, attribute)
+    protected var cache: MutableMap<Attribute, Double>? = null
+
+    override fun setMutualInformationCache(cache: MutableMap<Attribute, Double>) {
+        this.cache = cache
+    }
+
+    override fun compute(): Double {
+        return if (attributeMap.isEmpty() && cache?.isEmpty() ?: true) {
+            initialCompute()
+        } else {
+            incrementalCompute()
+        }
+    }
+
+    override fun computeAttributeValue(attribute: Attribute): Double {
+        return getFromCacheOrPut(attribute) { mutualInformation(instances, attribute) }
+    }
 
     override fun initialCompute(): Double {
         val infoGain = InfoGainAttributeEval()
@@ -24,10 +41,15 @@ abstract class MutualInformation(aggregator: Aggregator) : AbstractAttributeMeta
             if (isSuitable(attr)) {
                 val value = infoGain.evaluateAttribute(attr.index())
                 attributeMap[attr] = value
+                cache?.put(attr, value)
                 values += value
             }
         }
         return aggregator.aggregate(values)
+    }
+
+    protected inline fun getFromCacheOrPut(attribute: Attribute, defaultValue: () -> Double): Double {
+        return cache?.getOrPut(attribute, defaultValue) ?: defaultValue()
     }
 }
 

@@ -1,12 +1,13 @@
 package com.warrior.classification_workflow.meta_learning.metafeatures.informationtheoretic
 
 import com.warrior.classification_workflow.meta_learning.metafeatures.AbstractMetaFeature
+import weka.core.Attribute
 import weka.core.Instances
 
 /**
  * Created by warrior on 23.03.15.
  */
-class NoiseSignalRatio : AbstractMetaFeature() {
+class NoiseSignalRatio : AbstractMetaFeature(), MutualInformationCache, EntropyCache {
 
     val meanMutualInformation: MeanMutualInformation = MeanMutualInformation()
     val meanEntropy: MeanFeatureEntropy = MeanFeatureEntropy()
@@ -18,6 +19,14 @@ class NoiseSignalRatio : AbstractMetaFeature() {
             meanMutualInformation.instances = value
             meanEntropy.instances = value
         }
+
+    override fun setMutualInformationCache(cache: MutableMap<Attribute, Double>) {
+        meanMutualInformation.setMutualInformationCache(cache)
+    }
+
+    override fun setEntropyCache(cache: MutableMap<Attribute, EntropyResult>) {
+        meanEntropy.setEntropyCache(cache)
+    }
 
     override fun compute(): Double {
         val mutualInfo = meanMutualInformation.compute()

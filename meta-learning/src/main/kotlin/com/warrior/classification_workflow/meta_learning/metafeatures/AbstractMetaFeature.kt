@@ -6,6 +6,11 @@ abstract class AbstractMetaFeature : MetaFeature {
 
     open lateinit var instances: Instances
 
+    fun compute(instances: Instances): Double {
+        this.instances = instances
+        return compute()
+    }
+
     protected fun isNonClassAttributeWithType(instances: Instances, attributeIndex: Int, vararg types: Int): Boolean {
         val attribute = instances.attribute(attributeIndex)
         val type = attribute.type()

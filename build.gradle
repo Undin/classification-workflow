@@ -14,15 +14,22 @@ allprojects {
     }
 }
 
+def versions = [
+        jackson                     : '2.8.5'
+]
+
 ext.libraries = [
         kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.5',
         kotlinxSupportJdk8          : 'org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3',
 
-        hibernate                   : 'org.hibernate:hibernate-core:5.2.2.Final',
-        postgresql                  : 'org.postgresql:postgresql:9.4.1209',
+        hibernate                   : 'org.hibernate:hibernate-core:5.2.4.Final',
+        postgresql                  : 'org.postgresql:postgresql:9.4.1212',
 
-        jackson                     : 'com.fasterxml.jackson.core:jackson-databind:2.8.0',
+        jackson                     : 'com.fasterxml.jackson.core:jackson-databind:' + versions.jackson,
+        jacksonKotlin               : 'com.fasterxml.jackson.module:jackson-module-kotlin:' + versions.jackson,
+        yaml                        : 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:' + versions.jackson,
         args4j                      : 'args4j:args4j:2.33',
+        commonsCli                  : 'commons-cli:commons-cli:1.3.1',
 
         weka                        : 'nz.ac.waikato.cms.weka:weka-dev:3.9.0',
         wekaLibSVM                  : 'nz.ac.waikato.cms.weka:LibSVM:1.0.8',

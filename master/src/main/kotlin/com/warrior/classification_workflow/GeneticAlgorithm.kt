@@ -2,13 +2,9 @@ package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.warrior.classification.workflow.core.*
-import com.warrior.classification_workflow.core.Algorithm
+import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.TransformerConfiguration
-import com.warrior.classification_workflow.core.ComputationManager
-import com.warrior.classification_workflow.core.Result
-import com.warrior.classification_workflow.core.Workflow
 import java.io.File
 import java.io.PrintWriter
 import java.util.*

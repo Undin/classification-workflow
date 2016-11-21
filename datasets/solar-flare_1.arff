@@ -1,4 +1,4 @@
-@relation solar-flare
+@relation solar-flare_1
 
 @attribute largest_spot_size {A,H,K,R,S,X}
 @attribute spot_distribution {C,I,O,X}

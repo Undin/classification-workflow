@@ -331,7 +331,7 @@
 %    From: '1'                     To: yes                 
 %    From: '2'                     To: no                  
 %
-@relation horse-colic
+@relation colic
 @attribute 'surgery' { yes, no}
 @attribute 'Age' { adult, young}
 @attribute 'rectal_temperature' real

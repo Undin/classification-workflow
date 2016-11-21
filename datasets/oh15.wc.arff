@@ -1,5 +1,5 @@
 % ARFF format training set
-@RELATION oh15.mat
+@RELATION oh15.wc
 
 @ATTRIBUTE cluster	integer
 @ATTRIBUTE infus	integer

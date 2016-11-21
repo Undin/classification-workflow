@@ -16,7 +16,7 @@
 %
 % This dataset contains samples from both training and validation datasets.
 
-@relation ADA_Agnostic
+@relation ada_agnostic
 
 @attribute attr0 numeric
 @attribute attr1 numeric

@@ -49,7 +49,7 @@
 %  HI  - 12
 %
 
-@relation pasture-production
+@relation pasture
 
 @attribute fertiliser {LL,LN,HN,HH}
 @attribute slope numeric

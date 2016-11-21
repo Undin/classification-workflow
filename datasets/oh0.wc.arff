@@ -34,7 +34,7 @@
 %  George Forman
 %  
 
-@RELATION oh0.mat
+@RELATION oh0.wc
 
 @ATTRIBUTE depart	integer
 @ATTRIBUTE cluster	integer

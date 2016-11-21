@@ -62,7 +62,7 @@
 %     +: 307 (44.5%)
 %     -: 383 (55.5%)
 
-@relation credit-rating
+@relation credit-a
 
 @attribute A1		{b,a}
 @attribute A2		REAL

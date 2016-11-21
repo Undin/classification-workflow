@@ -181,7 +181,7 @@
 %    From: '3'                     To: malign_lymph        
 %    From: '4'                     To: fibrosis            
 %
-@relation lymphography
+@relation lymph
 @attribute 'lymphatics' { normal, arched, deformed, displaced}
 @attribute 'block_of_affere' { no, yes}
 @attribute 'bl_of_lymph_c' { no, yes}

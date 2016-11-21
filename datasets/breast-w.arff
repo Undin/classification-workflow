@@ -1,4 +1,4 @@
-@relation wisconsin-breast-cancer
+@relation breast-w
 @attribute Clump_Thickness integer [1,10]
 @attribute Cell_Size_Uniformity integer [1,10]
 @attribute Cell_Shape_Uniformity integer [1,10]

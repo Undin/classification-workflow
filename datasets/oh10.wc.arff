@@ -1,5 +1,5 @@
 % ARFF format training set
-@RELATION oh10.mat
+@RELATION oh10.wc
 
 @ATTRIBUTE sudden	integer
 @ATTRIBUTE gland	integer

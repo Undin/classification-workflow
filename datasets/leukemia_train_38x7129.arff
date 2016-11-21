@@ -1,4 +1,4 @@
-@RELATION leukemia_train_34x7129
+@RELATION leukemia_train_38x7129
 
 @ATTRIBUTE AFFX-BioB-5_at REAL
 @ATTRIBUTE AFFX-BioB-M_at REAL

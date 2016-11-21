@@ -295,7 +295,7 @@
 %    From: '3'                     To: '>50_3'             
 %    From: '4'                     To: '>50_4'             
 %
-@relation hungarian-14-heart-disease
+@relation heart-h
 @attribute 'age' real
 @attribute 'sex' { female, male}
 @attribute 'chest_pain' { typ_angina, asympt, non_anginal, atyp_angina}

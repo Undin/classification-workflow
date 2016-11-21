@@ -1,4 +1,4 @@
-@relation monks-problems-1
+@relation monks-problems-1_train
 
 @attribute attr1 {1,2,3}
 @attribute attr2 {1,2,3}

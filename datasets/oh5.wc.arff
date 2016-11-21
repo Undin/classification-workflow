@@ -1,5 +1,5 @@
 % ARFF format training set
-@RELATION oh5.mat
+@RELATION oh5.wc
 
 @ATTRIBUTE depart	integer
 @ATTRIBUTE nephropathi	integer

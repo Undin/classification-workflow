@@ -296,7 +296,7 @@
 %    From: '3'                     To: '>50_3'             
 %    From: '4'                     To: '>50_4'             
 %
-@relation cleveland-14-heart-disease
+@relation heart-c
 @attribute 'age' real
 @attribute 'sex' { female, male}
 @attribute 'cp' { typ_angina, asympt, non_anginal, atyp_angina}

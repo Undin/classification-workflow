@@ -17,7 +17,7 @@
 %
 %
 
-@relation SYLVA
+@relation sylva_prior
 
 @attribute Elevation integer
 @attribute Aspect integer

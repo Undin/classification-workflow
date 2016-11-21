@@ -83,7 +83,7 @@
 % CLASSINDEX: last
 %
 
-@relation mfeat
+@relation mfeat-zernike
 
 @attribute att1 REAL
 @attribute att2 REAL

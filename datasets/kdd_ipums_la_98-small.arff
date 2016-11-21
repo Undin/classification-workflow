@@ -148,7 +148,7 @@
 % CLASSINDEX: none specific
 %
 
-@relation ipums_la_98-small
+@relation kdd_ipums_la_98-small
 
 @attribute year {98}
 @attribute gq {HH_in_1970_definition_but_sampled_as_larger_unit,Institution,Other_group_quarters}

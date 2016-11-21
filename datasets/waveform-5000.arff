@@ -35,7 +35,7 @@
 % 
 % 9. Class Distribution: 33% for each of 3 classes
 
-@relation waveform
+@relation waveform-5000
 
 @attribute x1 real
 @attribute x2 real

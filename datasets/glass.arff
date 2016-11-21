@@ -104,7 +104,7 @@
 %    From: '6'                     To: tableware           
 %    From: '7'                     To: headlamps           
 %
-@relation Glass
+@relation glass
 @attribute 'RI' real
 @attribute 'Na' real
 @attribute 'Mg' real

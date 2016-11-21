@@ -195,7 +195,7 @@
 % CLASSINDEX: first
 %
 
-@relation JapaneseVowels-test
+@relation kdd_JapaneseVowels_test
 
 @attribute utterance INTEGER
 @attribute frame INTEGER

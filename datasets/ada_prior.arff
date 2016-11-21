@@ -13,7 +13,7 @@
 % This dataset contains samples from both training and validation datasets.
 
 
-@relation ADA_Prior
+@relation ada_prior
 
 @attribute age numeric
 @attribute workclass {Federal-gov,Without-pay,Self-emp-inc,State-gov,Local-gov,Self-emp-not-inc,Private}

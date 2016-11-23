@@ -16,6 +16,8 @@ dependencies {
     compile libraries.kotlinxSupportJdk8
 
     compile libraries.weka
+    compile libraries.wekaLibSVM
+    compile libraries.wekaLibLinear
     compile libraries.apacheMath
 
     compile libraries.commonsCli

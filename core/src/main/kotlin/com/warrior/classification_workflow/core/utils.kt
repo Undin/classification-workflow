@@ -15,10 +15,16 @@ import java.util.*
 fun load(path: String, removeUseless: Boolean = true): Instances {
     val instances = ConverterUtils.DataSource.read(path)
     instances.setClassIndex(instances.numAttributes() - 1)
-    return if (removeUseless) removeUseless(instances) else instances
+    return if (removeUseless) {
+        val filteredInstances = removeUseless(instances)
+        filteredInstances.setRelationName(instances.relationName())
+        filteredInstances
+    } else {
+        instances
+    }
 }
 
-fun removeUseless(instances: Instances): Instances {
+private fun removeUseless(instances: Instances): Instances {
     val firstInstance = instances[0]
     val uselessAttributes = ArrayList<Int>()
     for (attr in instances.enumerateAttributes()) {

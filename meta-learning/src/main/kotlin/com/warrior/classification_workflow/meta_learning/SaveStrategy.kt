@@ -78,4 +78,20 @@ sealed class SaveStrategy : Closeable {
     }
 
     abstract fun save(any: Any)
+
+    companion object {
+
+        @JvmStatic
+        fun fromString(saveStrategy: String, outFolder: String? = null): SaveStrategy {
+            return when (saveStrategy) {
+                "json" -> {
+                    val folder = outFolder ?: throw IllegalAccessException("outFolder must be non null for json save strategy")
+                    File(folder).mkdirs()
+                    JsonSaveStrategy("$folder/result-${System.currentTimeMillis()}.json")
+                }
+                "db" -> DatabaseSaveStrategy()
+                else -> throw IllegalArgumentException("unknown value for save strategy: $saveStrategy")
+            }
+        }
+    }
 }

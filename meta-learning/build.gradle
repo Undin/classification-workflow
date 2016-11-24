@@ -25,6 +25,9 @@ dependencies {
     compile libraries.jacksonKotlin
     compile libraries.yaml
 
+    compile libraries.log4jApi
+    compile libraries.log4jCore
+
     compile libraries.hibernate
     compile libraries.postgresql
 

@@ -12,10 +12,27 @@ import javax.persistence.*;
 @Table(name = "transformer_performance", schema = "public", catalog = "master")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TransformerPerformanceEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transformer_performance_seq")
+    @SequenceGenerator(name = "transformer_performance_seq", sequenceName = "transformer_performance_seq")
+    @Column(name = "id", nullable = false)
     private int id;
+
+    @Column(name = "transformer_name", nullable = false)
+    @JsonProperty("transformer_name")
     private String transformerName;
+
+    @Column(name = "classifier_name", nullable = false)
+    @JsonProperty("classifier_name")
     private String classifierName;
+
+    @Column(name = "dataset_name", nullable = false)
+    @JsonProperty("dataset_name")
     private String datasetName;
+
+    @Column(name = "measure", nullable = false)
+    @JsonProperty("measure")
     private double measure;
 
     public TransformerPerformanceEntity() {}
@@ -27,9 +44,6 @@ public class TransformerPerformanceEntity {
         this.measure = measure;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -38,50 +52,34 @@ public class TransformerPerformanceEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "transformer_name")
-    @JsonProperty("transformer_name")
     public String getTransformerName() {
         return transformerName;
     }
 
-    @JsonProperty("transformer_name")
     public void setTransformerName(String transformerName) {
         this.transformerName = transformerName;
     }
 
-    @Basic
-    @Column(name = "classifier_name")
-    @JsonProperty("classifier_name")
     public String getClassifierName() {
         return classifierName;
     }
 
-    @JsonProperty("classifier_name")
     public void setClassifierName(String classifierName) {
         this.classifierName = classifierName;
     }
 
-    @Basic
-    @Column(name = "dataset_name")
-    @JsonProperty("dataset_name")
     public String getDatasetName() {
         return datasetName;
     }
 
-    @JsonProperty("dataset_name")
     public void setDatasetName(String datasetName) {
         this.datasetName = datasetName;
     }
 
-    @Basic
-    @Column(name = "measure")
-    @JsonProperty("measure")
     public double getMeasure() {
         return measure;
     }
 
-    @JsonProperty("measure")
     public void setMeasure(double measure) {
         this.measure = measure;
     }

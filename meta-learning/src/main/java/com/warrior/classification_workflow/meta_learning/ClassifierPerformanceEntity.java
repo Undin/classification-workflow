@@ -12,9 +12,23 @@ import javax.persistence.*;
 @Table(name = "classifier_performance", schema = "public", catalog = "master")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ClassifierPerformanceEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classifier_performance_seq")
+    @SequenceGenerator(name = "classifier_performance_seq", sequenceName = "classifier_performance_seq")
+    @Column(name = "id", nullable = false)
     private int id;
+
+    @Column(name = "classifier_name", nullable = false)
+    @JsonProperty("classifier_name")
     private String classifierName;
+
+    @Column(name = "dataset_name", nullable = false)
+    @JsonProperty("dataset_name")
     private String datasetName;
+
+    @Column(name = "measure", nullable = false)
+    @JsonProperty("measure")
     private double measure;
 
     public ClassifierPerformanceEntity() {}
@@ -25,9 +39,6 @@ public class ClassifierPerformanceEntity {
         this.measure = measure;
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -36,38 +47,26 @@ public class ClassifierPerformanceEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "classifier_name")
-    @JsonProperty("classifier_name")
     public String getClassifierName() {
         return classifierName;
     }
 
-    @JsonProperty("classifier_name")
     public void setClassifierName(String classifierName) {
         this.classifierName = classifierName;
     }
 
-    @Basic
-    @Column(name = "dataset_name")
-    @JsonProperty("dataset_name")
     public String getDatasetName() {
         return datasetName;
     }
 
-    @JsonProperty("dataset_name")
     public void setDatasetName(String datasetName) {
         this.datasetName = datasetName;
     }
 
-    @Basic
-    @Column(name = "measure")
-    @JsonProperty("measure")
     public double getMeasure() {
         return measure;
     }
 
-    @JsonProperty("measure")
     public void setMeasure(double measure) {
         this.measure = measure;
     }

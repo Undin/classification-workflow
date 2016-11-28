@@ -13,21 +13,72 @@ import javax.persistence.*;
 @Table(name = "meta_features", schema = "public", catalog = "master")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MetaFeaturesEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meta_features_seq")
+    @SequenceGenerator(name = "meta_features_seq", sequenceName = "meta_features_seq")
+    @Column(name = "id", nullable = false)
     private int id;
+
+    @Column(name = "dataset_name", nullable = false)
+    @JsonProperty("dataset_name")
     private String datasetName;
+
+    @Column(name = "number_of_instances", nullable = false)
+    @JsonProperty("number_of_instances")
     private double numberOfInstances;
+
+    @Column(name = "number_of_features", nullable = false)
+    @JsonProperty("number_of_features")
     private double numberOfFeatures;
+
+    @Column(name = "number_of_classes", nullable = false)
+    @JsonProperty("number_of_classes")
     private double numberOfClasses;
+
+    @Column(name = "dataset_dimensionality", nullable = false)
+    @JsonProperty("dataset_dimensionality")
     private double datasetDimensionality;
+
+    @Column(name = "mean_coefficient_of_variation", nullable = false)
+    @JsonProperty("mean_coefficient_of_variation")
     private double meanCoefficientOfVariation;
+
+    @Column(name = "mean_kurtosis", nullable = false)
+    @JsonProperty("mean_kurtosis")
     private double meanKurtosis;
+
+    @Basic
+    @Column(name = "mean_skewness", nullable = false)
+    @JsonProperty("mean_skewness")
     private double meanSkewness;
+
+    @Column(name = "mean_standard_deviation", nullable = false)
+    @JsonProperty("mean_standard_deviation")
     private double meanStandardDeviation;
+    
+    @Column(name = "equivalent_number_of_features", nullable = false)
+    @JsonProperty("equivalent_number_of_features")
     private double equivalentNumberOfFeatures;
+
+    @Column(name = "max_mutual_information", nullable = false)
+    @JsonProperty("max_mutual_information")
     private double maxMutualInformation;
+
+    @Column(name = "mean_mutual_information", nullable = false)
+    @JsonProperty("mean_mutual_information")
     private double meanMutualInformation;
+
+    @Column(name = "mean_normalized_feature_entropy", nullable = false)
+    @JsonProperty("mean_normalized_feature_entropy")
     private double meanNormalizedFeatureEntropy;
+
+    @Column(name = "noise_signal_ratio", nullable = false)
+    @JsonProperty("noise_signal_ratio")
     private double noiseSignalRatio;
+    
+    @Column(name = "normalized_class_entropy", nullable = false)
+    @JsonProperty("normalized_class_entropy")
     private double normalizedClassEntropy;
 
     public MetaFeaturesEntity() {}
@@ -50,9 +101,6 @@ public class MetaFeaturesEntity {
         normalizedClassEntropy = result.getNormalizedClassEntropy();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
     public int getId() {
         return id;
     }
@@ -61,182 +109,122 @@ public class MetaFeaturesEntity {
         this.id = id;
     }
 
-    @Basic
-    @Column(name = "dataset_name")
-    @JsonProperty("dataset_name")
     public String getDatasetName() {
         return datasetName;
     }
 
-    @JsonProperty("dataset_name")
     public void setDatasetName(String datasetName) {
         this.datasetName = datasetName;
     }
 
-    @Basic
-    @Column(name = "number_of_instances")
-    @JsonProperty("number_of_instances")
     public double getNumberOfInstances() {
         return numberOfInstances;
     }
 
-    @JsonProperty("number_of_instances")
     public void setNumberOfInstances(double numberOfInstances) {
         this.numberOfInstances = numberOfInstances;
     }
 
-    @Basic
-    @Column(name = "number_of_features")
-    @JsonProperty("number_of_features")
     public double getNumberOfFeatures() {
         return numberOfFeatures;
     }
 
-    @JsonProperty("number_of_features")
     public void setNumberOfFeatures(double numberOfFeatures) {
         this.numberOfFeatures = numberOfFeatures;
     }
 
-    @Basic
-    @Column(name = "number_of_classes")
-    @JsonProperty("number_of_classes")
     public double getNumberOfClasses() {
         return numberOfClasses;
     }
 
-    @JsonProperty("number_of_classes")
     public void setNumberOfClasses(double numberOfClasses) {
         this.numberOfClasses = numberOfClasses;
     }
 
-    @Basic
-    @Column(name = "dataset_dimensionality")
-    @JsonProperty("dataset_dimensionality")
     public double getDatasetDimensionality() {
         return datasetDimensionality;
     }
 
-    @JsonProperty("dataset_dimensionality")
     public void setDatasetDimensionality(double datasetDimensionality) {
         this.datasetDimensionality = datasetDimensionality;
     }
 
-    @Basic
-    @Column(name = "mean_coefficient_of_variation")
-    @JsonProperty("mean_coefficient_of_variation")
     public double getMeanCoefficientOfVariation() {
         return meanCoefficientOfVariation;
     }
 
-    @JsonProperty("mean_coefficient_of_variation")
     public void setMeanCoefficientOfVariation(double meanCoefficientOfVariation) {
         this.meanCoefficientOfVariation = meanCoefficientOfVariation;
     }
 
-    @Basic
-    @Column(name = "mean_kurtosis")
-    @JsonProperty("mean_kurtosis")
     public double getMeanKurtosis() {
         return meanKurtosis;
     }
 
-    @JsonProperty("mean_kurtosis")
     public void setMeanKurtosis(double meanKurtosis) {
         this.meanKurtosis = meanKurtosis;
     }
 
-    @Basic
-    @Column(name = "mean_skewness")
-    @JsonProperty("mean_skewness")
     public double getMeanSkewness() {
         return meanSkewness;
     }
 
-    @JsonProperty("mean_skewness")
     public void setMeanSkewness(double meanSkewness) {
         this.meanSkewness = meanSkewness;
     }
 
-    @Basic
-    @Column(name = "mean_standard_deviation")
-    @JsonProperty("mean_standard_deviation")
     public double getMeanStandardDeviation() {
         return meanStandardDeviation;
     }
 
-    @JsonProperty("mean_standard_deviation")
     public void setMeanStandardDeviation(double meanStandardDeviation) {
         this.meanStandardDeviation = meanStandardDeviation;
     }
 
-    @Basic
-    @Column(name = "equivalent_number_of_features")
-    @JsonProperty("equivalent_number_of_features")
     public double getEquivalentNumberOfFeatures() {
         return equivalentNumberOfFeatures;
     }
 
-    @JsonProperty("equivalent_number_of_features")
     public void setEquivalentNumberOfFeatures(double equivalentNumberOfFeatures) {
         this.equivalentNumberOfFeatures = equivalentNumberOfFeatures;
     }
-
-    @Basic
-    @Column(name = "max_mutual_information")
-    @JsonProperty("max_mutual_information")
+    
     public double getMaxMutualInformation() {
         return maxMutualInformation;
     }
 
-    @JsonProperty("max_mutual_information")
     public void setMaxMutualInformation(double maxMutualInformation) {
         this.maxMutualInformation = maxMutualInformation;
     }
 
-    @Basic
-    @Column(name = "mean_mutual_information")
-    @JsonProperty("mean_mutual_information")
     public double getMeanMutualInformation() {
         return meanMutualInformation;
     }
 
-    @JsonProperty("mean_mutual_information")
     public void setMeanMutualInformation(double meanMutualInformation) {
         this.meanMutualInformation = meanMutualInformation;
     }
 
-    @Basic
-    @Column(name = "mean_normalized_feature_entropy")
-    @JsonProperty("mean_normalized_feature_entropy")
     public double getMeanNormalizedFeatureEntropy() {
         return meanNormalizedFeatureEntropy;
     }
 
-    @JsonProperty("mean_normalized_feature_entropy")
     public void setMeanNormalizedFeatureEntropy(double meanNormalizedFeatureEntropy) {
         this.meanNormalizedFeatureEntropy = meanNormalizedFeatureEntropy;
     }
-
-    @Basic
-    @Column(name = "noise_signal_ratio")
-    @JsonProperty("noise_signal_ratio")
+    
     public double getNoiseSignalRatio() {
         return noiseSignalRatio;
     }
 
-    @JsonProperty("noise_signal_ratio")
     public void setNoiseSignalRatio(double noiseSignalRatio) {
         this.noiseSignalRatio = noiseSignalRatio;
     }
 
-    @Basic
-    @Column(name = "normalized_class_entropy")
-    @JsonProperty("normalized_class_entropy")
     public double getNormalizedClassEntropy() {
         return normalizedClassEntropy;
     }
 
-    @JsonProperty("normalized_class_entropy")
     public void setNormalizedClassEntropy(double normalizedClassEntropy) {
         this.normalizedClassEntropy = normalizedClassEntropy;
     }

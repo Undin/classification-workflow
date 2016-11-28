@@ -11,9 +11,20 @@ Configutation:
       PatternLayout:
         pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
 
+    File:
+      name: File
+      fileName: logs/logfile.log
+      PatternLayout:
+        pattern: "[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n"
+
   Loggers:
 
       Root:
         level: debug
         AppenderRef:
           - ref: Console
+      Logger:
+        - name: com.warrior.classification_workflow.meta_learning
+          level: debug
+          AppenderRef:
+            - ref: File

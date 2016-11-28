@@ -13,12 +13,16 @@ import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
 import weka.attributeSelection.ASEvaluation
 import weka.attributeSelection.ASSearch
+import weka.classifiers.AbstractClassifier
+import weka.classifiers.AggregateableEvaluation
 import weka.classifiers.Evaluation
 import weka.core.Instances
 import weka.filters.Filter
 import weka.filters.supervised.attribute.AttributeSelection
 import java.io.File
 import java.util.*
+import java.util.stream.IntStream
+import java.util.stream.Stream
 
 /**
  * Created by warrior on 11/14/16.
@@ -183,11 +187,33 @@ private fun calculate(classifier: Classifier, data: Instances, random: Random, s
 
 private fun crossValidation(classifier: Classifier, data: Instances, random: Random): Double {
     val options = classifier.options.toArray()
-    val eval = Evaluation(data)
-    for (i in 1..10) {
-        eval.crossValidateModel(classifier.className, data, 10, options, random)
-    }
-    return eval.unweightedMacroFmeasure()
+    val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
+
+    val fullAggregation: AggregateableEvaluation = IntStream.range(0, 10)
+            .parallel()
+            .boxed()
+            .flatMap { parallelCrossValidation(data, wekaClassifier, random, 10) }
+            .collect(
+                    { AggregateableEvaluation(data) },
+                    { acc, o -> acc.aggregate(o) },
+                    { l, r -> l.aggregate(r) }
+            )
+    return fullAggregation.unweightedMacroFmeasure()
+}
+
+private fun parallelCrossValidation(data: Instances, classifier: weka.classifiers.Classifier,
+                                    random: Random, numFolds: Int): Stream<Evaluation> {
+    return IntStream.range(0, numFolds)
+            .parallel()
+            .mapToObj { fold ->
+                val train = data.trainCV(10, fold, random)
+                val copiedClassifier = AbstractClassifier.makeCopy(classifier)
+                copiedClassifier.buildClassifier(train)
+                val test = data.testCV(10, fold)
+                val eval = Evaluation(data)
+                eval.evaluateModel(copiedClassifier, test)
+                eval
+            }
 }
 
 private fun extractMetaFeatures(config: MetaFeatureConfig) {

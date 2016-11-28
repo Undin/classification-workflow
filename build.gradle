@@ -39,6 +39,7 @@ ext.libraries = [
         wekaLibLinear               : 'nz.ac.waikato.cms.weka:LibLINEAR:1.9.7',
         wekaCSE                     : 'nz.ac.waikato.cms.weka:consistencySubsetEval:1.0.4',
         wekaSignific                : 'nz.ac.waikato.cms.weka:probabilisticSignificanceAE:1.0.2',
+        wekaLS                      : 'nz.ac.waikato.cms.weka:linearForwardSelection:1.0.2',
         xgboost                     : 'biz.k11i:xgboost-predictor:0.1.7',
         apacheMath                  : 'org.apache.commons:commons-math3:3.6.1',
 

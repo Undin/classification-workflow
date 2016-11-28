@@ -1,28 +1,34 @@
 dataset_folder: datasets
-out_folder: performance
+out_folder: classifier_performance
 save_strategy: json
 classifiers:
   - name                : "NaiveBayes"
     classifier_class    : "weka.classifiers.bayes.NaiveBayes"
     classifier_options  : {}
+
   - name                : "KNN"
     classifier_class    : "weka.classifiers.lazy.IBk"
     classifier_options  :
       -K: "3"
+
   - name                : "SVM"
     classifier_class    : "weka.classifiers.functions.LibSVM"
     classifier_options  : {}
+
   - name                : "C4.5"
     classifier_class    : "weka.classifiers.trees.J48"
     classifier_options  : {}
+
   - name                : "LogR-L2"
     classifier_class    : "weka.classifiers.functions.LibLINEAR"
     classifier_options  :
       -S: "0"
+
   - name                : "LogR-L1"
     classifier_class    : "weka.classifiers.functions.LibLINEAR"
     classifier_options  :
       -S: "6"
+
 datasets:
   # 0 <= instances * features < 10000
   - balance-scale.arff

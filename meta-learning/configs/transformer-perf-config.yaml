@@ -1,0 +1,165 @@
+dataset_folder: datasets
+out_folder: transformer_performance
+save_strategy: json
+classifiers:
+  - name                : "NaiveBayes"
+    classifier_class    : "weka.classifiers.bayes.NaiveBayes"
+    classifier_options  : {}
+
+  - name                : "KNN"
+    classifier_class    : "weka.classifiers.lazy.IBk"
+    classifier_options  :
+      -K: "3"
+
+  - name                : "SVM"
+    classifier_class    : "weka.classifiers.functions.LibSVM"
+    classifier_options  : {}
+
+  - name                : "C4.5"
+    classifier_class    : "weka.classifiers.trees.J48"
+    classifier_options  : {}
+
+  - name                : "LogR-L2"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: "0"
+
+  - name                : "LogR-L1"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: "6"
+
+transformers:
+  - name                : "PCA"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.PrincipalComponents"
+      evaluation_options: {}
+
+  - name                : "CFS-SFS"
+    search:
+      search_class      : "weka.attributeSelection.BestFirst"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.CfsSubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-LS"
+    search:
+      search_class      : "weka.attributeSelection.LinearForwardSelection"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-SWS"
+    search:
+      search_class      : "weka.attributeSelection.GreedyStepwise"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Relief-F"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: "0.01"
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ReliefFAttributeEval"
+      evaluation_options: {}
+
+  - name                : "Signific"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: "0.01"
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.SignificanceAttributeEval"
+      evaluation_options: {}
+
+datasets:
+  # 0 <= instances * features < 10000
+  - balance-scale.arff
+  - diabetes.arff
+  - ecoli.arff
+  - flags.arff
+  - glass.arff
+  - grub-damage.arff
+  - heart-statlog.arff
+  - iris.arff
+  - lymph.arff
+  - molecular-biology_promoters.arff
+  - monks-problems-1_test.arff
+  - monks-problems-1_train.arff
+  - monks-problems-2_test.arff
+  - monks-problems-2_train.arff
+  - monks-problems-3_test.arff
+  - monks-problems-3_train.arff
+  - pasture.arff
+  - solar-flare_1.arff
+  - spect_test.arff
+  - spect_train.arff
+  - spectf_train.arff
+  - white-clover.arff
+  - wine.arff
+  - zoo.arff
+  # 10000 <= instances * features < 100000
+  - anneal.arff
+  - car.arff
+  - cmc.arff
+  - credit-g.arff
+  - ionosphere.arff
+  - kdd_JapaneseVowels_test.arff
+  - kdd_JapaneseVowels_train.arff
+  - kdd_synthetic_control.arff
+  - mfeat-morphological.arff
+  - mfeat-zernike.arff
+  - segment.arff
+  - solar-flare_2.arff
+  - sonar.arff
+  - spectf_test.arff
+  - spectrometer.arff
+  - vehicle.arff
+  - vowel.arff
+  # 100000 <= instances * features < 1000000
+  - ada_agnostic.arff
+  - AR10P.arff
+  - colon.arff
+  - Embryonaldataset_c.arff
+  - GCM_Test.arff
+  - kr-vs-kp.arff
+  - leukemia.arff
+  - Leukemia_3c.arff
+  - leukemia_test_34x7129.arff
+  - leukemia_train_38x7129.arff
+  - mfeat-fourier.arff
+  - mfeat-pixel.arff
+  - pendigits.arff
+  - PIE10P.arff
+  - splice.arff
+  - TOX-171.arff
+  - waveform-5000.arff
+  # 1000000 <= instances * features < 10000000
+  - CLL-SUB-111.arff
+  - ECML90x27679.arff
+  - gina_agnostic.arff
+  - gina_prior.arff
+  - gina_prior2.arff
+  - oh0.wc.arff
+  - oh10.wc.arff
+  - oh15.wc.arff
+  - oh5.wc.arff
+  - SMK-CAN-187.arff
+  - sylva_agnostic.arff
+  - sylva_prior.arff
+  - tr11.wc.arff
+  - tr12.wc.arff
+  - tr23.wc.arff
+  - tr31.wc.arff
+  - tr41.wc.arff
+  - tr45.wc.arff
+  # 10000000 <= instances * features < 100000000
+  - wap.wc.arff

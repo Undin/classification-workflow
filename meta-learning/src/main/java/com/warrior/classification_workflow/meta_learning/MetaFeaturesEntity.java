@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.meta_learning;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.warrior.classification_workflow.meta_learning.metafeatures.MetaFeatureExtractor;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "meta_features", schema = "public", catalog = "master")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MetaFeaturesEntity {
     private int id;
     private String datasetName;

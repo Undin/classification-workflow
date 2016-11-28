@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.meta_learning;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
@@ -8,16 +9,17 @@ import javax.persistence.*;
  * Created by warrior on 11/21/16.
  */
 @Entity
-@Table(name = "performance", schema = "public", catalog = "master")
-public class PerformanceEntity {
+@Table(name = "classifier_performance", schema = "public", catalog = "master")
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ClassifierPerformanceEntity {
     private int id;
     private String classifierName;
     private String datasetName;
     private double measure;
 
-    public PerformanceEntity() {}
+    public ClassifierPerformanceEntity() {}
 
-    public PerformanceEntity(String classifierName, String datasetName, double measure) {
+    public ClassifierPerformanceEntity(String classifierName, String datasetName, double measure) {
         this.classifierName = classifierName;
         this.datasetName = datasetName;
         this.measure = measure;
@@ -75,7 +77,7 @@ public class PerformanceEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PerformanceEntity that = (PerformanceEntity) o;
+        ClassifierPerformanceEntity that = (ClassifierPerformanceEntity) o;
 
         if (id != that.id) return false;
         if (Double.compare(that.measure, measure) != 0) return false;

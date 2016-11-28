@@ -10,6 +10,7 @@
         <property name="hbm2ddl.auto">update</property>
 
         <mapping class="com.warrior.classification_workflow.meta_learning.MetaFeaturesEntity"/>
-        <mapping class="com.warrior.classification_workflow.meta_learning.PerformanceEntity"/>
+        <mapping class="com.warrior.classification_workflow.meta_learning.ClassifierPerformanceEntity"/>
+        <mapping class="com.warrior.classification_workflow.meta_learning.TransformerPerformanceEntity"/>
     </session-factory>
 </hibernate-configuration>

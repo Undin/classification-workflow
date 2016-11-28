@@ -11,8 +11,12 @@ import libsvm.svm
 import org.apache.commons.cli.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
+import weka.attributeSelection.ASEvaluation
+import weka.attributeSelection.ASSearch
 import weka.classifiers.Evaluation
 import weka.core.Instances
+import weka.filters.Filter
+import weka.filters.supervised.attribute.AttributeSelection
 import java.io.File
 import java.util.*
 
@@ -22,36 +26,50 @@ import java.util.*
 val logger = LogManager.getLogger()
 
 fun main(args: Array<String>) {
-    val (metaFeatureConfigPath, performanceConfigPath) = parseArgs(args)
+    val (metaFeatureConfigPath, classifierPerfConfigPath, transformerPerfConfig) = parseArgs(args)
     val mapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
+
+    svm.svm_set_print_string_function { it -> }
+
     if (metaFeatureConfigPath != null) {
         val config: MetaFeatureConfig = mapper.readValue(File(metaFeatureConfigPath))
         extractMetaFeatures(config)
     }
-    if (performanceConfigPath != null) {
-        val config: PerformanceConfig = mapper.readValue(File(performanceConfigPath))
-        measurePerformance(config)
+    if (classifierPerfConfigPath != null) {
+        val config: ClassifierPerfConfig = mapper.readValue(File(classifierPerfConfigPath))
+        measureClassifierPerformance(config)
+    }
+    if (transformerPerfConfig != null) {
+        val config: TransformerPerfConfig = mapper.readValue(File(transformerPerfConfig))
+        measureTransformerPerformance(config)
     }
 }
 
 private fun parseArgs(args: Array<String>): ConfigPaths {
-    val helpOption = Option.builder("h")
-            .longOpt("help")
-            .desc("show this help")
-            .build()
     val metaFeatureConfigOption = Option.builder("m")
             .longOpt("meta-feature-config")
             .hasArg(true)
             .argName("path")
             .desc("path to meta-feature extraction config_name.yaml file")
             .build()
-    val performanceConfigOption = Option.builder("p")
-            .longOpt("performance-config")
+    val classifierPerfConfigOption = Option.builder("c")
+            .longOpt("classifier-perf-config")
             .hasArg(true)
             .argName("path")
-            .desc("path to performance measurement config_name.yaml file")
+            .desc("path to classifier performance measurement config_name.yaml file")
             .build()
-
+    val transformerPerfConfigOption = Option.builder("t")
+            .longOpt("transformer-perf-config")
+            .hasArg(true)
+            .argName("path")
+            .desc("path to transformer performance measurement config_name.yaml file")
+            .build()
+    val helpOption = Option.builder("h")
+            .longOpt("help")
+            .desc("show this help")
+            .build()
+    val allOptions = options(metaFeatureConfigOption, classifierPerfConfigOption,
+            transformerPerfConfigOption, helpOption)
 
     val parser = DefaultParser()
     val line = try {
@@ -60,26 +78,32 @@ private fun parseArgs(args: Array<String>): ConfigPaths {
         null
     }
     if (line != null && line.hasOption(helpOption.opt)) {
-        printHelp(helpOption, metaFeatureConfigOption, performanceConfigOption)
+        printHelp(allOptions)
         System.exit(0)
     } else {
         try {
-            val line = parser.parse(options(metaFeatureConfigOption, performanceConfigOption), args)
+            val configOptions = options(metaFeatureConfigOption, classifierPerfConfigOption, transformerPerfConfigOption)
+            val line = parser.parse(configOptions, args)
             return ConfigPaths(
                     metaFeatureConfigPath = line.getOptionValue(metaFeatureConfigOption.opt),
-                    performanceConfigPath = line.getOptionValue(performanceConfigOption.opt)
+                    classifierPerfConfigPath = line.getOptionValue(classifierPerfConfigOption.opt),
+                    transformerPerfConfigPath = line.getOptionValue(transformerPerfConfigOption.opt)
             )
         } catch (e: ParseException) {
             println(e.message)
-            printHelp(helpOption, metaFeatureConfigOption, performanceConfigOption)
+            printHelp(allOptions)
             System.exit(1)
         }
     }
     // unreachable
-    return ConfigPaths(null, null)
+    return ConfigPaths(null, null, null)
 }
 
-data class ConfigPaths(val metaFeatureConfigPath: String?, val performanceConfigPath: String?)
+data class ConfigPaths(
+        val metaFeatureConfigPath: String?,
+        val classifierPerfConfigPath: String?,
+        val transformerPerfConfigPath: String?
+)
 
 private fun options(vararg opts: Option): Options {
     val options = Options()
@@ -89,43 +113,81 @@ private fun options(vararg opts: Option): Options {
     return options
 }
 
-private fun printHelp(vararg opts: Option) {
+private fun printHelp(options: Options) {
     val formatter = HelpFormatter()
-    formatter.printHelp("java -jar jarfile.jar [options...]", options(*opts))
+    formatter.printHelp("java -jar jarfile.jar [options...]", options)
 }
 
-private fun measurePerformance(config: PerformanceConfig) {
+fun measureTransformerPerformance(config: TransformerPerfConfig) {
+    val datasets = config.datasets.map { File(config.datasetFolder, it) }
+    val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
+    val random = Random()
+
+    saveStrategy.use { saveStrategy ->
+        datasets.forEachParallel { dataset ->
+            val data = load(dataset.absolutePath)
+            config.transformers.forEachParallel { transformer ->
+                calculate(transformer, config.classifiers, data, random, saveStrategy)
+            }
+        }
+    }
+}
+
+fun transform(transformer: Transformer, data: Instances): Instances {
+    val (name, search, evaluation) = transformer
+    val filter = AttributeSelection()
+    filter.search = ASSearch.forName(search.className, search.options.toArray())
+    filter.evaluator = ASEvaluation.forName(evaluation.className, evaluation.options.toArray())
+    filter.setInputFormat(data)
+    return Filter.useFilter(data, filter).apply { setRelationName(data.relationName()) }
+}
+
+private fun calculate(transformer: Transformer, classifiers: List<Classifier>, data: Instances,
+                      random: Random, saveStrategy: SaveStrategy) {
+    val transformedData = withLog("${transformer.name} on ${data.relationName()}") {
+        transform(transformer, data)
+    }
+
+    classifiers.forEachParallel { classifier ->
+        val measure = withLog("evaluate ${classifier.name} on ${data.relationName()}") {
+            crossValidation(classifier, transformedData, random)
+        }
+
+        val entity = TransformerPerformanceEntity(transformer.name, classifier.name,
+                data.relationName(), measure)
+        saveStrategy.save(entity)
+    }
+}
+
+private fun measureClassifierPerformance(config: ClassifierPerfConfig) {
     val datasets = config.datasets.map { File(config.datasetFolder, it) }
     val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
-    svm.svm_set_print_string_function { it -> }
     val random = Random()
     saveStrategy.use { saveStrategy ->
-        datasets.parallelStream()
-                .forEach { dataset ->
-                    val data = load(dataset.absolutePath)
-                    config.classifiers.parallelStream()
-                            .forEach { classifier ->
-                                calculate(classifier, data, random, saveStrategy)
-                            }
-                }
-
+        datasets.forEachParallel { dataset ->
+            val data = load(dataset.absolutePath)
+            config.classifiers.forEachParallel { calculate(it, data, random, saveStrategy) }
+        }
     }
 }
 
 private fun calculate(classifier: Classifier, data: Instances, random: Random, saveStrategy: SaveStrategy) {
-    logger.info(Supplier { "start evaluate ${classifier.name} on ${data.relationName()}" })
+    val measure = withLog("evaluate ${classifier.name} on ${data.relationName()}") {
+        crossValidation(classifier, data, random)
+    }
 
-    val options = classifier.options.flatMap { listOf(it.key, it.value) }.toTypedArray()
+    val entity = ClassifierPerformanceEntity(classifier.name, data.relationName(), measure)
+    saveStrategy.save(entity)
+}
+
+private fun crossValidation(classifier: Classifier, data: Instances, random: Random): Double {
+    val options = classifier.options.toArray()
     val eval = Evaluation(data)
     for (i in 1..10) {
         eval.crossValidateModel(classifier.className, data, 10, options, random)
     }
-    val measure = eval.unweightedMacroFmeasure()
-    logger.info(Supplier { "end evaluate ${classifier.name} on ${data.relationName()}: $measure" })
-
-    val entity = PerformanceEntity(classifier.name, data.relationName(), measure)
-    saveStrategy.save(entity)
+    return eval.unweightedMacroFmeasure()
 }
 
 private fun extractMetaFeatures(config: MetaFeatureConfig) {
@@ -133,20 +195,32 @@ private fun extractMetaFeatures(config: MetaFeatureConfig) {
     val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
     saveStrategy.use { saveStrategy ->
-        datasets.parallelStream()
-                .forEach { file ->
-                    val data = load(file.absolutePath)
-                    calculate(data, saveStrategy)
-                }
+        datasets.forEachParallel { file ->
+            val data = load(file.absolutePath)
+            calculate(data, saveStrategy)
+        }
     }
 }
 
 private fun calculate(data: Instances, saveStrategy: SaveStrategy) {
-    logger.info(Supplier { "start extract meta-features: ${data.relationName()}" })
-    val extractor = MetaFeatureExtractor(data)
-    logger.info(Supplier { "end extract meta-features: ${data.relationName()}" })
+    val extractor = withLog("extract meta-features: ${data.relationName()}") {
+        MetaFeatureExtractor(data)
+    }
 
     val result = extractor.extract()
     val entity = MetaFeaturesEntity(data.relationName(), result)
     saveStrategy.save(entity)
 }
+
+private inline fun <T> withLog(message: String, block: () -> T): T {
+    logger.info(Supplier { "start $message" })
+    val result = block()
+    logger.info(Supplier { "end $message" })
+    return result
+}
+
+private fun Map<String, String>.toArray(): Array<String>
+        = flatMap { listOf(it.key, it.value) }.toTypedArray()
+
+private fun <T> Collection<T>.forEachParallel(action: (T) -> Unit)
+        = parallelStream().forEach { action(it) }

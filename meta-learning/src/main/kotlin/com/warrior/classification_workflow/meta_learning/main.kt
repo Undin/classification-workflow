@@ -17,6 +17,8 @@ import java.util.*
  * Created by warrior on 11/14/16.
  */
 fun main(args: Array<String>) {
+    System.setProperty("java.util.concurrent.ForkJoinPool.common.exceptionHandler", ExceptionHandler::class.java.name)
+
     val (metaFeatureConfigPath, classifierPerfConfigPath, transformerPerfConfig) = parseArgs(args)
     val mapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
 

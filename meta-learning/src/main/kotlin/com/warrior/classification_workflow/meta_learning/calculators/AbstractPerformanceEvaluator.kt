@@ -36,14 +36,16 @@ abstract class AbstractPerformanceEvaluator : Evaluator {
 
     protected fun parallelCrossValidation(data: Instances, classifier: weka.classifiers.Classifier,
                                           random: Random, numFolds: Int): Stream<Evaluation> {
+        val shuffledData = Instances(data)
+        shuffledData.randomize(random)
         return IntStream.range(0, numFolds)
                 .parallel()
                 .mapToObj { fold ->
-                    val train = data.trainCV(numFolds, fold, random)
+                    val train = shuffledData.trainCV(numFolds, fold, random)
                     val copiedClassifier = AbstractClassifier.makeCopy(classifier)
                     copiedClassifier.buildClassifier(train)
-                    val test = data.testCV(numFolds, fold)
-                    val eval = Evaluation(data)
+                    val test = shuffledData.testCV(numFolds, fold)
+                    val eval = Evaluation(shuffledData)
                     eval.evaluateModel(copiedClassifier, test)
                     eval
                 }

@@ -12,28 +12,31 @@ import libsvm.svm
 import org.apache.commons.cli.*
 import java.io.File
 import java.util.*
+import java.util.concurrent.ForkJoinPool
 
 /**
  * Created by warrior on 11/14/16.
  */
 fun main(args: Array<String>) {
-    System.setProperty("java.util.concurrent.ForkJoinPool.common.exceptionHandler", ExceptionHandler::class.java.name)
+    val (parallelism, metaFeatureConfigPath, classifierPerfConfigPath, transformerPerfConfig) = parseArgs(args)
 
-    val (metaFeatureConfigPath, classifierPerfConfigPath, transformerPerfConfig) = parseArgs(args)
+    val handler = ExceptionHandler()
+    val pool = ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, handler, false)
+
     val mapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
 
     val evaluators = ArrayList<Evaluator>()
     if (metaFeatureConfigPath != null) {
         val config: MetaFeatureConfig = mapper.readValue(File(metaFeatureConfigPath))
-        evaluators += MetaFeatureEvaluator(config)
+        evaluators += MetaFeatureEvaluator(config, pool)
     }
     if (classifierPerfConfigPath != null) {
         val config: ClassifierPerfConfig = mapper.readValue(File(classifierPerfConfigPath))
-        evaluators += ClassifierPerformanceEvaluator(config)
+        evaluators += ClassifierPerformanceEvaluator(config, pool)
     }
     if (transformerPerfConfig != null) {
         val config: TransformerPerfConfig = mapper.readValue(File(transformerPerfConfig))
-        evaluators += TransformerPerformanceEvaluator(config)
+        evaluators += TransformerPerformanceEvaluator(config, pool)
     }
 
     // disable svm logs
@@ -41,7 +44,7 @@ fun main(args: Array<String>) {
     evaluators.forEach { it.evaluate() }
 }
 
-private fun parseArgs(args: Array<String>): ConfigPaths {
+private fun parseArgs(args: Array<String>): CommandLineArguments {
     val metaFeatureConfigOption = Option.builder("m")
             .longOpt("meta-feature-config")
             .hasArg(true)
@@ -60,12 +63,18 @@ private fun parseArgs(args: Array<String>): ConfigPaths {
             .argName("path")
             .desc("path to transformer performance measurement config_name.yaml file")
             .build()
+    val parallelismOptions = Option.builder("p")
+            .longOpt("parallelism")
+            .hasArg(true)
+            .argName("parallelism level")
+            .desc("set parallelism level of thread pool")
+            .build()
     val helpOption = Option.builder("h")
             .longOpt("help")
             .desc("show this help")
             .build()
     val allOptions = options(metaFeatureConfigOption, classifierPerfConfigOption,
-            transformerPerfConfigOption, helpOption)
+            transformerPerfConfigOption, parallelismOptions, helpOption)
 
     val parser = DefaultParser()
     val line = try {
@@ -78,9 +87,13 @@ private fun parseArgs(args: Array<String>): ConfigPaths {
         System.exit(0)
     } else {
         try {
-            val configOptions = options(metaFeatureConfigOption, classifierPerfConfigOption, transformerPerfConfigOption)
+            val configOptions = options(metaFeatureConfigOption, classifierPerfConfigOption,
+                    transformerPerfConfigOption, parallelismOptions)
             val line = parser.parse(configOptions, args)
-            return ConfigPaths(
+            val parallelism = line.getOptionValue(parallelismOptions.opt)?.toInt() ?: Runtime.getRuntime().availableProcessors()
+
+            return CommandLineArguments(
+                    parallelism = parallelism,
                     metaFeatureConfigPath = line.getOptionValue(metaFeatureConfigOption.opt),
                     classifierPerfConfigPath = line.getOptionValue(classifierPerfConfigOption.opt),
                     transformerPerfConfigPath = line.getOptionValue(transformerPerfConfigOption.opt)
@@ -92,7 +105,7 @@ private fun parseArgs(args: Array<String>): ConfigPaths {
         }
     }
     // unreachable
-    return ConfigPaths(null, null, null)
+    return CommandLineArguments(1, null, null, null)
 }
 
 private fun options(vararg opts: Option): Options {
@@ -108,7 +121,8 @@ private fun printHelp(options: Options) {
     formatter.printHelp("java -jar jarfile.jar [options...]", options)
 }
 
-data class ConfigPaths(
+data class CommandLineArguments(
+        val parallelism: Int,
         val metaFeatureConfigPath: String?,
         val classifierPerfConfigPath: String?,
         val transformerPerfConfigPath: String?

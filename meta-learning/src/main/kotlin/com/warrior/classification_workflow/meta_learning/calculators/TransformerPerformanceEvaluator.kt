@@ -2,7 +2,6 @@ package com.warrior.classification_workflow.meta_learning.calculators
 
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.meta_learning.*
-import org.apache.logging.log4j.LogManager
 import weka.attributeSelection.ASEvaluation
 import weka.attributeSelection.ASSearch
 import weka.core.Instances
@@ -10,24 +9,28 @@ import weka.filters.Filter
 import weka.filters.supervised.attribute.AttributeSelection
 import java.io.File
 import java.util.*
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.ForkJoinTask
 
 /**
  * Created by warrior on 11/28/16.
  */
-class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig) : AbstractPerformanceEvaluator() {
+class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig, pool: ForkJoinPool)
+    : AbstractPerformanceEvaluator(pool) {
 
-    private val logger = LogManager.getLogger(TransformerPerformanceEvaluator::class.java)
+    override val saveStrategy: SaveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
-    override fun evaluate() {
+    override fun getTasks(): List<ForkJoinTask<*>> {
         val datasets = config.datasets.map { File(config.datasetFolder, it) }
-        val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
         val random = Random()
 
-        saveStrategy.use { saveStrategy ->
-            datasets.forEachParallel { dataset ->
-                val data = load(dataset.absolutePath)
-                config.transformers.forEachParallel { transformer ->
-                    calculate(transformer, config.classifiers, data, random, saveStrategy)
+        return datasets.map { dataset ->
+            ForkJoinTask.adapt {
+                logger.withLog("start $dataset") {
+                    val data = load(dataset.absolutePath)
+                    config.transformers.forEachParallel { transformer ->
+                        calculate(transformer, config.classifiers, data, random, saveStrategy)
+                    }
                 }
             }
         }

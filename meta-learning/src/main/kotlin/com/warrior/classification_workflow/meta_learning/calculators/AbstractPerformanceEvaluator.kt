@@ -1,22 +1,48 @@
 package com.warrior.classification_workflow.meta_learning.calculators
 
 import com.warrior.classification_workflow.meta_learning.Classifier
+import com.warrior.classification_workflow.meta_learning.SaveStrategy
 import com.warrior.classification_workflow.meta_learning.toArray
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
 import weka.classifiers.AbstractClassifier
 import weka.classifiers.AggregateableEvaluation
 import weka.classifiers.Evaluation
 import weka.core.Instances
 import java.util.*
+import java.util.concurrent.ForkJoinPool
+import java.util.concurrent.ForkJoinTask
 import java.util.stream.IntStream
 import java.util.stream.Stream
 
 /**
  * Created by warrior on 11/28/16.
  */
-abstract class AbstractPerformanceEvaluator : Evaluator {
+abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Evaluator {
 
     private val crossValidationIterations = 10
     private val crossValidationFolders = 10
+
+    protected val logger: Logger = LogManager.getLogger(javaClass)
+
+    protected abstract val saveStrategy: SaveStrategy
+
+    override fun evaluate() {
+        val tasks = getTasks()
+        try {
+            for (task in tasks) {
+                pool.submit(task)
+                Thread.sleep(100)
+            }
+            for (task in tasks) {
+                task.get()
+            }
+        } catch (e: Exception) {
+            logger.error(e.message, e)
+        } finally {
+            saveStrategy.close()
+        }
+    }
 
     protected fun crossValidation(classifier: Classifier, data: Instances, random: Random): Double {
         val options = classifier.options.toArray()
@@ -50,4 +76,6 @@ abstract class AbstractPerformanceEvaluator : Evaluator {
                     eval
                 }
     }
+
+    protected abstract fun getTasks(): List<ForkJoinTask<*>>
 }

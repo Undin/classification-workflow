@@ -1,13 +1,13 @@
 package com.warrior.classification_workflow.core.meta.features.informationtheoretic
 
-import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeature
+import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeatureExtractor
 import weka.core.Attribute
 import weka.core.Instances
 
 /**
  * Created by warrior on 23.03.15.
  */
-class EquivalentNumberOfFeatures : AbstractMetaFeature(), MutualInformationCache {
+class EquivalentNumberOfFeatures : AbstractMetaFeatureExtractor(), MutualInformationCache {
 
     val meanMutualInformation: MeanMutualInformation = MeanMutualInformation()
 

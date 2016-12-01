@@ -2,7 +2,7 @@ package com.warrior.classification_workflow.meta_learning;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.warrior.classification_workflow.core.meta.features.MetaFeatureExtractor;
+import com.warrior.classification_workflow.core.meta.features.MetaFeatures;
 
 import javax.persistence.*;
 
@@ -83,22 +83,22 @@ public class MetaFeaturesEntity {
 
     public MetaFeaturesEntity() {}
 
-    public MetaFeaturesEntity(String name, MetaFeatureExtractor.Result result) {
+    public MetaFeaturesEntity(String name, MetaFeatures metaFeatures) {
         datasetName = name;
-        numberOfInstances = result.getNumberOfInstances();
-        numberOfFeatures = result.getNumberOfFeatures();
-        numberOfClasses = result.getNumberOfClasses();
-        datasetDimensionality = result.getDatasetDimensionality();
-        meanCoefficientOfVariation = result.getMeanCoefficientOfVariation();
-        meanKurtosis = result.getMeanKurtosis();
-        meanSkewness = result.getMeanSkewness();
-        meanStandardDeviation = result.getMeanStandardDeviation();
-        equivalentNumberOfFeatures = result.getEquivalentNumberOfFeatures();
-        maxMutualInformation = result.getMaxMutualInformation();
-        meanMutualInformation = result.getMeanMutualInformation();
-        meanNormalizedFeatureEntropy = result.getMeanNormalizedFeatureEntropy();
-        noiseSignalRatio = result.getNoiseSignalRatio();
-        normalizedClassEntropy = result.getNormalizedClassEntropy();
+        numberOfInstances = metaFeatures.getNumberOfInstances();
+        numberOfFeatures = metaFeatures.getNumberOfFeatures();
+        numberOfClasses = metaFeatures.getNumberOfClasses();
+        datasetDimensionality = metaFeatures.getDatasetDimensionality();
+        meanCoefficientOfVariation = metaFeatures.getMeanCoefficientOfVariation();
+        meanKurtosis = metaFeatures.getMeanKurtosis();
+        meanSkewness = metaFeatures.getMeanSkewness();
+        meanStandardDeviation = metaFeatures.getMeanStandardDeviation();
+        equivalentNumberOfFeatures = metaFeatures.getEquivalentNumberOfFeatures();
+        maxMutualInformation = metaFeatures.getMaxMutualInformation();
+        meanMutualInformation = metaFeatures.getMeanMutualInformation();
+        meanNormalizedFeatureEntropy = metaFeatures.getMeanNormalizedFeatureEntropy();
+        noiseSignalRatio = metaFeatures.getNoiseSignalRatio();
+        normalizedClassEntropy = metaFeatures.getNormalizedClassEntropy();
     }
 
     public int getId() {

@@ -1,13 +1,13 @@
 package com.warrior.classification_workflow.core.meta.features.informationtheoretic
 
-import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeature
+import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeatureExtractor
 import weka.core.Attribute
 import weka.core.Instances
 
 /**
  * Created by warrior on 23.03.15.
  */
-class NoiseSignalRatio : AbstractMetaFeature(), MutualInformationCache, EntropyCache {
+class NoiseSignalRatio : AbstractMetaFeatureExtractor(), MutualInformationCache, EntropyCache {
 
     val meanMutualInformation: MeanMutualInformation = MeanMutualInformation()
     val meanEntropy: MeanFeatureEntropy = MeanFeatureEntropy()

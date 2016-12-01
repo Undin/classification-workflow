@@ -32,7 +32,7 @@ class Tests {
 
     @Test
     fun forNameTest() {
-        val metaFeature = AbstractMetaFeature.forName(NumberOfInstances::class.java.name)
+        val metaFeature = AbstractMetaFeatureExtractor.forName(NumberOfInstances::class.java.name)
         assertThat(metaFeature, notNullValue())
     }
 

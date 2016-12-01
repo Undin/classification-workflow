@@ -1,12 +1,12 @@
 package com.warrior.classification_workflow.core.meta.features.informationtheoretic
 
-import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeature
+import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeatureExtractor
 import weka.core.Instances
 
 /**
  * Created by warrior on 23.03.15.
  */
-class NormalizedClassEntropy : AbstractMetaFeature() {
+class NormalizedClassEntropy : AbstractMetaFeatureExtractor() {
 
     override var instances: Instances
         get() = super.instances

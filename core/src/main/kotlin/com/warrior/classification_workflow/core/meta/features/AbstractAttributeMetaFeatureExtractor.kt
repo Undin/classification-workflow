@@ -6,7 +6,7 @@ import java.util.*
 /**
  * Created by warrior on 11/15/16.
  */
-abstract class AbstractAttributeMetaFeature(protected val aggregator: Aggregator) : AbstractMetaFeature() {
+abstract class AbstractAttributeMetaFeatureExtractor(protected val aggregator: Aggregator) : AbstractMetaFeatureExtractor() {
 
     protected val attributeMap: MutableMap<Attribute, Double> = HashMap()
 

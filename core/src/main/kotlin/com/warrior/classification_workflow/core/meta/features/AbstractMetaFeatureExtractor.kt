@@ -2,7 +2,7 @@ package com.warrior.classification_workflow.core.meta.features
 
 import weka.core.Instances
 
-abstract class AbstractMetaFeature : MetaFeature {
+abstract class AbstractMetaFeatureExtractor : MetaFeatureExtractor {
 
     open lateinit var instances: Instances
 
@@ -27,7 +27,7 @@ abstract class AbstractMetaFeature : MetaFeature {
          * @return new instance of the meta feature. If the name is invalid return null
          */
         @JvmStatic
-        fun forName(className: String): AbstractMetaFeature? {
+        fun forName(className: String): AbstractMetaFeatureExtractor? {
             val clazz: Class<*>
             try {
                 clazz = Class.forName(className)
@@ -36,7 +36,7 @@ abstract class AbstractMetaFeature : MetaFeature {
                 return null
             }
 
-            if (!AbstractMetaFeature::class.java.isAssignableFrom(clazz)) {
+            if (!AbstractMetaFeatureExtractor::class.java.isAssignableFrom(clazz)) {
                 return null
             }
             val newInstance: Any
@@ -50,7 +50,7 @@ abstract class AbstractMetaFeature : MetaFeature {
                 return null
             }
 
-            return newInstance as AbstractMetaFeature
+            return newInstance as AbstractMetaFeatureExtractor
         }
     }
 }

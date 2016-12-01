@@ -9,7 +9,7 @@ import java.util.*
  * Created by warrior on 11/18/16.
  */
 abstract class MutualInformation(aggregator: Aggregator) :
-        AbstractAttributeMetaFeature(aggregator), MutualInformationCache {
+        AbstractAttributeMetaFeatureExtractor(aggregator), MutualInformationCache {
 
     protected var cache: MutableMap<Attribute, Double>? = null
 

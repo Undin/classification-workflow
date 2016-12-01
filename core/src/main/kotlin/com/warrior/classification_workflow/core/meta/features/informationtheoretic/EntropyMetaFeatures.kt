@@ -1,6 +1,6 @@
 package com.warrior.classification_workflow.core.meta.features.informationtheoretic
 
-import com.warrior.classification_workflow.core.meta.features.AbstractAttributeMetaFeature
+import com.warrior.classification_workflow.core.meta.features.AbstractAttributeMetaFeatureExtractor
 import com.warrior.classification_workflow.core.meta.features.Aggregator
 import com.warrior.classification_workflow.core.meta.features.Mean
 import weka.core.Attribute
@@ -11,8 +11,8 @@ import java.util.*
 /**
  * Created by warrior on 11/18/16.
  */
-abstract class EntropyMetaFeature(aggregator: Aggregator) :
-        AbstractAttributeMetaFeature(aggregator), EntropyCache {
+abstract class EntropyMetaFeatureExtractor(aggregator: Aggregator) :
+        AbstractAttributeMetaFeatureExtractor(aggregator), EntropyCache {
 
     protected var cache: MutableMap<Attribute, EntropyResult>? = null
 
@@ -62,10 +62,10 @@ abstract class EntropyMetaFeature(aggregator: Aggregator) :
     abstract protected fun EntropyResult.value(): Double
 }
 
-class MeanNormalizedFeatureEntropy : EntropyMetaFeature(Mean) {
+class MeanNormalizedFeatureEntropy : EntropyMetaFeatureExtractor(Mean) {
     override fun EntropyResult.value(): Double = normalizedEntropy
 }
 
-class MeanFeatureEntropy : EntropyMetaFeature(Mean) {
+class MeanFeatureEntropy : EntropyMetaFeatureExtractor(Mean) {
     override fun EntropyResult.value(): Double = entropy
 }

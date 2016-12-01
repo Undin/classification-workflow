@@ -4,7 +4,7 @@ import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.meta_learning.MetaFeatureConfig
 import com.warrior.classification_workflow.meta_learning.MetaFeaturesEntity
 import com.warrior.classification_workflow.meta_learning.SaveStrategy
-import com.warrior.classification_workflow.meta_learning.metafeatures.MetaFeatureExtractor
+import com.warrior.classification_workflow.core.meta.features.MetaFeatureExtractor
 import com.warrior.classification_workflow.meta_learning.withLog
 import weka.core.Instances
 import java.io.File

@@ -2,7 +2,7 @@ package com.warrior.classification_workflow.meta_learning;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.warrior.classification_workflow.meta_learning.metafeatures.MetaFeatureExtractor;
+import com.warrior.classification_workflow.core.meta.features.MetaFeatureExtractor;
 
 import javax.persistence.*;
 

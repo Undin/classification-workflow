@@ -6,6 +6,11 @@ targetCompatibility = 1.8
 
 dependencies {
     compile libraries.kotlin
+
     compile libraries.weka
+    compile libraries.apacheMath
+
     compile libraries.jackson
+
+    testCompile libraries.junit
 }

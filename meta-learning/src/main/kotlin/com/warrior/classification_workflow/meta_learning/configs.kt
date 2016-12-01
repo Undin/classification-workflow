@@ -20,7 +20,8 @@ data class ClassifierPerfConfig(
         @JsonProperty("datasets") val datasets: List<String>,
         @JsonProperty("classifiers") val classifiers: List<Classifier>,
         @JsonProperty("save_strategy") val saveStrategy: String,
-        @JsonProperty("out_folder") val outFolder: String?
+        @JsonProperty("out_folder") val outFolder: String?,
+        @JsonProperty("current_results") val currentResults: String?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -30,7 +31,8 @@ data class TransformerPerfConfig(
         @JsonProperty("classifiers") val classifiers: List<Classifier>,
         @JsonProperty("transformers") val transformers: List<Transformer>,
         @JsonProperty("save_strategy") val saveStrategy: String,
-        @JsonProperty("out_folder") val outFolder: String?
+        @JsonProperty("out_folder") val outFolder: String?,
+        @JsonProperty("current_results") val currentResults: String?
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)

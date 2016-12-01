@@ -3,6 +3,7 @@ package com.warrior.classification_workflow.meta_learning.calculators
 import com.warrior.classification_workflow.meta_learning.Classifier
 import com.warrior.classification_workflow.meta_learning.SaveStrategy
 import com.warrior.classification_workflow.meta_learning.toArray
+import com.warrior.classification_workflow.meta_learning.withLog
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import weka.classifiers.AbstractClassifier
@@ -50,7 +51,11 @@ abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Ev
         val fullAggregation: AggregateableEvaluation = IntStream.range(0, crossValidationIterations)
                 .parallel()
                 .boxed()
-                .flatMap { parallelCrossValidation(data, wekaClassifier, random, crossValidationFolders) }
+                .flatMap {
+                    logger.withLog("start $it iteration for ${classifier.name}") {
+                        parallelCrossValidation(data, wekaClassifier, random, crossValidationFolders)
+                    }
+                }
                 .collect(
                         { AggregateableEvaluation(data) },
                         { acc, o -> acc.aggregate(o) },

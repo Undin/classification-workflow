@@ -24,8 +24,8 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
         val datasets = config.datasets.map { File(config.datasetFolder, it) }
         val random = Random()
 
-        return datasets.map { dataset ->
-            ForkJoinTask.adapt {
+        val task = ForkJoinTask.adapt {
+            for (dataset in datasets) {
                 logger.withLog("start $dataset") {
                     val data = load(dataset.absolutePath)
                     config.transformers.forEachParallel { transformer ->
@@ -34,6 +34,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
                 }
             }
         }
+        return listOf(task)
     }
 
     private fun calculate(transformer: Transformer, classifiers: List<Classifier>, data: Instances,

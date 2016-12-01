@@ -19,14 +19,17 @@ class ClassifierPerformanceEvaluator(private val config: ClassifierPerfConfig, p
     override fun getTasks(): List<ForkJoinTask<*>> {
         val datasets = config.datasets.map { File(config.datasetFolder, it) }
         val random = Random()
-        return datasets.map { dataset ->
-            ForkJoinTask.adapt {
+        val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
+
+        val task = ForkJoinTask.adapt {
+            for (dataset in datasets) {
                 logger.withLog("start $dataset") {
                     val data = load(dataset.absolutePath)
                     config.classifiers.forEachParallel { calculate(it, data, random, saveStrategy) }
                 }
             }
         }
+        return listOf(task)
     }
 
     private fun calculate(classifier: Classifier, data: Instances, random: Random, saveStrategy: SaveStrategy) {

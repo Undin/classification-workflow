@@ -32,7 +32,6 @@ abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Ev
         try {
             for (task in tasks) {
                 pool.submit(task)
-                Thread.sleep(100)
             }
             for (task in tasks) {
                 task.get()

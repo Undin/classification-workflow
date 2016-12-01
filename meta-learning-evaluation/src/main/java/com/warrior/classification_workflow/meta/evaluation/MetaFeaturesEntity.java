@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.meta_learning;
+package com.warrior.classification_workflow.meta.evaluation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

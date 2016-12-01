@@ -1,13 +1,13 @@
-package com.warrior.classification_workflow.meta_learning
+package com.warrior.classification_workflow.meta.evaluation
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.warrior.classification_workflow.meta_learning.calculators.ClassifierPerformanceEvaluator
-import com.warrior.classification_workflow.meta_learning.calculators.Evaluator
-import com.warrior.classification_workflow.meta_learning.calculators.MetaFeatureEvaluator
-import com.warrior.classification_workflow.meta_learning.calculators.TransformerPerformanceEvaluator
+import com.warrior.classification_workflow.meta.evaluation.evaluators.ClassifierPerformanceEvaluator
+import com.warrior.classification_workflow.meta.evaluation.evaluators.Evaluator
+import com.warrior.classification_workflow.meta.evaluation.evaluators.MetaFeatureEvaluator
+import com.warrior.classification_workflow.meta.evaluation.evaluators.TransformerPerformanceEvaluator
 import libsvm.svm
 import org.apache.commons.cli.*
 import java.io.File

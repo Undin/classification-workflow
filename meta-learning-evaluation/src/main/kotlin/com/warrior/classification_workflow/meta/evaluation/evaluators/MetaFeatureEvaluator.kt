@@ -1,11 +1,8 @@
-package com.warrior.classification_workflow.meta_learning.calculators
+package com.warrior.classification_workflow.meta.evaluation.evaluators
 
 import com.warrior.classification_workflow.core.load
-import com.warrior.classification_workflow.meta_learning.MetaFeatureConfig
-import com.warrior.classification_workflow.meta_learning.MetaFeaturesEntity
-import com.warrior.classification_workflow.meta_learning.SaveStrategy
 import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
-import com.warrior.classification_workflow.meta_learning.withLog
+import com.warrior.classification_workflow.meta.evaluation.*
 import weka.core.Instances
 import java.io.File
 import java.util.concurrent.ForkJoinPool

@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.meta_learning
+package com.warrior.classification_workflow.meta.evaluation
 
 import kotlinx.support.jdk8.collections.parallelStream
 import org.apache.logging.log4j.Logger

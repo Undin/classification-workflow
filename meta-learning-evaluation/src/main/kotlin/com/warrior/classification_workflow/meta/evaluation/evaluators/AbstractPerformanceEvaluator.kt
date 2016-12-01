@@ -1,9 +1,6 @@
-package com.warrior.classification_workflow.meta_learning.calculators
+package com.warrior.classification_workflow.meta.evaluation.evaluators
 
-import com.warrior.classification_workflow.meta_learning.Classifier
-import com.warrior.classification_workflow.meta_learning.SaveStrategy
-import com.warrior.classification_workflow.meta_learning.toArray
-import com.warrior.classification_workflow.meta_learning.withLog
+import com.warrior.classification_workflow.meta.evaluation.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import weka.classifiers.AbstractClassifier

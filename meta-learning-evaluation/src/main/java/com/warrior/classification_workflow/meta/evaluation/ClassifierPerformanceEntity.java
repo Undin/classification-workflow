@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.meta_learning;
+package com.warrior.classification_workflow.meta.evaluation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,22 +6,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.persistence.*;
 
 /**
- * Created by warrior on 11/25/16.
+ * Created by warrior on 11/21/16.
  */
 @Entity
-@Table(name = "transformer_performance", schema = "public", catalog = "master")
+@Table(name = "classifier_performance", schema = "public", catalog = "master")
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TransformerPerformanceEntity {
+public class ClassifierPerformanceEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transformer_performance_seq")
-    @SequenceGenerator(name = "transformer_performance_seq", sequenceName = "transformer_performance_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classifier_performance_seq")
+    @SequenceGenerator(name = "classifier_performance_seq", sequenceName = "classifier_performance_seq")
     @Column(name = "id", nullable = false)
     private int id;
-
-    @Column(name = "transformer_name", nullable = false)
-    @JsonProperty("transformer_name")
-    private String transformerName;
 
     @Column(name = "classifier_name", nullable = false)
     @JsonProperty("classifier_name")
@@ -35,10 +31,9 @@ public class TransformerPerformanceEntity {
     @JsonProperty("measure")
     private double measure;
 
-    public TransformerPerformanceEntity() {}
+    public ClassifierPerformanceEntity() {}
 
-    public TransformerPerformanceEntity(String transformerName, String classifierName, String datasetName, double measure) {
-        this.transformerName = transformerName;
+    public ClassifierPerformanceEntity(String classifierName, String datasetName, double measure) {
         this.classifierName = classifierName;
         this.datasetName = datasetName;
         this.measure = measure;
@@ -50,14 +45,6 @@ public class TransformerPerformanceEntity {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public String getTransformerName() {
-        return transformerName;
-    }
-
-    public void setTransformerName(String transformerName) {
-        this.transformerName = transformerName;
     }
 
     public String getClassifierName() {
@@ -89,12 +76,10 @@ public class TransformerPerformanceEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        TransformerPerformanceEntity that = (TransformerPerformanceEntity) o;
+        ClassifierPerformanceEntity that = (ClassifierPerformanceEntity) o;
 
         if (id != that.id) return false;
         if (Double.compare(that.measure, measure) != 0) return false;
-        if (transformerName != null ? !transformerName.equals(that.transformerName) : that.transformerName != null)
-            return false;
         if (classifierName != null ? !classifierName.equals(that.classifierName) : that.classifierName != null)
             return false;
         if (datasetName != null ? !datasetName.equals(that.datasetName) : that.datasetName != null) return false;
@@ -107,7 +92,6 @@ public class TransformerPerformanceEntity {
         int result;
         long temp;
         result = id;
-        result = 31 * result + (transformerName != null ? transformerName.hashCode() : 0);
         result = 31 * result + (classifierName != null ? classifierName.hashCode() : 0);
         result = 31 * result + (datasetName != null ? datasetName.hashCode() : 0);
         temp = Double.doubleToLongBits(measure);

@@ -1,0 +1,16 @@
+apply plugin: 'kotlin'
+
+dependencies {
+    compile project(':core')
+
+    compile libraries.kotlin
+
+    compile libraries.jackson
+    compile libraries.jacksonKotlin
+
+    compile libraries.commonsCli
+
+    compile libraries.weka
+    compile libraries.wekaDbScan
+    compile libraries.wekaXMeans
+}

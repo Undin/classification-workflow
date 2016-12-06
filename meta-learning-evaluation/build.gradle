@@ -25,7 +25,7 @@ dependencies {
     compile libraries.commonsCli
     compile libraries.jackson
     compile libraries.jacksonKotlin
-    compile libraries.yaml
+    compile libraries.jacksonYaml
 
     compile libraries.log4jApi
     compile libraries.log4jCore

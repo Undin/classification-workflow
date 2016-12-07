@@ -32,7 +32,7 @@ class MetaFeatureEvaluator(private val config: MetaFeatureConfig, pool: ForkJoin
         }
 
         val result = extractor.extract()
-        val entity = MetaFeaturesEntity(data.relationName(), result)
+        val entity = MetaFeaturesEntity(result)
         saveStrategy.save(entity)
     }
 }

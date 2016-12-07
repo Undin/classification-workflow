@@ -2,7 +2,6 @@ package com.warrior.classification_workflow.meta.evaluation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.warrior.classification_workflow.core.meta.features.MetaFeatures;
 
 import javax.persistence.*;
 
@@ -83,8 +82,8 @@ public class MetaFeaturesEntity {
 
     public MetaFeaturesEntity() {}
 
-    public MetaFeaturesEntity(String name, MetaFeatures metaFeatures) {
-        datasetName = name;
+    public MetaFeaturesEntity(com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity metaFeatures) {
+        datasetName = metaFeatures.getDatasetName();
         numberOfInstances = metaFeatures.getNumberOfInstances();
         numberOfFeatures = metaFeatures.getNumberOfFeatures();
         numberOfClasses = metaFeatures.getNumberOfClasses();

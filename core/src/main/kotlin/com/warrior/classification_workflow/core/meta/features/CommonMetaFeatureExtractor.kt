@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.core.meta.features
 
+import com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity
 import com.warrior.classification_workflow.core.meta.features.general.*
 import com.warrior.classification_workflow.core.meta.features.informationtheoretic.*
 import com.warrior.classification_workflow.core.meta.features.statistical.*
@@ -10,7 +11,7 @@ import java.util.*
 /**
  * Created by warrior on 11/18/16.
  */
-class CommonMetaFeatureExtractor(instances: Instances) {
+class CommonMetaFeatureExtractor(val instances: Instances) {
 
     private val dataSetDimensionality: DataSetDimensionality = DataSetDimensionality()
     private val numberOfClasses: NumberOfClasses = NumberOfClasses()
@@ -60,7 +61,8 @@ class CommonMetaFeatureExtractor(instances: Instances) {
         noiseSignalRatio.setEntropyCache(entropyCache)
     }
 
-    fun extract(): MetaFeatures = MetaFeatures(
+    fun extract(): MetaFeaturesEntity = MetaFeaturesEntity(
+            datasetName = instances.relationName(),
             datasetDimensionality = dataSetDimensionality.compute(),
             numberOfClasses = numberOfClasses.compute(),
             numberOfFeatures = numberOfFeatures.compute(),

@@ -40,7 +40,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
                 if (needCalculate) {
                     logger.withLog("start $dataset") {
                         val data = load(dataset.absolutePath)
-                        for (transformer in config.transformers) {
+                        config.transformers.forEachParallel { transformer ->
                             val transformerSet = datasetMap[transformer.name] ?: emptySet()
                             val classifiers = config.classifiers.filter { it.name !in transformerSet }
                             if (classifiers.isNotEmpty()) {

@@ -24,7 +24,7 @@ Configutation:
         AppenderRef:
           - ref: Console
       Logger:
-        - name: com.warrior.classification_workflow.meta_learning
+        - name: com.warrior.classification_workflow.meta.evaluation
           level: debug
           AppenderRef:
             - ref: File

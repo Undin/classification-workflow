@@ -48,11 +48,7 @@ abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Ev
         val fullAggregation: AggregateableEvaluation = IntStream.range(0, crossValidationIterations)
                 .parallel()
                 .boxed()
-                .flatMap {
-                    logger.withLog("start $it iteration for ${classifier.name}") {
-                        parallelCrossValidation(data, wekaClassifier, random, crossValidationFolders)
-                    }
-                }
+                .flatMap { parallelCrossValidation(data, wekaClassifier, random, crossValidationFolders) }
                 .collect(
                         { AggregateableEvaluation(data) },
                         { acc, o -> acc.aggregate(o) },

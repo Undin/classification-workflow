@@ -29,7 +29,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
         val random = Random()
 
         val task = ForkJoinTask.adapt {
-            for (dataset in datasets) {
+            datasets.forEachParallel { dataset ->
                 val datasetMap = currentResults.getOrElse(dataset.nameWithoutExtension) { emptyMap() }
 
                 val needCalculate = config.transformers.any { transformer ->

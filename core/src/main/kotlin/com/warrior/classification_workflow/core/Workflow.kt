@@ -1,6 +1,5 @@
 package com.warrior.classification_workflow.core
 
-import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonProperty
 import weka.attributeSelection.AttributeTransformer
 import weka.classifiers.AbstractClassifier
@@ -15,9 +14,9 @@ import java.util.*
 /**
  * Created by warrior on 12/07/16.
  */
-class Workflow @JsonCreator constructor(
-        @get:JsonProperty("algorithms") @param:JsonProperty("algorithms") var algorithms: List<Algorithm>,
-        @get:JsonProperty("classifier") @param:JsonProperty("classifier") val classifier: Algorithm.Classifier
+class Workflow(
+        @JsonProperty("algorithms") var algorithms: List<Algorithm>,
+        @JsonProperty("classifier") val classifier: Algorithm.Classifier
 ) : AbstractClassifier() {
 
     val allAlgorithms = algorithms + classifier

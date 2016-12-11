@@ -34,7 +34,7 @@ class LocalComputationManager(val threads: Int) : ComputationManager {
     private fun compute(workflow: Workflow, instances: Instances): Double {
         val eval = Evaluation(instances)
         try {
-            eval.crossValidateModel(workflow, instances, numFolds, random)
+            eval.crossValidateModel(workflow.classifier(), instances, numFolds, random)
         } catch (e: Exception) {
             e.printStackTrace()
             return 0.0

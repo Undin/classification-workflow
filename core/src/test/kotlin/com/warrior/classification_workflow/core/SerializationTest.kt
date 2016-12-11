@@ -66,4 +66,25 @@ class SerializationTest {
         val deserializedConfiguration: TransformerConfiguration = mapper.readValue(serializedConfiguration)
         assertThat(deserializedConfiguration, equalTo(configuration))
     }
+
+    @Test
+    fun workflowTest() {
+        val transformer = Transformer(
+                name = "Signific",
+                searchClass = "weka.attributeSelection.Ranker",
+                searchOptions = mapOf("-T" to "0.01"),
+                evaluationClass = "weka.attributeSelection.SignificanceAttributeEval",
+                evaluationOptions = emptyMap()
+        )
+        val classifier = Classifier(
+                name = "C4.5",
+                classifierClass = "weka.classifiers.trees.J48",
+                classifierOptions = mapOf("-D" to "2")
+        )
+        val workflow = Workflow(listOf(transformer), classifier)
+        val serializedWorkflow = mapper.writeValueAsString(workflow)
+        println(serializedWorkflow)
+        val deserializedWorkflow: Workflow = mapper.readValue(serializedWorkflow)
+        assertThat(deserializedWorkflow, equalTo(workflow))
+    }
 }

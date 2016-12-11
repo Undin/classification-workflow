@@ -1,6 +1,8 @@
 package com.warrior.classification_workflow.core
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import weka.attributeSelection.ASEvaluation
 import weka.attributeSelection.ASSearch
 import weka.classifiers.AbstractClassifier
@@ -67,6 +69,15 @@ sealed class AlgorithmConfiguration(@JsonProperty("name") val name: String) : Se
     }
 }
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes(
+        JsonSubTypes.Type(value = Algorithm.Classifier::class, name = "Classifier"),
+        JsonSubTypes.Type(value = Algorithm.Transformer::class, name = "Transformer")
+)
 sealed class Algorithm() : Serializable {
     class Classifier(
             @JsonProperty("name") val name: String,

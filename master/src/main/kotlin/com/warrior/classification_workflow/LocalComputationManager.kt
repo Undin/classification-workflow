@@ -1,7 +1,5 @@
 package com.warrior.classification_workflow
 
-import com.warrior.classification_workflow.core.ComputationManager
-import com.warrior.classification_workflow.core.Result
 import com.warrior.classification_workflow.core.Workflow
 import com.warrior.classification_workflow.core.load
 import kotlinx.support.jdk8.collections.parallelStream

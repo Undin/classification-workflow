@@ -1,6 +1,7 @@
-package com.warrior.classification_workflow.core
+package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.warrior.classification_workflow.core.Workflow
 
 /**
  * Created by warrior on 16/09/16.

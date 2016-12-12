@@ -1,7 +1,6 @@
 package com.warrior.classification_workflow
 
-import com.warrior.classification_workflow.core.Algorithm
-import com.warrior.classification_workflow.core.AlgorithmConfiguration
+import com.warrior.classification_workflow.core.*
 import java.util.*
 
 /**
@@ -30,13 +29,19 @@ fun randomRange(bound: Int, random: Random): IntRange {
 }
 
 fun AlgorithmConfiguration.randomAlgorithm(random: Random): Algorithm = when (this) {
-    is AlgorithmConfiguration.ClassifierConfiguration -> randomClassifier(random)
-    is AlgorithmConfiguration.TransformerConfiguration -> randomTransformer(random)
+    is ClassifierConfiguration -> randomClassifier(random)
+    is TransformerConfiguration -> randomTransformer(random)
+    else -> throw UnsupportedOperationException()
 }
 
-fun AlgorithmConfiguration.ClassifierConfiguration.randomClassifier(random: Random): Algorithm.Classifier =
-        Algorithm.Classifier(name, classifierClass, classifierOptions.randomValues(random))
+fun ClassifierConfiguration.randomClassifier(random: Random): Classifier =
+        Classifier(name, classifierClass, classifierOptions.randomValues(random))
 
-fun AlgorithmConfiguration.TransformerConfiguration.randomTransformer(random: Random): Algorithm.Transformer =
-        Algorithm.Transformer(name, searchClass, searchOptions.randomValues(random),
-                evaluationClass, evaluationOptions.randomValues(random))
+fun TransformerConfiguration.randomTransformer(random: Random): Transformer
+        = Transformer(name, searchConfiguration.randomSearch(random), evaluationConfiguration.randomEvaluation(random))
+
+fun SearchConfiguration.randomSearch(random: Random): Search
+        = Search(className, options.randomValues(random))
+
+fun EvaluationConfiguration.randomEvaluation(random: Random): Evaluation
+        = Evaluation(className, options.randomValues(random))

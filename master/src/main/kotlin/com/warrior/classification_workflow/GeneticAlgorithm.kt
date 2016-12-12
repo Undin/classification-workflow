@@ -2,8 +2,8 @@ package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.warrior.classification_workflow.core.*
-import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
-import com.warrior.classification_workflow.core.AlgorithmConfiguration.TransformerConfiguration
+import com.warrior.classification_workflow.core.ClassifierConfiguration
+import com.warrior.classification_workflow.core.TransformerConfiguration
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
 import java.io.File
@@ -105,8 +105,8 @@ class GeneticAlgorithm(
         var firstIndex = random.nextInt(firstAlgorithms.size)
         var secondIndex = random.nextInt(secondAlgorithms.size)
 
-        while (firstIndex == firstAlgorithms.lastIndex && secondAlgorithms[secondIndex] !is Algorithm.Classifier ||
-                secondIndex == secondAlgorithms.lastIndex && firstAlgorithms[firstIndex] !is Algorithm.Classifier) {
+        while (firstIndex == firstAlgorithms.lastIndex && secondAlgorithms[secondIndex] !is Classifier ||
+                secondIndex == secondAlgorithms.lastIndex && firstAlgorithms[firstIndex] !is Classifier) {
             if (firstIndex == firstAlgorithms.lastIndex) {
                 secondIndex = random.nextInt(secondAlgorithms.size)
             } else {
@@ -132,8 +132,8 @@ class GeneticAlgorithm(
         var firstRange = randomRange(firstAlgorithms.size, random)
         var secondRange = randomRange(secondAlgorithms.size, random)
 
-        while (firstRange.endInclusive == firstAlgorithms.lastIndex && secondAlgorithms[secondRange.endInclusive] !is Algorithm.Classifier ||
-               secondRange.endInclusive == secondAlgorithms.lastIndex && firstAlgorithms[firstRange.endInclusive] !is Algorithm.Classifier) {
+        while (firstRange.endInclusive == firstAlgorithms.lastIndex && secondAlgorithms[secondRange.endInclusive] !is Classifier ||
+               secondRange.endInclusive == secondAlgorithms.lastIndex && firstAlgorithms[firstRange.endInclusive] !is Classifier) {
             if (firstRange.endInclusive == firstAlgorithms.lastIndex) {
                 secondRange = randomRange(secondAlgorithms.size, random)
             } else {
@@ -181,14 +181,15 @@ class GeneticAlgorithm(
         val index = random.nextInt(newAlgorithms.size)
         val algo = newAlgorithms[index]
         newAlgorithms[index] = when (algo) {
-            is Algorithm.Classifier -> {
+            is Classifier -> {
                 val classifierConfiguration = classifiers[algo.name]!!
                 classifierConfiguration.randomClassifier(random)
             }
-            is Algorithm.Transformer -> {
+            is Transformer -> {
                 val transformerConfiguration = transformers[algo.name]!!
                 transformerConfiguration.randomTransformer(random)
             }
+            else -> throw UnsupportedOperationException()
         }
         return Workflow(newAlgorithms)
     }

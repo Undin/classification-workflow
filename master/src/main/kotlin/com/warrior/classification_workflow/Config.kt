@@ -2,8 +2,8 @@ package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
-import com.warrior.classification_workflow.core.AlgorithmConfiguration.TransformerConfiguration
+import com.warrior.classification_workflow.core.ClassifierConfiguration
+import com.warrior.classification_workflow.core.TransformerConfiguration
 
 /**
  * Created by warrior on 27/08/16.

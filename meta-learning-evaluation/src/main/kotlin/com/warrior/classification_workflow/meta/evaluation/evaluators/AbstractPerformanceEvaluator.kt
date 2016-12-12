@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.meta.evaluation.evaluators
 
+import com.warrior.classification_workflow.core.Classifier
 import com.warrior.classification_workflow.meta.evaluation.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger

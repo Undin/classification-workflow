@@ -2,6 +2,8 @@ package com.warrior.classification_workflow.meta.evaluation
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.warrior.classification_workflow.core.Classifier
+import com.warrior.classification_workflow.core.Transformer
 
 /**
  * Created by warrior on 11/16/16.
@@ -33,30 +35,4 @@ data class TransformerPerfConfig(
         @JsonProperty("save_strategy") val saveStrategy: String,
         @JsonProperty("out_folder") val outFolder: String?,
         @JsonProperty("current_results") val currentResults: String?
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Classifier(
-        @JsonProperty("name") val name: String,
-        @JsonProperty("classifier_class") val className: String,
-        @JsonProperty("classifier_options") val options: Map<String, String>
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Transformer(
-        @JsonProperty("name") val name: String,
-        @JsonProperty("search") val search: Search,
-        @JsonProperty("evaluation") val evaluation: Evaluation
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Search(
-        @JsonProperty("search_class") val className: String,
-        @JsonProperty("search_options") val options: Map<String, String>
-)
-
-@JsonIgnoreProperties(ignoreUnknown = true)
-data class Evaluation(
-        @JsonProperty("evaluation_class") val className: String,
-        @JsonProperty("evaluation_options") val options: Map<String, String>
 )

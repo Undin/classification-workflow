@@ -2,7 +2,6 @@ package com.warrior.classification_workflow.core
 
 import weka.attributeSelection.AttributeTransformer
 import weka.classifiers.AbstractClassifier
-import weka.classifiers.Classifier
 import weka.core.Instance
 import weka.core.Instances
 import weka.core.Utils
@@ -15,13 +14,13 @@ import java.util.*
  */
 internal class WorkflowClassifier(
         private val algorithms: List<Algorithm>,
-        private val classifier: Algorithm.Classifier
+        private val classifier: Classifier
 ) : AbstractClassifier() {
 
-    private val builtClassifiers: MutableMap<Int, Classifier> = HashMap()
+    private val builtClassifiers: MutableMap<Int, weka.classifiers.Classifier> = HashMap()
     private val builtTransformers: MutableMap<Int, AttributeTransformer> = HashMap()
     private val buildIndices: MutableMap<Int, IntArray> = HashMap()
-    private lateinit var builtFinalClassifier: Classifier
+    private lateinit var builtFinalClassifier: weka.classifiers.Classifier
 
     override fun buildClassifier(data: Instances) {
         val processingData = processInstances(data, true)
@@ -40,7 +39,7 @@ internal class WorkflowClassifier(
         var currentData = data
         for ((i, algo) in algorithms.withIndex()) {
             when (algo) {
-                is Algorithm.Classifier -> {
+                is Classifier -> {
                     val classifier = if (needBuildFirst) {
                         val c = algo()
                         c.buildClassifier(currentData)
@@ -51,7 +50,7 @@ internal class WorkflowClassifier(
                     }
                     addClassificationsResult(classifier, currentData, i)
                 }
-                is Algorithm.Transformer -> {
+                is Transformer -> {
                     if (needBuildFirst) {
                         val (search, eval) = algo()
                         eval.buildEvaluator(currentData)
@@ -82,7 +81,7 @@ internal class WorkflowClassifier(
         return currentData
     }
 
-    private fun addClassificationsResult(builtClassifier: Classifier, instances: Instances, iteration: Int) {
+    private fun addClassificationsResult(builtClassifier: weka.classifiers.Classifier, instances: Instances, iteration: Int) {
         val classificationResults = DoubleArray(instances.size)
         for ((i, inst) in instances.withIndex()) {
             classificationResults[i] = builtClassifier.classifyInstance(inst)

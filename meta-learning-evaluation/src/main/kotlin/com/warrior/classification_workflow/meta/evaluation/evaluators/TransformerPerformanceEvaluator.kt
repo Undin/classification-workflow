@@ -3,6 +3,8 @@ package com.warrior.classification_workflow.meta.evaluation.evaluators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.warrior.classification_workflow.core.Classifier
+import com.warrior.classification_workflow.core.Transformer
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.meta.evaluation.*
 import weka.attributeSelection.ASEvaluation

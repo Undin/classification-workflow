@@ -1,17 +1,15 @@
 package com.warrior.classification_workflow.core
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonIgnore
-import com.fasterxml.jackson.annotation.JsonProperty
-import weka.classifiers.Classifier
+import com.fasterxml.jackson.annotation.*
 import java.util.*
 
 /**
  * Created by warrior on 12/07/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 class Workflow @JsonCreator constructor(
         @JsonProperty("algorithms") val algorithms: List<Algorithm>,
-        @JsonProperty("classifier") val classifier: Algorithm.Classifier
+        @JsonProperty("classifier") val classifier: Classifier
 ) {
 
     @JsonIgnore
@@ -19,10 +17,10 @@ class Workflow @JsonCreator constructor(
 
     constructor(algorithms: List<Algorithm>) : this(
             ArrayList(algorithms.subList(0, algorithms.lastIndex)),
-            algorithms.last() as Algorithm.Classifier
+            algorithms.last() as Classifier
     )
 
-    fun classifier(): Classifier = WorkflowClassifier(algorithms, classifier)
+    fun classifier(): weka.classifiers.Classifier = WorkflowClassifier(algorithms, classifier)
 
     override fun toString(): String {
         return "Workflow(" +

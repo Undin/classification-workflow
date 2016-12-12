@@ -10,9 +10,19 @@ shadowJar {
 
 dependencies {
     compile project(':core')
+
     compile libraries.kotlin
     compile libraries.kotlinxSupportJdk8
-    compile libraries.args4j
+
+    compile libraries.commonsCli
+
+    compile libraries.jackson
+    compile libraries.jacksonKotlin
+    compile libraries.jacksonYaml
+
+    compile libraries.log4jApi
+    compile libraries.log4jCore
+
     compile libraries.weka
     compile libraries.wekaLibSVM
     compile libraries.wekaCSE

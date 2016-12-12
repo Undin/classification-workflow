@@ -1,10 +1,11 @@
 package com.warrior.classification_workflow
 
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.TransformerConfiguration
+import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.util.Supplier
 import java.io.File
 import java.io.PrintWriter
 import java.util.*
@@ -17,6 +18,9 @@ class GeneticAlgorithm(
         val computationManager: ComputationManager,
         val random: Random = Random()
 ) {
+
+    private val logger = LogManager.getLogger(GeneticAlgorithm::class.java)
+    private val mapper = jacksonObjectMapper()
 
     private val algorithms = config.classifiers + config.transformers
     private val classifiers: Map<String, ClassifierConfiguration>
@@ -37,15 +41,10 @@ class GeneticAlgorithm(
         val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
         logs.mkdir()
 
-        val mapper = ObjectMapper()
-        mapper.disable(MapperFeature.AUTO_DETECT_FIELDS,
-                MapperFeature.AUTO_DETECT_GETTERS,
-                MapperFeature.AUTO_DETECT_IS_GETTERS)
-
         val initialAlgorithms = (1..config.populationSize).map { generate() }
         var population = computationManager.compute(initialAlgorithms, config.dataset)
                 .sortedDescending()
-        writeLogs(population, logs, 0, mapper)
+        writeLogs(population, logs, 0)
 
         for (i in 1..config.generations) {
             val childrenWorkflows = (1..config.populationSize).flatMap {
@@ -56,20 +55,26 @@ class GeneticAlgorithm(
             val children = computationManager.compute(childrenWorkflows, config.dataset)
             population = selection(population, children)
 
-            writeLogs(population, logs, i, mapper)
+            writeLogs(population, logs, i)
         }
         return population[0]
     }
 
-    private fun writeLogs(population: List<Result>, logs: File, iteration: Int, mapper: ObjectMapper) {
+    private fun writeLogs(population: List<Result>, logs: File, iteration: Int) {
         PrintWriter(File(logs, "$iteration.json")).use {
             mapper.writeValue(it, population)
         }
-        println("--- iteration $iteration ---")
-        population.forEach {
-            println(it.measure)
-            println(mapper.writeValueAsString(it.workflow))
-        }
+        logger.info(Supplier {
+            val builder = StringBuilder()
+            builder.append("--- iteration $iteration ---\n")
+            population.forEach {
+                builder.append(it.measure)
+                        .append("\n")
+                        .append(mapper.writeValueAsString(it.workflow))
+                        .append("\n")
+            }
+            builder.toString()
+        })
     }
 
     private fun generateParents(population: List<Result>): Pair<Result, Result> {

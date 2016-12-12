@@ -5,6 +5,7 @@ import com.warrior.classification_workflow.core.Result
 import com.warrior.classification_workflow.core.Workflow
 import com.warrior.classification_workflow.core.load
 import kotlinx.support.jdk8.collections.parallelStream
+import org.apache.logging.log4j.LogManager
 import weka.classifiers.evaluation.Evaluation
 import weka.core.Instances
 import java.util.*
@@ -16,6 +17,8 @@ import java.util.stream.Collectors
  * Created by warrior on 29/06/16.
  */
 class LocalComputationManager(val threads: Int) : ComputationManager {
+
+    private val logger = LogManager.getLogger(LocalComputationManager::class.java)
 
     private val datasetFolder = "datasets"
     private val numFolds = 10
@@ -36,7 +39,7 @@ class LocalComputationManager(val threads: Int) : ComputationManager {
         try {
             eval.crossValidateModel(workflow.classifier(), instances, numFolds, random)
         } catch (e: Exception) {
-            e.printStackTrace()
+            logger.error(e.message, e)
             return 0.0
         }
         return eval.unweightedMacroFmeasure()

@@ -1,6 +1,6 @@
 package com.warrior.classification_workflow
 
-import com.fasterxml.jackson.annotation.JsonCreator
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
 import com.warrior.classification_workflow.core.AlgorithmConfiguration.TransformerConfiguration
@@ -8,7 +8,8 @@ import com.warrior.classification_workflow.core.AlgorithmConfiguration.Transform
 /**
  * Created by warrior on 27/08/16.
  */
-data class Config @JsonCreator constructor(
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class Config(
         @JsonProperty("dataset") val dataset: String,
         @JsonProperty("classifiers") val classifiers: List<ClassifierConfiguration>,
         @JsonProperty("transformers") val transformers: List<TransformerConfiguration>,

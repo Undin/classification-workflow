@@ -27,11 +27,11 @@ class MetaFeatureEvaluator(private val config: MetaFeatureConfig, pool: ForkJoin
     }
 
     private fun calculate(data: Instances, saveStrategy: SaveStrategy) {
-        val extractor = logger.withLog("extract meta-features: ${data.relationName()}") {
-            CommonMetaFeatureExtractor(data)
+        val result = logger.withLog("extract meta-features: ${data.relationName()}") {
+            val extractor = CommonMetaFeatureExtractor()
+            extractor.extract(data)
         }
 
-        val result = extractor.extract()
         val entity = MetaFeaturesEntity(result)
         saveStrategy.save(entity)
     }

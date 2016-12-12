@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Created by warrior on 11/18/16.
  */
-class CommonMetaFeatureExtractor(val instances: Instances) {
+class CommonMetaFeatureExtractor() {
 
     private val dataSetDimensionality: DataSetDimensionality = DataSetDimensionality()
     private val numberOfClasses: NumberOfClasses = NumberOfClasses()
@@ -28,28 +28,7 @@ class CommonMetaFeatureExtractor(val instances: Instances) {
     private val noiseSignalRatio: NoiseSignalRatio = NoiseSignalRatio()
     private val normalizedClassEntropy: NormalizedClassEntropy = NormalizedClassEntropy()
 
-    private val metaFeatures: List<AbstractMetaFeatureExtractor> = listOf(
-            dataSetDimensionality,
-            numberOfClasses,
-            numberOfFeatures,
-            numberOfInstances,
-            meanCoefficientOfVariation,
-            meanKurtosis,
-            meanSkewness,
-            meanStandardDeviation,
-            equivalentNumberOfFeatures,
-            maxMutualInformation,
-            meanMutualInformation,
-            meanNormalizedFeatureEntropy,
-            noiseSignalRatio,
-            normalizedClassEntropy
-    )
-
     init {
-        for (metaFeature in metaFeatures) {
-            metaFeature.instances = instances
-        }
-
         val mutualInformationCache = HashMap<Attribute, Double>()
         equivalentNumberOfFeatures.setMutualInformationCache(mutualInformationCache)
         maxMutualInformation.setMutualInformationCache(mutualInformationCache)
@@ -61,21 +40,21 @@ class CommonMetaFeatureExtractor(val instances: Instances) {
         noiseSignalRatio.setEntropyCache(entropyCache)
     }
 
-    fun extract(): MetaFeaturesEntity = MetaFeaturesEntity(
+    fun extract(instances: Instances): MetaFeaturesEntity = MetaFeaturesEntity(
             datasetName = instances.relationName(),
-            datasetDimensionality = dataSetDimensionality.compute(),
-            numberOfClasses = numberOfClasses.compute(),
-            numberOfFeatures = numberOfFeatures.compute(),
-            numberOfInstances = numberOfInstances.compute(),
-            meanCoefficientOfVariation = meanCoefficientOfVariation.compute(),
-            meanKurtosis = meanKurtosis.compute(),
-            meanSkewness = meanSkewness.compute(),
-            meanStandardDeviation = meanStandardDeviation.compute(),
-            equivalentNumberOfFeatures = equivalentNumberOfFeatures.compute(),
-            maxMutualInformation = maxMutualInformation.compute(),
-            meanMutualInformation = meanMutualInformation.compute(),
-            meanNormalizedFeatureEntropy = meanNormalizedFeatureEntropy.compute(),
-            normalizedClassEntropy = normalizedClassEntropy.compute(),
-            noiseSignalRatio = noiseSignalRatio.compute()
+            datasetDimensionality = dataSetDimensionality.compute(instances),
+            numberOfClasses = numberOfClasses.compute(instances),
+            numberOfFeatures = numberOfFeatures.compute(instances),
+            numberOfInstances = numberOfInstances.compute(instances),
+            meanCoefficientOfVariation = meanCoefficientOfVariation.compute(instances),
+            meanKurtosis = meanKurtosis.compute(instances),
+            meanSkewness = meanSkewness.compute(instances),
+            meanStandardDeviation = meanStandardDeviation.compute(instances),
+            equivalentNumberOfFeatures = equivalentNumberOfFeatures.compute(instances),
+            maxMutualInformation = maxMutualInformation.compute(instances),
+            meanMutualInformation = meanMutualInformation.compute(instances),
+            meanNormalizedFeatureEntropy = meanNormalizedFeatureEntropy.compute(instances),
+            normalizedClassEntropy = normalizedClassEntropy.compute(instances),
+            noiseSignalRatio = noiseSignalRatio.compute(instances)
     )
 }

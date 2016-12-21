@@ -25,6 +25,8 @@ dependencies {
 
     compile libraries.weka
     compile libraries.wekaLibSVM
+    compile libraries.wekaLibLinear
     compile libraries.wekaCSE
     compile libraries.wekaSignific
+    compile libraries.wekaLS
 }

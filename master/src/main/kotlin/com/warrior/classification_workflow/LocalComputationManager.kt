@@ -118,6 +118,7 @@ class LocalComputationManager(
         data.enumerateAttributes()
                 .asSequence()
                 .mapTo(newAttributes) { it.clone() }
+        newAttributes += data.classAttribute().clone()
         val newData = Instances(data.relationName(), newAttributes, data.size)
         newData.setClass(newAttributes.last())
 

@@ -1,6 +1,7 @@
 package com.warrior.classification_workflow.core
 
 import com.fasterxml.jackson.annotation.*
+import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
 import java.util.*
 
 /**
@@ -12,8 +13,16 @@ class Workflow @JsonCreator constructor(
         @JsonProperty("classifier") val classifier: Classifier
 ) {
 
+    constructor(algorithms: List<Algorithm>, classifier: Classifier, extractor: CommonMetaFeatureExtractor):
+            this(algorithms, classifier) {
+        this.extractor = extractor
+    }
+
     @JsonIgnore
     val allAlgorithms = algorithms + classifier
+
+    @JsonIgnore
+    var extractor: CommonMetaFeatureExtractor? = null
 
     constructor(algorithms: List<Algorithm>) : this(
             ArrayList(algorithms.subList(0, algorithms.lastIndex)),

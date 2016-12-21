@@ -1,27 +1,77 @@
 package com.warrior.classification_workflow
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanceEntity
+import com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity
+import com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity
+import com.warrior.classification_workflow.meta.AlgorithmChooser
 import libsvm.svm
 import org.apache.commons.cli.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
 import java.io.File
+import java.util.*
 
 /**
  * Created by warrior on 29/06/16.
  */
-private val logger = LogManager.getLogger("main")
+private val logger = lazy { LogManager.getLogger("main") }
 
 fun main(args: Array<String>) {
     val configPath = parseArgs(args)
-    val mapper = jacksonObjectMapper()
-    val config: Config = mapper.readValue(File(configPath))
+    val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
+    val config: Config = yamlMapper.readValue(File(configPath))
+    println(yamlMapper.writeValueAsString(config))
 
-    val ga = GeneticAlgorithm(config, LocalComputationManager(config.threads))
+    val algorithmChooser = algorithmChooser(config)
+    val computationManager = computationManager(config, algorithmChooser)
+    val ga = GeneticAlgorithm(config, computationManager)
     svm.svm_set_print_string_function { it -> }
     val result = ga.search()
-    logger.info(Supplier { result.toString() })
+
+    logger.value.info(Supplier { result.toString() })
+}
+
+private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser): LocalComputationManager {
+    val classifierMap = config.classifiers.associateBy { it.name }
+    val transformerMap = config.transformers.associateBy { it.name }
+    val algorithmMap = classifierMap + transformerMap
+    val computationManager = LocalComputationManager(
+            config.dataset,
+            algorithmChooser,
+            algorithmMap,
+            classifierMap,
+            config.threads
+    )
+    return computationManager
+}
+
+private fun algorithmChooser(config: Config): AlgorithmChooser {
+    val jsonMapper = jacksonObjectMapper()
+    val paths = config.metaDataPaths
+    val metaFeatures: List<MetaFeaturesEntity> = jsonMapper.readValue(File(paths.metaFeaturesPath))
+    val classifierPerformance: List<ClassifierPerformanceEntity> = jsonMapper.readValue(File(paths.classifierPerformancePath))
+    val transformerPerformance: List<TransformerPerformanceEntity> = jsonMapper.readValue(File(paths.transformerPerformancePath))
+
+    val datasets = metaFeatures.mapTo(HashSet()) { it.datasetName }
+    datasets.remove(config.dataset.removeSuffix(".arff"))
+
+    val classifiers = classifierPerformance.mapTo(HashSet()) { it.classifierName }
+    val transformers = transformerPerformance.mapTo(HashSet()) { it.transformerName }
+
+    val algorithmChooser = AlgorithmChooser(
+            datasets,
+            classifiers,
+            transformers,
+            metaFeatures,
+            classifierPerformance,
+            transformerPerformance
+    )
+    return algorithmChooser
 }
 
 private fun parseArgs(args: Array<String>): String? {
@@ -57,7 +107,7 @@ private fun parseArgs(args: Array<String>): String? {
                 System.exit(0)
             }
         } catch (e: ParseException) {
-            logger.error(e.message, e)
+            logger.value.error(e.message, e)
             printHelp(allOptions)
             System.exit(1)
         }

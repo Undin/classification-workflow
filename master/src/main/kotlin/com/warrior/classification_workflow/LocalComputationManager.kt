@@ -1,35 +1,94 @@
 package com.warrior.classification_workflow
 
-import com.warrior.classification_workflow.core.Workflow
-import com.warrior.classification_workflow.core.load
+import com.warrior.classification_workflow.core.*
+import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
+import com.warrior.classification_workflow.meta.AlgorithmChooser
 import kotlinx.support.jdk8.collections.parallelStream
+import kotlinx.support.jdk8.streams.toList
 import org.apache.logging.log4j.LogManager
+import org.apache.logging.log4j.Logger
+import weka.classifiers.AbstractClassifier
 import weka.classifiers.evaluation.Evaluation
+import weka.core.Attribute
+import weka.core.DenseInstance
 import weka.core.Instances
+import weka.filters.Filter
+import weka.filters.supervised.attribute.AttributeSelection
 import java.util.*
-import java.util.concurrent.Callable
 import java.util.concurrent.ForkJoinPool
-import java.util.stream.Collectors
+import java.util.concurrent.atomic.AtomicInteger
 
 /**
  * Created by warrior on 29/06/16.
  */
-class LocalComputationManager(val threads: Int) : ComputationManager {
+class LocalComputationManager(
+        private val dataset: String,
+        private val algorithmChooser: AlgorithmChooser,
+        private val algorithmsMap: Map<String, AlgorithmConfiguration>,
+        private val classifiersMap: Map<String, ClassifierConfiguration>,
+        threads: Int
+) : ComputationManager {
 
-    private val logger = LogManager.getLogger(LocalComputationManager::class.java)
+    private val logger: Logger = LogManager.getLogger(LocalComputationManager::class.java)
 
-    private val datasetFolder = "datasets"
-    private val numFolds = 10
-    private val random = Random()
+    private val datasetFolder: String = "datasets"
+    private val numFolds: Int = 10
+    private val random: Random = Random()
+    private val pool: ForkJoinPool = ForkJoinPool(threads)
 
-    override fun compute(tasks: List<Workflow>, dataset: String): List<Result> {
-        val instances = load("$datasetFolder/$dataset")
-        val pool = ForkJoinPool(threads)
-        return pool.submit(Callable {
-            tasks.parallelStream()
-                    .map { w -> Result(w, compute(w, instances)) }
-                    .collect(Collectors.toList<Result>())
-        }).get()
+    private val instances: Lazy<Instances> = lazy { load("$datasetFolder/$dataset") }
+
+    override fun generate(count: Int, sizes: List<Int>): List<Workflow> {
+        return submit {
+            sizes.parallelStream()
+                    .map { size ->
+                        generateSuffix(instances.value, ArrayList(), size, CommonMetaFeatureExtractor())
+                    }
+                    .toList()
+        }
+    }
+
+    override fun mutation(params: List<ComputationManager.MutationParam>): List<Workflow> {
+        return submit {
+            params.parallelStream()
+                    .map { p ->
+                        val (workflow, cutPoint, size) = p
+                        val extractor = workflow.extractor ?: CommonMetaFeatureExtractor()
+                        var data = instances.value
+
+                        val prefix = workflow.algorithms.take(cutPoint)
+                        val algorithms = ArrayList<Algorithm>(size - 1)
+                        for (algorithm in prefix) {
+                            algorithms += algorithm
+                            data = algorithm.apply(data)
+                        }
+                        generateSuffix(data, algorithms, size, extractor)
+                    }
+                    .toList()
+        }
+    }
+
+    private fun generateSuffix(currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {
+        var data = currentData
+        for (i in algorithms.size until size) {
+            val algorithmName = algorithmChooser.chooseAlgorithm(extractor, data)
+            val algorithm = algorithmsMap[algorithmName]!!.randomAlgorithm(random)
+            algorithms += algorithm
+            data = algorithm.apply(data)
+        }
+
+        val classifierName = algorithmChooser.chooseClassifier(extractor, data)
+        val classifier = classifiersMap[classifierName]!!.randomClassifier(random)
+        val workflow = Workflow(algorithms, classifier, extractor)
+        return workflow
+    }
+
+    override fun evaluate(workflows: List<Workflow>): List<Result> {
+        return submit {
+            workflows.parallelStream()
+                    .map { w -> Result(w, compute(w, instances.value)) }
+                    .toList()
+        }
     }
 
     private fun compute(workflow: Workflow, instances: Instances): Double {
@@ -41,5 +100,62 @@ class LocalComputationManager(val threads: Int) : ComputationManager {
             return 0.0
         }
         return eval.unweightedMacroFmeasure()
+    }
+
+    private fun Algorithm.apply(data: Instances): Instances {
+        return when (this) {
+            is Classifier -> apply(data)
+            is Transformer -> apply(data)
+            else -> throw UnsupportedOperationException()
+        }
+    }
+
+    private fun Classifier.apply(data: Instances): Instances {
+        // create new Instances container with addition attribute
+        val newAttributes = ArrayList<Attribute>(data.numAttributes() + 1)
+        val classifierResultAttr = data.classAttribute().copy("$name-${counter.andIncrement}")
+        newAttributes += classifierResultAttr
+        data.enumerateAttributes()
+                .asSequence()
+                .mapTo(newAttributes) { it.clone() }
+        val newData = Instances(data.relationName(), newAttributes, data.size)
+        newData.setClass(newAttributes.last())
+
+        // prepare data for cross validation
+        val copiedData = Instances(data)
+        copiedData.randomize(random)
+        val classifierModel = invoke()
+        val classifierCopies = AbstractClassifier.makeCopies(classifierModel, numFolds)
+
+        // cross validation
+        for ((i, c) in classifierCopies.withIndex()) {
+            val train = copiedData.trainCV(numFolds, i, random)
+            val test = copiedData.testCV(numFolds, i)
+            c.buildClassifier(train)
+            for (inst in test) {
+                val result = c.classifyInstance(inst)
+                val values = DoubleArray(newAttributes.size) { j -> if (j == 0) result else inst.value(j - 1) }
+                val newInstance = DenseInstance(1.0, values)
+                newData += newInstance
+            }
+        }
+        return newData
+    }
+
+    private fun Transformer.apply(data: Instances): Instances {
+        val (search, evaluator) = invoke()
+        val filter = AttributeSelection()
+        filter.search = search
+        filter.evaluator = evaluator
+        filter.setInputFormat(data)
+        return Filter.useFilter(data, filter)
+    }
+
+    private fun <T> submit(block: () -> T): T = pool.submit(block).get()
+
+    private fun Attribute.clone(): Attribute = copy(name())
+
+    companion object {
+        private val counter = AtomicInteger(0)
     }
 }

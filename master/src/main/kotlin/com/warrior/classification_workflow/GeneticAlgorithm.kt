@@ -2,8 +2,6 @@ package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.warrior.classification_workflow.core.*
-import com.warrior.classification_workflow.core.ClassifierConfiguration
-import com.warrior.classification_workflow.core.TransformerConfiguration
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
 import java.io.File
@@ -22,6 +20,7 @@ class GeneticAlgorithm(
     private val logger = LogManager.getLogger(GeneticAlgorithm::class.java)
     private val mapper = jacksonObjectMapper()
 
+    private val params: GeneticAlgorithmParams = config.params
     private val algorithms = config.classifiers + config.transformers
     private val classifiers: Map<String, ClassifierConfiguration>
     private val transformers: Map<String, TransformerConfiguration>
@@ -41,22 +40,29 @@ class GeneticAlgorithm(
         val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
         logs.mkdir()
 
-        val initialAlgorithms = (1..config.populationSize).map { generate() }
-        var population = computationManager.compute(initialAlgorithms, config.dataset)
+        val initialWorkflows = generate()
+        var population = computationManager.evaluate(initialWorkflows)
                 .sortedDescending()
         writeLogs(population, logs, 0)
 
-        for (i in 1..config.generations) {
-            val childrenWorkflows = (1..config.populationSize).flatMap {
-                val (first, second) = generateParents(population)
-                crossover(first.workflow, second.workflow)
-            }.map { mutation(it) }
+        for (i in 1..params.generations) {
+            val mutations = mutations(population)
+            val mutationResults = computationManager.evaluate(mutations)
 
-            val children = computationManager.compute(childrenWorkflows, config.dataset)
-            population = selection(population, children)
-
+            val newPopulation = ArrayList<Result>(population.size)
+            for ((j, individual) in population.withIndex()) {
+                var bestResult = individual
+                for (k in params.mutationNumber * j until params.mutationNumber * (j + 1)) {
+                    if (mutationResults[k] > bestResult) {
+                        bestResult = mutationResults[k]
+                    }
+                }
+                newPopulation += bestResult
+            }
+            population = newPopulation.sortedDescending()
             writeLogs(population, logs, i)
         }
+
         return population[0]
     }
 
@@ -83,15 +89,13 @@ class GeneticAlgorithm(
         return Pair(first, second)
     }
 
-    private fun generate(): Workflow {
-        val size = random.nextInt(config.maxWorkflowSize - 1)
-        val flow = (1..size).map { algorithms.randomElement(random).randomAlgorithm(random) }
-        val classifier = config.classifiers.randomElement(random).randomClassifier(random)
-        return Workflow(flow, classifier)
+    private fun generate(): List<Workflow> {
+        val sizes = (1..params.populationSize).map { random.nextInt(params.maxWorkflowSize) + 1 }
+        return computationManager.generate(params.populationSize, sizes)
     }
 
     private fun crossover(first: Workflow, second: Workflow): List<Workflow> {
-        return if (random.nextDouble() < config.pointCrossoverProbability) {
+        return if (random.nextDouble() < params.pointCrossoverProbability) {
             pointCrossover(first, second)
         } else {
             intervalCrossover(first, second)
@@ -158,14 +162,27 @@ class GeneticAlgorithm(
     }
 
     private fun mutation(workflow: Workflow): Workflow {
-        if (random.nextDouble() < config.mutationProbability) {
-            return if (random.nextDouble() < config.structureMutationProbability) {
+        if (random.nextDouble() < params.mutationProbability) {
+            return if (random.nextDouble() < params.structureMutationProbability) {
                 pointStructureMutation(workflow)
             } else {
                 paramMutation(workflow)
             }
         }
         return workflow
+    }
+
+    private fun mutations(population: List<Result>): List<Workflow> {
+        val mutationParams = population.flatMapTo(ArrayList(population.size * params.mutationNumber)) { individual ->
+            val workflow = individual.workflow
+            val size = workflow.algorithms.size
+            (1..params.mutationNumber).map {
+                val cutPoint = random.nextInt(size) + 1
+                val nextSize = random.nextInt(params.maxWorkflowSize - cutPoint) + 1
+                ComputationManager.MutationParam(workflow, cutPoint, nextSize)
+            }
+        }
+        return computationManager.mutation(mutationParams)
     }
 
     private fun pointStructureMutation(workflow: Workflow): Workflow {
@@ -197,7 +214,7 @@ class GeneticAlgorithm(
     private fun selection(currentPopulation: List<Result>, children: List<Result>): List<Result> {
         val size = currentPopulation.size
         val newPopulation = ArrayList<Result>(size)
-        val survivedCount = Math.max(1.0, size * config.survivedPart).toInt()
+        val survivedCount = Math.max(1.0, size * params.survivedPart).toInt()
         newPopulation += currentPopulation.subList(0, survivedCount)
         val other = ArrayList<Result>(size - survivedCount + children.size)
         other += currentPopulation.subList(survivedCount, size)
@@ -211,7 +228,7 @@ class GeneticAlgorithm(
                 first = second
                 second = c
             }
-            val index = if (random.nextDouble() < config.tournamentProbability) { first } else { second }
+            val index = if (random.nextDouble() < params.tournamentProbability) { first } else { second }
             newPopulation.add(other.removeAt(index))
         }
         return newPopulation.sortedDescending()

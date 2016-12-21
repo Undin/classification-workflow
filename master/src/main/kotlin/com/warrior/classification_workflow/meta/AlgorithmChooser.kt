@@ -122,7 +122,6 @@ class AlgorithmChooser(
             estimationMap[algorithm] = performanceEstimation
         }
 
-        estimationMap.forEach { k, v -> println("$k -> $v") }
         return selector.select(estimationMap)
     }
 

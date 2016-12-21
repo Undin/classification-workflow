@@ -25,7 +25,6 @@ fun main(args: Array<String>) {
     val configPath = parseArgs(args)
     val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
     val config: Config = yamlMapper.readValue(File(configPath))
-    println(yamlMapper.writeValueAsString(config))
 
     val algorithmChooser = algorithmChooser(config)
     val computationManager = computationManager(config, algorithmChooser)

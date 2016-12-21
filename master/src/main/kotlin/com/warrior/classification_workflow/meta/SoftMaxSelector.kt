@@ -8,9 +8,7 @@ import java.util.*
 class SoftMaxSelector(private val random: Random = Random()) : Selector {
 
     override fun select(weights: Map<String, Double>): String {
-        if (weights.isEmpty()) {
-            throw IllegalAccessException("weights must be not empty")
-        }
+        require(weights.isNotEmpty()) { "weights must be not empty" }
 
         val weightList = weights.toList()
         val sum = weightList.asSequence().map { e -> f(e.second) }.sum()

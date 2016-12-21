@@ -6,7 +6,7 @@ import com.warrior.classification_workflow.core.meta.features.informationtheoret
 import com.warrior.classification_workflow.core.meta.features.statistical.*
 import weka.core.Attribute
 import weka.core.Instances
-import java.util.*
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Created by warrior on 11/18/16.
@@ -29,13 +29,13 @@ class CommonMetaFeatureExtractor() {
     private val normalizedClassEntropy: NormalizedClassEntropy = NormalizedClassEntropy()
 
     init {
-        val mutualInformationCache = HashMap<Attribute, Double>()
+        val mutualInformationCache = ConcurrentHashMap<Attribute, Double>()
         equivalentNumberOfFeatures.setMutualInformationCache(mutualInformationCache)
         maxMutualInformation.setMutualInformationCache(mutualInformationCache)
         meanMutualInformation.setMutualInformationCache(mutualInformationCache)
         noiseSignalRatio.setMutualInformationCache(mutualInformationCache)
 
-        val entropyCache = HashMap<Attribute, EntropyResult>()
+        val entropyCache = ConcurrentHashMap<Attribute, EntropyResult>()
         meanNormalizedFeatureEntropy.setEntropyCache(entropyCache)
         noiseSignalRatio.setEntropyCache(entropyCache)
     }

@@ -2,13 +2,15 @@ package com.warrior.classification_workflow.core.meta.features
 
 import weka.core.Attribute
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ConcurrentMap
 
 /**
  * Created by warrior on 11/15/16.
  */
 abstract class AbstractAttributeMetaFeatureExtractor(protected val aggregator: Aggregator) : AbstractMetaFeatureExtractor() {
 
-    protected val attributeMap: MutableMap<Attribute, Double> = HashMap()
+    protected val attributeMap: ConcurrentMap<Attribute, Double> = ConcurrentHashMap()
 
     override fun compute(): Double {
         return if (attributeMap.isEmpty()) {

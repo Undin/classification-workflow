@@ -4,6 +4,7 @@ import com.warrior.classification_workflow.core.meta.features.*
 import weka.attributeSelection.InfoGainAttributeEval
 import weka.core.Attribute
 import java.util.*
+import java.util.concurrent.ConcurrentMap
 
 /**
  * Created by warrior on 11/18/16.
@@ -13,7 +14,7 @@ abstract class MutualInformation(aggregator: Aggregator) :
 
     protected var cache: MutableMap<Attribute, Double>? = null
 
-    override fun setMutualInformationCache(cache: MutableMap<Attribute, Double>) {
+    override fun setMutualInformationCache(cache: ConcurrentMap<Attribute, Double>) {
         this.cache = cache
     }
 

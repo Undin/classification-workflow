@@ -3,6 +3,7 @@ package com.warrior.classification_workflow.core.meta.features.informationtheore
 import com.warrior.classification_workflow.core.meta.features.AbstractMetaFeatureExtractor
 import weka.core.Attribute
 import weka.core.Instances
+import java.util.concurrent.ConcurrentMap
 
 /**
  * Created by warrior on 23.03.15.
@@ -20,11 +21,11 @@ class NoiseSignalRatio : AbstractMetaFeatureExtractor(), MutualInformationCache,
             meanEntropy.instances = value
         }
 
-    override fun setMutualInformationCache(cache: MutableMap<Attribute, Double>) {
+    override fun setMutualInformationCache(cache: ConcurrentMap<Attribute, Double>) {
         meanMutualInformation.setMutualInformationCache(cache)
     }
 
-    override fun setEntropyCache(cache: MutableMap<Attribute, EntropyResult>) {
+    override fun setEntropyCache(cache: ConcurrentMap<Attribute, EntropyResult>) {
         meanEntropy.setEntropyCache(cache)
     }
 

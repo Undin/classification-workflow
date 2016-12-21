@@ -7,6 +7,7 @@ import weka.core.Attribute
 import weka.filters.Filter
 import weka.filters.supervised.attribute.Discretize
 import java.util.*
+import java.util.concurrent.ConcurrentMap
 
 /**
  * Created by warrior on 11/18/16.
@@ -14,9 +15,9 @@ import java.util.*
 abstract class EntropyMetaFeatureExtractor(aggregator: Aggregator) :
         AbstractAttributeMetaFeatureExtractor(aggregator), EntropyCache {
 
-    protected var cache: MutableMap<Attribute, EntropyResult>? = null
+    protected var cache: ConcurrentMap<Attribute, EntropyResult>? = null
 
-    override fun setEntropyCache(cache: MutableMap<Attribute, EntropyResult>) {
+    override fun setEntropyCache(cache: ConcurrentMap<Attribute, EntropyResult>) {
         this.cache = cache
     }
 

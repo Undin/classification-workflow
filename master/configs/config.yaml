@@ -1,0 +1,103 @@
+dataset_folder: datasets
+dataset: zoo.arff
+log_folder: logs
+threads: 4
+
+meta_data_paths:
+  meta_features_path: results/meta-features/all-finite.json
+  classifier_performance_path: results/classifier_performance/classifier-performance-common.json
+  transformer_performances_path: results/transformer_performance/transformer-performance-common.json
+
+params:
+  population_size: 10
+  generations: 20
+  max_workflow_size: 10
+  mutation_number: 10
+  survived_part: 0.1
+  mutation_probability: 0.3
+  tournament_probability: 0.8
+  point_crossover_probability: 0.5
+  structure_mutation_probability: 0.5
+
+classifiers:
+  - name                : "NaiveBayes"
+    classifier_class    : "weka.classifiers.bayes.NaiveBayes"
+    classifier_options  : {}
+
+  - name                : "KNN"
+    classifier_class    : "weka.classifiers.lazy.IBk"
+    classifier_options  :
+      -K: ["1", "3", "5", "10", "15"]
+
+  - name                : "SVM"
+    classifier_class    : "weka.classifiers.functions.LibSVM"
+    classifier_options  :
+      -C: ["0.1", "0.5", "1.0", "2", "5", "10", "15"]
+      -G: ["0.0001", "0.001", "0.01", "0.1", "0.5"]
+      -E: ["0.0001", "0.001", "0.01"]
+
+  - name                : "C4.5"
+    classifier_class    : "weka.classifiers.trees.J48"
+    classifier_options  :
+      -M: ["1", "2", "5", "10", "20"]
+
+  - name                : "LogR-L2"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: ["0"]
+
+  - name                : "LogR-L1"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: ["6"]
+
+transformers:
+  - name                : "PCA"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.PrincipalComponents"
+      evaluation_options: {}
+
+  - name                : "CFS-SFS"
+    search:
+      search_class      : "weka.attributeSelection.BestFirst"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.CfsSubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-LS"
+    search:
+      search_class      : "weka.attributeSelection.LinearForwardSelection"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-SWS"
+    search:
+      search_class      : "weka.attributeSelection.GreedyStepwise"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Relief-F"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: ["0.01"]
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ReliefFAttributeEval"
+      evaluation_options: {}
+
+  - name                : "Signific"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: ["0.01"]
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.SignificanceAttributeEval"
+      evaluation_options: {}

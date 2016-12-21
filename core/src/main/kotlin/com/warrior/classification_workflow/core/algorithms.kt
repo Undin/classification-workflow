@@ -42,7 +42,7 @@ data class Transformer(
 data class Search(
         @JsonProperty("search_class") val className: String,
         @JsonProperty("search_options") val options: Map<String, String>
-) {
+) : Serializable {
     operator fun invoke(): ASSearch = ASSearch.forName(className, options.toStringArray())
 }
 
@@ -50,7 +50,7 @@ data class Search(
 data class Evaluation(
         @JsonProperty("evaluation_class") val className: String,
         @JsonProperty("evaluation_options") val options: Map<String, String>
-) {
+) : Serializable {
     operator fun invoke(): ASEvaluation = ASEvaluation.forName(className, options.toStringArray())
 }
 

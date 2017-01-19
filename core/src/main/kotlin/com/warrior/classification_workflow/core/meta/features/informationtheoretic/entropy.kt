@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.core.meta.features.informationtheoretic
 
+import org.apache.logging.log4j.LogManager
 import weka.attributeSelection.InfoGainAttributeEval
 import weka.core.*
 import weka.filters.Filter
@@ -10,6 +11,8 @@ import weka.filters.unsupervised.attribute.Remove
  * Created by warrior on 23.03.15.
  */
 val LOG_2 = Math.log(2.0)
+
+private val logger = LogManager.getLogger("EntropyKt")
 
 fun entropy(values: DoubleArray, numValues: Int): EntropyResult {
     val distribution = DoubleArray(numValues)
@@ -29,15 +32,21 @@ fun entropy(values: DoubleArray, numValues: Int): EntropyResult {
 fun entropy(instances: Instances, attribute: Attribute): EntropyResult {
     var featureInstances = oneAttributeInstances(instances, attribute)
 
-    if (featureInstances.attribute(0).isNumeric) {
-        val discretize = Discretize()
-        discretize.useBetterEncoding = true
-        discretize.setInputFormat(featureInstances)
-        featureInstances = Filter.useFilter(featureInstances, discretize)
-    }
+    try {
+        if (featureInstances.attribute(0).isNumeric) {
+            val discretize = Discretize()
+            discretize.useBetterEncoding = true
+            discretize.setInputFormat(featureInstances)
+            featureInstances = Filter.useFilter(featureInstances, discretize)
+        }
 
-    val values = featureInstances.attributeToDoubleArray(0)
-    return entropy(values, featureInstances.attribute(0).numValues())
+        val values = featureInstances.attributeToDoubleArray(0)
+        return entropy(values, featureInstances.attribute(0).numValues())
+    } catch (e: Exception) {
+        // TODO: fix it
+        logger.error(e)
+        return EntropyResult(0.0, featureInstances.attribute(0).numValues())
+    }
 }
 
 fun mutualInformation(instances: Instances, attribute: Attribute): Double {
@@ -47,6 +56,7 @@ fun mutualInformation(instances: Instances, attribute: Attribute): Double {
         infoGain.buildEvaluator(featureInstances)
     } catch (e: Exception) {
         // TODO: fix it
+        logger.error(e)
         return 0.0
     }
     return infoGain.evaluateAttribute(0)

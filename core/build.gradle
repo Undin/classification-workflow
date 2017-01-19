@@ -7,6 +7,7 @@ dependencies {
     compile libraries.apacheMath
 
     compile libraries.jackson
+    compile libraries.log4j2
 
     testCompile libraries.junit
     testCompile libraries.jacksonKotlin

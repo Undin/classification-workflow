@@ -20,8 +20,7 @@ dependencies {
     compile libraries.jacksonKotlin
     compile libraries.jacksonYaml
 
-    compile libraries.log4jApi
-    compile libraries.log4jCore
+    compile libraries.log4j2
 
     compile libraries.weka
     compile libraries.wekaLibSVM

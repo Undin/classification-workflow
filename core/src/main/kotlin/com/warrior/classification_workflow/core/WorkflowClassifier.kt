@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow.core
 
+import weka.attributeSelection.AttributeSelection
 import weka.attributeSelection.AttributeTransformer
 import weka.classifiers.AbstractClassifier
 import weka.core.Instance
@@ -53,8 +54,8 @@ internal class WorkflowClassifier(
                 is Transformer -> {
                     if (needBuildFirst) {
                         val (search, eval) = algo()
-                        eval.buildEvaluator(currentData)
                         if (eval is AttributeTransformer) {
+                            eval.buildEvaluator(currentData)
                             currentData = eval.transformedData(currentData)
                             val indices = usefulAttributes(currentData)
                             if (indices.size != currentData.numAttributes()) {
@@ -64,7 +65,11 @@ internal class WorkflowClassifier(
                             builtTransformers[i] = eval
                             buildIndices[i] = indices
                         } else {
-                            val indices = search.search(eval, currentData)
+                            val attributeSelection = AttributeSelection()
+                            attributeSelection.setSearch(search)
+                            attributeSelection.setEvaluator(eval)
+                            attributeSelection.SelectAttributes(currentData)
+                            val indices = attributeSelection.selectedAttributes()
                             currentData = filter(currentData, indices)
                             buildIndices[i] = indices
                         }

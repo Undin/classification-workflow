@@ -12,22 +12,22 @@ class Workflow @JsonCreator constructor(
         @JsonProperty("algorithms") val algorithms: List<Algorithm>,
         @JsonProperty("classifier") val classifier: Classifier
 ) {
-
-    constructor(algorithms: List<Algorithm>, classifier: Classifier, extractor: CommonMetaFeatureExtractor):
-            this(algorithms, classifier) {
-        this.extractor = extractor
-    }
-
     @JsonIgnore
     val allAlgorithms = algorithms + classifier
 
     @JsonIgnore
-    var extractor: CommonMetaFeatureExtractor? = null
+    var extractor: ThreadLocal<CommonMetaFeatureExtractor>? = null
 
     constructor(algorithms: List<Algorithm>) : this(
             ArrayList(algorithms.subList(0, algorithms.lastIndex)),
             algorithms.last() as Classifier
     )
+
+    constructor(algorithms: List<Algorithm>, classifier: Classifier, extractor: CommonMetaFeatureExtractor):
+            this(algorithms, classifier) {
+        this.extractor = ThreadLocal()
+        this.extractor?.set(extractor)
+    }
 
     fun classifier(): weka.classifiers.Classifier = WorkflowClassifier(algorithms, classifier)
 

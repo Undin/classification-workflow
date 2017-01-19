@@ -12,7 +12,7 @@ interface ComputationManager {
 
     data class MutationParam(
             val workflow: Workflow,
-            val cutPoint: Int,
+            val keepPrefixSize: Int,
             val size: Int
     )
 }

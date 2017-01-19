@@ -7,6 +7,9 @@ import kotlinx.support.jdk8.collections.parallelStream
 import kotlinx.support.jdk8.streams.toList
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
+import weka.attributeSelection.ASEvaluation
+import weka.attributeSelection.ASSearch
+import weka.attributeSelection.Ranker
 import weka.classifiers.AbstractClassifier
 import weka.classifiers.evaluation.Evaluation
 import weka.core.Attribute
@@ -52,11 +55,11 @@ class LocalComputationManager(
         return submit {
             params.parallelStream()
                     .map { p ->
-                        val (workflow, cutPoint, size) = p
-                        val extractor = workflow.extractor ?: CommonMetaFeatureExtractor()
+                        val (workflow, keepPrefixSize, size) = p
+                        val extractor = workflow.extractor?.get() ?: CommonMetaFeatureExtractor()
                         var data = instances.value
 
-                        val prefix = workflow.algorithms.take(cutPoint)
+                        val prefix = workflow.algorithms.take(keepPrefixSize)
                         val algorithms = ArrayList<Algorithm>(size - 1)
                         for (algorithm in prefix) {
                             algorithms += algorithm
@@ -71,10 +74,17 @@ class LocalComputationManager(
     private fun generateSuffix(currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {
         var data = currentData
         for (i in algorithms.size until size) {
-            val algorithmName = algorithmChooser.chooseAlgorithm(extractor, data)
-            val algorithm = algorithmsMap[algorithmName]!!.randomAlgorithm(random)
-            algorithms += algorithm
-            data = algorithm.apply(data)
+            while (true) {
+                val algorithmName = algorithmChooser.chooseAlgorithm(extractor, data)
+                val algorithm = algorithmsMap[algorithmName]!!.randomAlgorithm(random)
+                try {
+                    data = algorithm.apply(data)
+                    algorithms += algorithm
+                    break
+                } catch (e: Exception) {
+                    logger.error(e)
+                }
+            }
         }
 
         val classifierName = algorithmChooser.chooseClassifier(extractor, data)
@@ -145,11 +155,25 @@ class LocalComputationManager(
 
     private fun Transformer.apply(data: Instances): Instances {
         val (search, evaluator) = invoke()
-        val filter = AttributeSelection()
-        filter.search = search
-        filter.evaluator = evaluator
-        filter.setInputFormat(data)
-        return Filter.useFilter(data, filter)
+        var transformedData = attributeSelection(search, evaluator, data)
+        if (transformedData.numAttributes() == 1) {
+            if (search is Ranker) {
+                val defaultSearch = Ranker()
+                defaultSearch.numToSelect = 1
+                transformedData = attributeSelection(defaultSearch, evaluator, data)
+            } else {
+                throw IllegalStateException("attribute selection must choose at least one non class attribute")
+            }
+        }
+        return transformedData
+    }
+
+    private fun attributeSelection(search: ASSearch, evaluator: ASEvaluation, data: Instances): Instances {
+        val selection = AttributeSelection()
+        selection.search = search
+        selection.evaluator = evaluator
+        selection.setInputFormat(data)
+        return Filter.useFilter(data, selection)
     }
 
     private fun <T> submit(block: () -> T): T = pool.submit(block).get()

@@ -177,9 +177,9 @@ class GeneticAlgorithm(
             val workflow = individual.workflow
             val size = workflow.algorithms.size
             (1..params.mutationNumber).map {
-                val cutPoint = random.nextInt(size) + 1
-                val nextSize = random.nextInt(params.maxWorkflowSize - cutPoint) + 1
-                ComputationManager.MutationParam(workflow, cutPoint, nextSize)
+                val keepPrefixSize = random.nextInt(size)
+                val nextSize = random.nextInt(params.maxWorkflowSize - keepPrefixSize) + keepPrefixSize + 1
+                ComputationManager.MutationParam(workflow, keepPrefixSize, nextSize)
             }
         }
         return computationManager.mutation(mutationParams)

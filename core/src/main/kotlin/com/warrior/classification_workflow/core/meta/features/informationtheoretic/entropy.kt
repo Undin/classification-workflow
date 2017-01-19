@@ -43,7 +43,12 @@ fun entropy(instances: Instances, attribute: Attribute): EntropyResult {
 fun mutualInformation(instances: Instances, attribute: Attribute): Double {
     val featureInstances = oneAttributeInstances(instances, attribute)
     val infoGain = InfoGainAttributeEval()
-    infoGain.buildEvaluator(featureInstances)
+    try {
+        infoGain.buildEvaluator(featureInstances)
+    } catch (e: Exception) {
+        // TODO: fix it
+        return 0.0
+    }
     return infoGain.evaluateAttribute(0)
 }
 

@@ -17,6 +17,8 @@ dependencies {
     compile libraries.kotlin
     compile libraries.kotlinxSupportJdk8
 
+    compile libraries.jacksonKotlin
+
     compile libraries.hibernate
     compile libraries.postgresql
 

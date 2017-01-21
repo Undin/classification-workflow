@@ -2,8 +2,7 @@ package com.warrior.classification_workflow.baseline
 
 import com.fasterxml.jackson.core.JsonEncoding
 import com.fasterxml.jackson.core.JsonGenerator
-import com.fasterxml.jackson.databind.MapperFeature
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.hibernate.Session
 import org.hibernate.SessionFactory
 import org.hibernate.cfg.Configuration
@@ -17,13 +16,10 @@ sealed class SaveStrategy : Closeable {
 
     class JsonSaveStrategy(path: String) : SaveStrategy() {
 
-        private val mapper = ObjectMapper()
+        private val mapper = jacksonObjectMapper()
         private val generator: JsonGenerator
 
         init {
-            mapper.disable(MapperFeature.AUTO_DETECT_FIELDS,
-                    MapperFeature.AUTO_DETECT_GETTERS,
-                    MapperFeature.AUTO_DETECT_IS_GETTERS)
             generator = mapper.factory.createGenerator(File(path), JsonEncoding.UTF8)
             generator.writeStartArray()
         }

@@ -1,10 +1,8 @@
 package com.warrior.classification_workflow.baseline
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.warrior.classification_workflow.core.Algorithm.Classifier
-import com.warrior.classification_workflow.core.AlgorithmConfiguration.ClassifierConfiguration
-import com.warrior.classification_workflow.core.Workflow
-import com.warrior.classification_workflow.core.load
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
+import com.warrior.classification_workflow.core.*
 import kotlinx.support.jdk8.collections.parallelStream
 import libsvm.svm
 import org.kohsuke.args4j.CmdLineException
@@ -29,8 +27,8 @@ fun main(args: Array<String>) {
     val parser = CmdLineParser(arguments)
     try {
         parser.parseArgument(*args)
-        val mapper = ObjectMapper()
-        val config = mapper.readValue(File(arguments.configPath), Config::class.java)
+        val mapper = jacksonObjectMapper()
+        val config: Config = mapper.readValue(File(arguments.configPath))
         doClassification(config)
     } catch (e: CmdLineException) {
         e.printStackTrace(System.err)
@@ -115,7 +113,7 @@ private fun calculate(workflows: List<Workflow>, data: Instances, name: String, 
 
 private fun measure(workflow: Workflow, data: Instances, name: String): ResultEntity {
     val eval = Evaluation(data)
-    eval.crossValidateModel(workflow, data, 10, Random())
+    eval.crossValidateModel(workflow.classifier(), data, 10, Random())
     return ResultEntity(name, workflow, "f-measure", eval.unweightedMacroFmeasure())
 }
 

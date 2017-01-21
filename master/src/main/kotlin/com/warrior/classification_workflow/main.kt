@@ -38,12 +38,11 @@ fun main(args: Array<String>) {
 private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser): LocalComputationManager {
     val classifierMap = config.classifiers.associateBy { it.name }
     val transformerMap = config.transformers.associateBy { it.name }
-    val algorithmMap = classifierMap + transformerMap
     val computationManager = LocalComputationManager(
             config.dataset,
             algorithmChooser,
-            algorithmMap,
             classifierMap,
+            transformerMap,
             config.threads
     )
     return computationManager

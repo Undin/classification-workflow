@@ -1,6 +1,7 @@
 package com.warrior.classification_workflow
 
 import com.warrior.classification_workflow.core.*
+import com.warrior.classification_workflow.ComputationManager.Mutation.*
 import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
 import com.warrior.classification_workflow.meta.AlgorithmChooser
 import kotlinx.support.jdk8.collections.parallelStream
@@ -27,12 +28,14 @@ import java.util.concurrent.atomic.AtomicInteger
 class LocalComputationManager(
         private val dataset: String,
         private val algorithmChooser: AlgorithmChooser,
-        private val algorithmsMap: Map<String, AlgorithmConfiguration>,
         private val classifiersMap: Map<String, ClassifierConfiguration>,
+        private val transformersMap: Map<String, TransformerConfiguration>,
         threads: Int
 ) : ComputationManager {
 
     private val logger: Logger = LogManager.getLogger(LocalComputationManager::class.java)
+
+    private val algorithmsMap: Map<String, AlgorithmConfiguration> = classifiersMap + transformersMap
 
     private val datasetFolder: String = "datasets"
     private val numFolds: Int = 10
@@ -51,24 +54,50 @@ class LocalComputationManager(
         }
     }
 
-    override fun mutation(params: List<ComputationManager.MutationParam>): List<Workflow> {
+    override fun mutation(params: List<ComputationManager.Mutation>): List<Workflow> {
         return submit {
             params.parallelStream()
-                    .map { p ->
-                        val (workflow, keepPrefixSize, size) = p
-                        val extractor = workflow.extractor?.get() ?: CommonMetaFeatureExtractor()
-                        var data = instances.value
-
-                        val prefix = workflow.algorithms.take(keepPrefixSize)
-                        val algorithms = ArrayList<Algorithm>(size - 1)
-                        for (algorithm in prefix) {
-                            algorithms += algorithm
-                            data = algorithm.apply(data)
+                    .map { mutation ->
+                        when (mutation) {
+                            is StructureMutation -> structureMutation(mutation.workflow, mutation.keepPrefixSize, mutation.size)
+                            is HyperparamMutation -> hyperparamMutation(mutation.workflow)
                         }
-                        generateSuffix(data, algorithms, size, extractor)
                     }
                     .toList()
         }
+    }
+
+    private fun structureMutation(workflow: Workflow, keepPrefixSize: Int, size: Int): Workflow {
+        val extractor = workflow.extractor?.get() ?: CommonMetaFeatureExtractor()
+        var data = instances.value
+
+        val prefix = workflow.algorithms.take(keepPrefixSize)
+        val algorithms = ArrayList<Algorithm>(size - 1)
+        for (algorithm in prefix) {
+            algorithms += algorithm
+            data = algorithm.apply(data)
+        }
+        return generateSuffix(data, algorithms, size, extractor)
+    }
+
+    private fun hyperparamMutation(workflow: Workflow): Workflow {
+        val newAlgorithms = ArrayList(workflow.allAlgorithms)
+        for ((index, algo) in newAlgorithms.withIndex()) {
+            if (random.nextDouble() < 1.0 / newAlgorithms.size) {
+                newAlgorithms[index] = when (algo) {
+                    is Classifier -> {
+                        val classifierConfiguration = classifiersMap[algo.name]!!
+                        classifierConfiguration.randomClassifier(random)
+                    }
+                    is Transformer -> {
+                        val transformerConfiguration = transformersMap[algo.name]!!
+                        transformerConfiguration.randomTransformer(random)
+                    }
+                    else -> throw UnsupportedOperationException()
+                }
+            }
+        }
+        return Workflow(newAlgorithms)
     }
 
     private fun generateSuffix(currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {

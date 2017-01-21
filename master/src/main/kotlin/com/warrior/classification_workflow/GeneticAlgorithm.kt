@@ -1,6 +1,8 @@
 package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.warrior.classification_workflow.ComputationManager.Mutation.HyperparamMutation
+import com.warrior.classification_workflow.ComputationManager.Mutation.StructureMutation
 import com.warrior.classification_workflow.core.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
@@ -177,9 +179,13 @@ class GeneticAlgorithm(
             val workflow = individual.workflow
             val size = workflow.algorithms.size
             (1..params.mutationNumber).map {
-                val keepPrefixSize = random.nextInt(size)
-                val nextSize = random.nextInt(params.maxWorkflowSize - keepPrefixSize) + keepPrefixSize + 1
-                ComputationManager.MutationParam(workflow, keepPrefixSize, nextSize)
+                if (random.nextDouble() < params.structureMutationProbability) {
+                    val keepPrefixSize = random.nextInt(size)
+                    val nextSize = random.nextInt(params.maxWorkflowSize - keepPrefixSize) + keepPrefixSize + 1
+                    StructureMutation(workflow, keepPrefixSize, nextSize)
+                } else {
+                    HyperparamMutation(workflow)
+                }
             }
         }
         return computationManager.mutation(mutationParams)
@@ -195,18 +201,20 @@ class GeneticAlgorithm(
 
     private fun paramMutation(workflow: Workflow): Workflow {
         val newAlgorithms = ArrayList(workflow.allAlgorithms)
-        val index = random.nextInt(newAlgorithms.size)
-        val algo = newAlgorithms[index]
-        newAlgorithms[index] = when (algo) {
-            is Classifier -> {
-                val classifierConfiguration = classifiers[algo.name]!!
-                classifierConfiguration.randomClassifier(random)
+        for ((index, algo) in newAlgorithms.withIndex()) {
+            if (random.nextDouble() < 1.0 / newAlgorithms.size) {
+                newAlgorithms[index] = when (algo) {
+                    is Classifier -> {
+                        val classifierConfiguration = classifiers[algo.name]!!
+                        classifierConfiguration.randomClassifier(random)
+                    }
+                    is Transformer -> {
+                        val transformerConfiguration = transformers[algo.name]!!
+                        transformerConfiguration.randomTransformer(random)
+                    }
+                    else -> throw UnsupportedOperationException()
+                }
             }
-            is Transformer -> {
-                val transformerConfiguration = transformers[algo.name]!!
-                transformerConfiguration.randomTransformer(random)
-            }
-            else -> throw UnsupportedOperationException()
         }
         return Workflow(newAlgorithms)
     }

@@ -58,10 +58,7 @@ internal class WorkflowClassifier(
                             eval.buildEvaluator(currentData)
                             currentData = eval.transformedData(currentData)
                             val indices = usefulAttributes(currentData)
-                            if (indices.size != currentData.numAttributes()) {
-                                currentData = filter(currentData, indices)
-                            }
-
+                            currentData = filter(currentData, indices)
                             builtTransformers[i] = eval
                             buildIndices[i] = indices
                         } else {
@@ -76,9 +73,7 @@ internal class WorkflowClassifier(
                     } else {
                         currentData = builtTransformers[i]?.transformedData(currentData) ?: currentData
                         val indices = buildIndices[i]!!
-                        if (indices.size != currentData.numAttributes()) {
-                            currentData = filter(currentData, indices)
-                        }
+                        currentData = filter(currentData, indices)
                     }
                 }
             }

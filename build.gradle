@@ -30,6 +30,7 @@ ext.libraries = [
         jacksonYaml                 : 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:' + versions.jackson,
         args4j                      : 'args4j:args4j:2.33',
         commonsCli                  : 'commons-cli:commons-cli:1.3.1',
+        commonsCSV                  : 'org.apache.commons:commons-csv:1.4',
         log4j2                      : 'org.apache.logging.log4j:log4j-core:2.7',
 
         weka                        : 'nz.ac.waikato.cms.weka:weka-dev:3.9.0',

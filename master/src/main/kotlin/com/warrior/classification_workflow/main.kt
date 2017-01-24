@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.benmanes.caffeine.cache.Cache
+import com.github.benmanes.caffeine.cache.Caffeine
 import com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanceEntity
 import com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity
 import com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity
@@ -13,8 +15,10 @@ import libsvm.svm
 import org.apache.commons.cli.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
+import weka.core.Instances
 import java.io.File
 import java.util.*
+import kotlin.system.measureTimeMillis
 
 /**
  * Created by warrior on 29/06/16.
@@ -30,20 +34,31 @@ fun main(args: Array<String>) {
     val computationManager = computationManager(config, algorithmChooser)
     val ga = GeneticAlgorithm(config, computationManager)
     svm.svm_set_print_string_function { it -> }
-    val result = ga.search()
 
-    logger.value.info(Supplier { result.toString() })
+    val time = measureTimeMillis {
+        val result = ga.search()
+        logger.value.info(Supplier { result.toString() })
+    }
+
+    println(time)
+
 }
 
 private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser): LocalComputationManager {
     val classifierMap = config.classifiers.associateBy { it.name }
     val transformerMap = config.transformers.associateBy { it.name }
+    val cache: Cache<String, MutableMap<Int, Instances>> = Caffeine.newBuilder()
+            .maximumSize((config.params.populationSize + 1) * config.params.mutationNumber.toLong())
+            .build()
+
     val computationManager = LocalComputationManager(
-            config.dataset,
-            algorithmChooser,
-            classifierMap,
-            transformerMap,
-            config.threads
+            dataset = config.dataset,
+            algorithmChooser = algorithmChooser,
+            classifiersMap = classifierMap,
+            transformersMap = transformerMap,
+            cache = cache,
+            cachePrefixSize = config.cachePrefixSize,
+            threads = config.threads
     )
     return computationManager
 }
@@ -62,12 +77,12 @@ private fun algorithmChooser(config: Config): AlgorithmChooser {
     val transformers = transformerPerformance.mapTo(HashSet()) { it.transformerName }
 
     val algorithmChooser = AlgorithmChooser(
-            datasets,
-            classifiers,
-            transformers,
-            metaFeatures,
-            classifierPerformance,
-            transformerPerformance
+            datasets = datasets,
+            classifiers = classifiers,
+            transformers = transformers,
+            metaFeatures = metaFeatures,
+            classifierPerformance = classifierPerformance,
+            transformerPerformance = transformerPerformance
     )
     return algorithmChooser
 }

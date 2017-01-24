@@ -14,6 +14,8 @@ dependencies {
     compile libraries.kotlin
     compile libraries.kotlinxSupportJdk8
 
+    compile libraries.caffeine
+
     compile libraries.commonsCli
 
     compile libraries.jackson

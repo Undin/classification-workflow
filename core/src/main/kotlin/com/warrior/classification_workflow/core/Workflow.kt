@@ -8,7 +8,8 @@ import java.util.*
  * Created by warrior on 12/07/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Workflow @JsonCreator constructor(
+class Workflow(
+        @JsonIgnore val uuid: String,
         @JsonProperty("algorithms") val algorithms: List<Algorithm>,
         @JsonProperty("classifier") val classifier: Classifier
 ) {
@@ -18,13 +19,18 @@ class Workflow @JsonCreator constructor(
     @JsonIgnore
     var extractor: ThreadLocal<CommonMetaFeatureExtractor>? = null
 
-    constructor(algorithms: List<Algorithm>) : this(
+    @JsonCreator
+    constructor(@JsonProperty("algorithms") algorithms: List<Algorithm>,
+                @JsonProperty("classifier") classifier: Classifier): this(UUID.randomUUID().toString(), algorithms, classifier)
+
+    constructor(uuid: String, algorithms: List<Algorithm>) : this(
+            uuid,
             ArrayList(algorithms.subList(0, algorithms.lastIndex)),
             algorithms.last() as Classifier
     )
 
-    constructor(algorithms: List<Algorithm>, classifier: Classifier, extractor: CommonMetaFeatureExtractor):
-            this(algorithms, classifier) {
+    constructor(uuid: String, algorithms: List<Algorithm>, classifier: Classifier, extractor: CommonMetaFeatureExtractor):
+            this(uuid, algorithms, classifier) {
         this.extractor = ThreadLocal()
         this.extractor?.set(extractor)
     }

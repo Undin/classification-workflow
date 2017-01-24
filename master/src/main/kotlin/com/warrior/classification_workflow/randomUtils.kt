@@ -45,3 +45,5 @@ fun SearchConfiguration.randomSearch(random: Random): Search
 
 fun EvaluationConfiguration.randomEvaluation(random: Random): Evaluation
         = Evaluation(className, options.randomValues(random))
+
+fun randomUUID(): String = UUID.randomUUID().toString()

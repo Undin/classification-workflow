@@ -1,5 +1,6 @@
 package com.warrior.classification_workflow
 
+import com.github.benmanes.caffeine.cache.Cache
 import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.ComputationManager.Mutation.*
 import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
@@ -30,6 +31,8 @@ class LocalComputationManager(
         private val algorithmChooser: AlgorithmChooser,
         private val classifiersMap: Map<String, ClassifierConfiguration>,
         private val transformersMap: Map<String, TransformerConfiguration>,
+        private val cache: Cache<String, MutableMap<Int, Instances>>,
+        private val cachePrefixSize: Int,
         threads: Int
 ) : ComputationManager {
 
@@ -48,7 +51,7 @@ class LocalComputationManager(
         return submit {
             sizes.parallelStream()
                     .map { size ->
-                        generateSuffix(instances.value, ArrayList(), size, CommonMetaFeatureExtractor())
+                        generateSuffix(randomUUID(), instances.value, ArrayList(), size, CommonMetaFeatureExtractor())
                     }
                     .toList()
         }
@@ -71,17 +74,24 @@ class LocalComputationManager(
         val extractor = workflow.extractor?.get() ?: CommonMetaFeatureExtractor()
         var data = instances.value
 
+        val uuid = workflow.uuid
+        val newUuid = randomUUID()
         val prefix = workflow.algorithms.take(keepPrefixSize)
         val algorithms = ArrayList<Algorithm>(size - 1)
-        for (algorithm in prefix) {
+        for ((position, algorithm) in prefix.withIndex()) {
             algorithms += algorithm
-            data = algorithm.apply(data)
+            data = algorithm.apply(uuid, position, data)
+            toCache(newUuid, position, data)
+
         }
-        return generateSuffix(data, algorithms, size, extractor)
+        return generateSuffix(newUuid, data, algorithms, size, extractor)
     }
 
     private fun hyperparamMutation(workflow: Workflow): Workflow {
         val newAlgorithms = ArrayList(workflow.allAlgorithms)
+        val uuid = workflow.uuid
+        val newUuid = randomUUID()
+        var isMutated = false
         for ((index, algo) in newAlgorithms.withIndex()) {
             if (random.nextDouble() < 1.0 / newAlgorithms.size) {
                 newAlgorithms[index] = when (algo) {
@@ -95,19 +105,25 @@ class LocalComputationManager(
                     }
                     else -> throw UnsupportedOperationException()
                 }
+                isMutated = true
+            } else if (!isMutated) {
+                val data = fromCache(uuid, index)
+                if (data != null) {
+                    toCache(newUuid, index, data)
+                }
             }
         }
-        return Workflow(newAlgorithms)
+        return Workflow(newUuid, newAlgorithms)
     }
 
-    private fun generateSuffix(currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {
+    private fun generateSuffix(uuid: String, currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {
         var data = currentData
         for (i in algorithms.size until size) {
             while (true) {
                 val algorithmName = algorithmChooser.chooseAlgorithm(extractor, data)
                 val algorithm = algorithmsMap[algorithmName]!!.randomAlgorithm(random)
                 try {
-                    data = algorithm.apply(data)
+                    data = algorithm.apply(uuid, i, data)
                     algorithms += algorithm
                     break
                 } catch (e: Exception) {
@@ -118,7 +134,7 @@ class LocalComputationManager(
 
         val classifierName = algorithmChooser.chooseClassifier(extractor, data)
         val classifier = classifiersMap[classifierName]!!.randomClassifier(random)
-        val workflow = Workflow(algorithms, classifier, extractor)
+        val workflow = Workflow(uuid, algorithms, classifier, extractor)
         return workflow
     }
 
@@ -141,60 +157,72 @@ class LocalComputationManager(
         return eval.unweightedMacroFmeasure()
     }
 
-    private fun Algorithm.apply(data: Instances): Instances {
+    private fun Algorithm.apply(uuid: String, position: Int, data: Instances): Instances {
         return when (this) {
-            is Classifier -> apply(data)
-            is Transformer -> apply(data)
+            is Classifier -> apply(uuid, position, data)
+            is Transformer -> apply(uuid, position, data)
             else -> throw UnsupportedOperationException()
         }
     }
 
-    private fun Classifier.apply(data: Instances): Instances {
-        // create new Instances container with addition attribute
-        val newAttributes = ArrayList<Attribute>(data.numAttributes() + 1)
-        val classifierResultAttr = data.classAttribute().copy("$name-${counter.andIncrement}")
-        newAttributes += classifierResultAttr
-        data.enumerateAttributes()
-                .asSequence()
-                .mapTo(newAttributes) { it.clone() }
-        newAttributes += data.classAttribute().clone()
-        val newData = Instances(data.relationName(), newAttributes, data.size)
-        newData.setClass(newAttributes.last())
+    private fun Classifier.apply(uuid: String, position: Int, data: Instances): Instances {
+        val cacheData = fromCache(uuid, position)
+        return if (cacheData != null) {
+            cacheData
+        } else {
+            // create new Instances container with addition attribute
+            val newAttributes = ArrayList<Attribute>(data.numAttributes() + 1)
+            val classifierResultAttr = data.classAttribute().copy("$name-${counter.andIncrement}")
+            newAttributes += classifierResultAttr
+            data.enumerateAttributes()
+                    .asSequence()
+                    .mapTo(newAttributes) { it.clone() }
+            newAttributes += data.classAttribute().clone()
+            val newData = Instances(data.relationName(), newAttributes, data.size)
+            newData.setClass(newAttributes.last())
 
-        // prepare data for cross validation
-        val copiedData = Instances(data)
-        copiedData.randomize(random)
-        val classifierModel = invoke()
-        val classifierCopies = AbstractClassifier.makeCopies(classifierModel, numFolds)
+            // prepare data for cross validation
+            val copiedData = Instances(data)
+            copiedData.randomize(random)
+            val classifierModel = invoke()
+            val classifierCopies = AbstractClassifier.makeCopies(classifierModel, numFolds)
 
-        // cross validation
-        for ((i, c) in classifierCopies.withIndex()) {
-            val train = copiedData.trainCV(numFolds, i, random)
-            val test = copiedData.testCV(numFolds, i)
-            c.buildClassifier(train)
-            for (inst in test) {
-                val result = c.classifyInstance(inst)
-                val values = DoubleArray(newAttributes.size) { j -> if (j == 0) result else inst.value(j - 1) }
-                val newInstance = DenseInstance(1.0, values)
-                newData += newInstance
+            // cross validation
+            for ((i, c) in classifierCopies.withIndex()) {
+                val train = copiedData.trainCV(numFolds, i, random)
+                val test = copiedData.testCV(numFolds, i)
+                c.buildClassifier(train)
+                for (inst in test) {
+                    val result = c.classifyInstance(inst)
+                    val values = DoubleArray(newAttributes.size) { j -> if (j == 0) result else inst.value(j - 1) }
+                    val newInstance = DenseInstance(1.0, values)
+                    newData += newInstance
+                }
             }
+            toCache(uuid, position, newData)
+            newData
         }
-        return newData
     }
 
-    private fun Transformer.apply(data: Instances): Instances {
-        val (search, evaluator) = invoke()
-        var transformedData = attributeSelection(search, evaluator, data)
-        if (transformedData.numAttributes() == 1) {
-            if (search is Ranker) {
-                val defaultSearch = Ranker()
-                defaultSearch.numToSelect = 1
-                transformedData = attributeSelection(defaultSearch, evaluator, data)
-            } else {
-                throw IllegalStateException("attribute selection must choose at least one non class attribute")
+    private fun Transformer.apply(uuid: String, position: Int, data: Instances): Instances {
+        val cacheData = fromCache(uuid, position)
+        return if (cacheData != null) {
+            cacheData
+        } else {
+            val (search, evaluator) = invoke()
+            var transformedData = attributeSelection(search, evaluator, data)
+            if (transformedData.numAttributes() == 1) {
+                if (search is Ranker) {
+                    val defaultSearch = Ranker()
+                    defaultSearch.numToSelect = 1
+                    transformedData = attributeSelection(defaultSearch, evaluator, data)
+                } else {
+                    throw IllegalStateException("attribute selection must choose at least one non class attribute")
+                }
             }
+            toCache(uuid, position, transformedData)
+            transformedData
         }
-        return transformedData
     }
 
     private fun attributeSelection(search: ASSearch, evaluator: ASEvaluation, data: Instances): Instances {
@@ -203,6 +231,18 @@ class LocalComputationManager(
         selection.evaluator = evaluator
         selection.setInputFormat(data)
         return Filter.useFilter(data, selection)
+    }
+
+    private fun fromCache(uuid: String, position: Int): Instances? {
+        val workflowCache = cache.get(uuid) { HashMap() }!!
+        return workflowCache[position]
+    }
+
+    private fun toCache(uuid: String, position: Int, data: Instances) {
+        if (position < cachePrefixSize) {
+            val workflowCache = cache.get(uuid) { HashMap() }!!
+            workflowCache[position] = data
+        }
     }
 
     private fun <T> submit(block: () -> T): T = pool.submit(block).get()

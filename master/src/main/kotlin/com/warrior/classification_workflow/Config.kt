@@ -13,6 +13,7 @@ data class Config(
         @JsonProperty("dataset_folder") val datasetFolder: String,
         @JsonProperty("dataset") val dataset: String,
         @JsonProperty("threads") val threads: Int,
+        @JsonProperty("cache_prefix_size") val cachePrefixSize: Int,
         @JsonProperty("log_folder") val logFolder: String,
         @JsonProperty("classifiers") val classifiers: List<ClassifierConfiguration>,
         @JsonProperty("transformers") val transformers: List<TransformerConfiguration>,

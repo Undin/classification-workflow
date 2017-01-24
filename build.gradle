@@ -3,7 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.5'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.6'
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
@@ -19,8 +19,10 @@ def versions = [
 ]
 
 ext.libraries = [
-        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.5',
+        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6',
         kotlinxSupportJdk8          : 'org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3',
+
+        caffeine                    : 'com.github.ben-manes.caffeine:caffeine:2.3.5',
 
         hibernate                   : 'org.hibernate:hibernate-core:5.2.4.Final',
         postgresql                  : 'org.postgresql:postgresql:9.4.1212',

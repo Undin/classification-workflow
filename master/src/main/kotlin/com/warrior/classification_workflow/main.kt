@@ -7,6 +7,8 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.benmanes.caffeine.cache.Cache
 import com.github.benmanes.caffeine.cache.Caffeine
+import com.warrior.classification_workflow.core.Workflow
+import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanceEntity
 import com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity
 import com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity
@@ -15,6 +17,7 @@ import libsvm.svm
 import org.apache.commons.cli.*
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
+import weka.classifiers.Evaluation
 import weka.core.Instances
 import java.io.File
 import java.util.*
@@ -23,6 +26,7 @@ import kotlin.system.measureTimeMillis
 /**
  * Created by warrior on 29/06/16.
  */
+private const val RESULT_FOLDER = "results/master"
 private val logger = lazy { LogManager.getLogger("main") }
 
 fun main(args: Array<String>) {
@@ -31,20 +35,48 @@ fun main(args: Array<String>) {
     val config: Config = yamlMapper.readValue(File(configPath))
 
     val algorithmChooser = algorithmChooser(config)
-    val computationManager = computationManager(config, algorithmChooser)
+    val instances = load("${config.datasetFolder}/${config.dataset}")
+
+    instances.randomize(Random())
+    val train = instances.trainCV(4, 0)
+    val test = instances.testCV(4, 0)
+
+    val computationManager = computationManager(config, algorithmChooser, train)
     val ga = GeneticAlgorithm(config, computationManager)
     svm.svm_set_print_string_function { it -> }
 
     val time = measureTimeMillis {
         val result = ga.search()
-        logger.value.info(Supplier { result.toString() })
+        val testScore = testWorkflow(result.workflow, train, test)
+        val datasetName = instances.relationName()
+
+        val mapper = jacksonObjectMapper()
+        val workflowPerformanceEntity = WorkflowPerformanceEntity(
+                datasetName = datasetName,
+                workflow = result.workflow,
+                trainScore = result.measure,
+                testScore = testScore)
+        File(RESULT_FOLDER).mkdirs()
+        mapper.writeValue(File(RESULT_FOLDER, "master-$datasetName.json"), workflowPerformanceEntity)
+
+        val loggerInstance = logger.value
+        loggerInstance.info(Supplier { result.workflow })
+
+        loggerInstance.info("train score: ${result.measure}")
+        loggerInstance.info("test score: $testScore")
     }
-
-    println(time)
-
+    logger.value.info("computation time: $time")
 }
 
-private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser): LocalComputationManager {
+private fun testWorkflow(workflow: Workflow, train: Instances, test: Instances): Double {
+    val classifier = workflow.classifier()
+    val eval = Evaluation(train)
+    classifier.buildClassifier(train)
+    eval.evaluateModel(classifier, test)
+    return eval.unweightedMacroFmeasure()
+}
+
+private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser, instances: Instances): LocalComputationManager {
     val classifierMap = config.classifiers.associateBy { it.name }
     val transformerMap = config.transformers.associateBy { it.name }
     val cache: Cache<String, MutableMap<Int, Instances>> = Caffeine.newBuilder()
@@ -52,7 +84,7 @@ private fun computationManager(config: Config, algorithmChooser: AlgorithmChoose
             .build()
 
     val computationManager = LocalComputationManager(
-            dataset = config.dataset,
+            instances = instances,
             algorithmChooser = algorithmChooser,
             classifiersMap = classifierMap,
             transformersMap = transformerMap,

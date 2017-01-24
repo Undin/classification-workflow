@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger
  * Created by warrior on 29/06/16.
  */
 class LocalComputationManager(
-        private val dataset: String,
+        private val instances: Instances,
         private val algorithmChooser: AlgorithmChooser,
         private val classifiersMap: Map<String, ClassifierConfiguration>,
         private val transformersMap: Map<String, TransformerConfiguration>,
@@ -45,13 +45,13 @@ class LocalComputationManager(
     private val random: Random = Random()
     private val pool: ForkJoinPool = ForkJoinPool(threads)
 
-    private val instances: Lazy<Instances> = lazy { load("$datasetFolder/$dataset") }
+//    private val instances: Lazy<Instances> = lazy { load("$datasetFolder/$dataset") }
 
     override fun generate(count: Int, sizes: List<Int>): List<Workflow> {
         return submit {
             sizes.parallelStream()
                     .map { size ->
-                        generateSuffix(randomUUID(), instances.value, ArrayList(), size, CommonMetaFeatureExtractor())
+                        generateSuffix(randomUUID(), instances, ArrayList(), size, CommonMetaFeatureExtractor())
                     }
                     .toList()
         }
@@ -72,7 +72,7 @@ class LocalComputationManager(
 
     private fun structureMutation(workflow: Workflow, keepPrefixSize: Int, size: Int): Workflow {
         val extractor = workflow.extractor?.get() ?: CommonMetaFeatureExtractor()
-        var data = instances.value
+        var data = instances
 
         val uuid = workflow.uuid
         val newUuid = randomUUID()
@@ -141,7 +141,7 @@ class LocalComputationManager(
     override fun evaluate(workflows: List<Workflow>): List<Result> {
         return submit {
             workflows.parallelStream()
-                    .map { w -> Result(w, compute(w, instances.value)) }
+                    .map { w -> Result(w, compute(w, instances)) }
                     .toList()
         }
     }

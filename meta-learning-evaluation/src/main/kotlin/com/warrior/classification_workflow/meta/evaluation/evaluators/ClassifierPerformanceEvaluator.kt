@@ -1,8 +1,7 @@
 package com.warrior.classification_workflow.meta.evaluation.evaluators
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.warrior.classification_workflow.core.Classifier
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.meta.evaluation.*
@@ -26,8 +25,8 @@ class ClassifierPerformanceEvaluator(private val config: ClassifierPerfConfig, p
         val random = Random()
         val saveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
-        val task = ForkJoinTask.adapt {
-            for (dataset in datasets) {
+        val tasks = datasets.map { dataset ->
+            ForkJoinTask.adapt {
                 val datasetSet = currentResults[dataset.nameWithoutExtension] ?: emptySet()
                 val classifiers = config.classifiers.filter { it.name !in datasetSet }
                 if (classifiers.isNotEmpty()) {
@@ -38,12 +37,12 @@ class ClassifierPerformanceEvaluator(private val config: ClassifierPerfConfig, p
                 }
             }
         }
-        return listOf(task)
+        return tasks
     }
 
     private fun currentResults(): Map<String, Set<String>> {
         val results = if (config.currentResults != null) {
-            val mapper = ObjectMapper().registerKotlinModule()
+            val mapper = jacksonObjectMapper()
             try {
                 mapper.readValue<List<ClassifierPerformanceEntity>>(File(config.currentResults))
             } catch (e: Exception) {

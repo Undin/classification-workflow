@@ -15,7 +15,7 @@ public class ClassifierPerformanceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "classifier_performance_seq")
-    @SequenceGenerator(name = "classifier_performance_seq", sequenceName = "classifier_performance_seq")
+    @SequenceGenerator(name = "classifier_performance_seq", sequenceName = "classifier_performance_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private int id;
 

@@ -15,7 +15,7 @@ public class TransformerPerformanceEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "transformer_performance_seq")
-    @SequenceGenerator(name = "transformer_performance_seq", sequenceName = "transformer_performance_seq")
+    @SequenceGenerator(name = "transformer_performance_seq", sequenceName = "transformer_performance_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private int id;
 

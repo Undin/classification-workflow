@@ -15,7 +15,7 @@ public class MetaFeaturesEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "meta_features_seq")
-    @SequenceGenerator(name = "meta_features_seq", sequenceName = "meta_features_seq")
+    @SequenceGenerator(name = "meta_features_seq", sequenceName = "meta_features_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private int id;
 

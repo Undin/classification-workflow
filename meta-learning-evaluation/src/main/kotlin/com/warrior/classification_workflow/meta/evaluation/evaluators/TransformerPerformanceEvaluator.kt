@@ -9,6 +9,7 @@ import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.meta.evaluation.*
 import weka.attributeSelection.ASEvaluation
 import weka.attributeSelection.ASSearch
+import weka.attributeSelection.PrincipalComponents
 import weka.core.Instances
 import weka.filters.Filter
 import weka.filters.supervised.attribute.AttributeSelection
@@ -80,18 +81,26 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
 
     private fun calculate(transformer: Transformer, classifiers: List<Classifier>, data: Instances,
                           random: Random, saveStrategy: SaveStrategy) {
-        val transformedData = logger.withLog("${transformer.name} on ${data.relationName()}") {
-            transform(transformer, data)
-        }
-
-        classifiers.forEachParallel { classifier ->
-            val measure = logger.withLog("evaluate ${classifier.name} on ${data.relationName()}") {
-                crossValidation(classifier, transformedData, random)
+        if (transformer.evaluation.className == PrincipalComponents::class.java.name) {
+            classifiers.forEach { classifier ->
+                val entity = TransformerPerformanceEntity(transformer.name, classifier.name,
+                        data.relationName(), 0.0)
+                saveStrategy.save(entity)
+            }
+        } else {
+            val transformedData = logger.withLog("${transformer.name} on ${data.relationName()}") {
+                transform(transformer, data)
             }
 
-            val entity = TransformerPerformanceEntity(transformer.name, classifier.name,
-                    data.relationName(), measure)
-            saveStrategy.save(entity)
+            classifiers.forEachParallel { classifier ->
+                val measure = logger.withLog("evaluate ${classifier.name} on ${data.relationName()}") {
+                    crossValidation(classifier, transformedData, random)
+                }
+
+                val entity = TransformerPerformanceEntity(transformer.name, classifier.name,
+                        data.relationName(), measure)
+                saveStrategy.save(entity)
+            }
         }
     }
 

@@ -19,7 +19,7 @@ import java.util.stream.Stream
  */
 abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Evaluator {
 
-    private val crossValidationIterations = 10
+    private val crossValidationIterations = 1
     private val crossValidationFolders = 10
 
     protected val logger: Logger = LogManager.getLogger(javaClass)

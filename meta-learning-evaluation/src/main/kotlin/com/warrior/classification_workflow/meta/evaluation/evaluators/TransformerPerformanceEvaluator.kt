@@ -81,7 +81,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
 
     private fun calculate(transformer: Transformer, classifiers: List<Classifier>, data: Instances,
                           random: Random, saveStrategy: SaveStrategy) {
-        if (transformer.evaluation.className == PrincipalComponents::class.java.name) {
+        if (transformer.evaluation.className == PrincipalComponents::class.java.name && data.numAttributes() > 1000) {
             classifiers.forEach { classifier ->
                 val entity = TransformerPerformanceEntity(transformer.name, classifier.name,
                         data.relationName(), 0.0)

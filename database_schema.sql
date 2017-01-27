@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS classifier_performance(
     id                              INTEGER             PRIMARY KEY,
     classifier_name                 TEXT                NOT NULL,
     dataset_name                    TEXT                NOT NULL,
-    measure                         DOUBLE PRECISION    NOT NULL
+    measure                         DOUBLE PRECISION    NOT NULL,
+    unique (dataset_name, classifier_name)
 );
 
 CREATE TABLE IF NOT EXISTS transformer_performance(
@@ -29,7 +30,8 @@ CREATE TABLE IF NOT EXISTS transformer_performance(
     transformer_name                TEXT                NOT NULL,
     classifier_name                 TEXT                NOT NULL,
     dataset_name                    TEXT                NOT NULL,
-    measure                         DOUBLE PRECISION    NOT NULL
+    measure                         DOUBLE PRECISION    NOT NULL,
+    unique (dataset_name, transformer_name, classifier_name)
 );
 
 CREATE SEQUENCE IF NOT EXISTS meta_features_seq

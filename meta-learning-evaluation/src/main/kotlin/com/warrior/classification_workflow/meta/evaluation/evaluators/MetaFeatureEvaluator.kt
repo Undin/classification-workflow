@@ -2,7 +2,9 @@ package com.warrior.classification_workflow.meta.evaluation.evaluators
 
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
-import com.warrior.classification_workflow.meta.evaluation.*
+import com.warrior.classification_workflow.core.storage.SaveStrategy
+import com.warrior.classification_workflow.meta.evaluation.MetaFeatureConfig
+import com.warrior.classification_workflow.meta.evaluation.withLog
 import weka.core.Instances
 import java.io.File
 import java.util.concurrent.ForkJoinPool
@@ -32,7 +34,6 @@ class MetaFeatureEvaluator(private val config: MetaFeatureConfig, pool: ForkJoin
             extractor.extract(data)
         }
 
-        val entity = MetaFeaturesEntity(result)
-        saveStrategy.save(entity)
+        saveStrategy.save(result)
     }
 }

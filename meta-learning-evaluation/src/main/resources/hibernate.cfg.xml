@@ -9,8 +9,8 @@
         <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property>
         <property name="hbm2ddl.auto">update</property>
 
-        <mapping class="com.warrior.classification_workflow.meta.evaluation.MetaFeaturesEntity"/>
-        <mapping class="com.warrior.classification_workflow.meta.evaluation.ClassifierPerformanceEntity"/>
-        <mapping class="com.warrior.classification_workflow.meta.evaluation.TransformerPerformanceEntity"/>
+        <mapping class="com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity"/>
+        <mapping class="com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanceEntity"/>
+        <mapping class="com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity"/>
     </session-factory>
 </hibernate-configuration>

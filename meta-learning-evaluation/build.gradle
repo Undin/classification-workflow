@@ -28,7 +28,4 @@ dependencies {
     compile libraries.jacksonYaml
 
     compile libraries.log4j2
-
-    compile libraries.hibernate
-    compile libraries.postgresql
 }

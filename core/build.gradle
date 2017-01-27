@@ -3,11 +3,19 @@ apply plugin: 'kotlin'
 dependencies {
     compile libraries.kotlin
 
+    compile libraries.jackson
+    compile libraries.jacksonKotlin
+
+    compile libraries.log4j2
+
+    compile libraries.hibernate
+    compile libraries.postgresql
+
+    compile libraries.jongo
+    compile libraries.mongo
+
     compile libraries.weka
     compile libraries.apacheMath
-
-    compile libraries.jackson
-    compile libraries.log4j2
 
     testCompile libraries.junit
     testCompile libraries.jacksonKotlin

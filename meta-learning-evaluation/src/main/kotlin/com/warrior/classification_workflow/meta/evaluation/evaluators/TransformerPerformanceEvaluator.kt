@@ -41,7 +41,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
                 }
 
                 if (needCalculate) {
-                    logger.withLog("start $dataset") {
+                    logger.withLog("$dataset") {
                         val data = load(dataset.absolutePath)
                         config.transformers.forEachParallel { transformer ->
                             val transformerSet = datasetMap[transformer.name] ?: emptySet()

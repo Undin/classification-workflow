@@ -1,114 +1,224 @@
-dataset_folder: datasets
+dataset_folder: common-datasets
 out_folder: classifier_performance
 save_strategy: json
 classifiers:
   - name                : "NaiveBayes"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.bayes.NaiveBayes"
     classifier_options  : {}
 
   - name                : "KNN"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.lazy.IBk"
     classifier_options  :
       -K: "3"
 
   - name                : "SVM"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.functions.LibSVM"
     classifier_options  : {}
 
   - name                : "C4.5"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.trees.J48"
     classifier_options  : {}
 
   - name                : "LogR-L2"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.functions.LibLINEAR"
     classifier_options  :
       -S: "0"
 
   - name                : "LogR-L1"
+    type                : "Classifier"
     classifier_class    : "weka.classifiers.functions.LibLINEAR"
     classifier_options  :
       -S: "6"
 
 datasets:
-  # 0 <= instances * features < 10000
-  - balance-scale.arff
-  - diabetes.arff
-  - ecoli.arff
-  - flags.arff
-  - glass.arff
-  - grub-damage.arff
-  - heart-statlog.arff
-  - iris.arff
-  - lymph.arff
-  - molecular-biology_promoters.arff
-  - monks-problems-1_test.arff
-  - monks-problems-1_train.arff
-  - monks-problems-2_test.arff
-  - monks-problems-2_train.arff
-  - monks-problems-3_test.arff
-  - monks-problems-3_train.arff
-  - pasture.arff
-  - solar-flare_1.arff
-  - spect_test.arff
-  - spect_train.arff
-  - spectf_train.arff
-  - white-clover.arff
-  - wine.arff
-  - zoo.arff
-  # 10000 <= instances * features < 100000
-  - anneal.arff
-  - car.arff
-  - cmc.arff
-  - credit-g.arff
-  - ionosphere.arff
-  - kdd_JapaneseVowels_test.arff
-  - kdd_JapaneseVowels_train.arff
-  - kdd_synthetic_control.arff
-  - mfeat-morphological.arff
-  - mfeat-zernike.arff
-  - segment.arff
-  - solar-flare_2.arff
-  - sonar.arff
-  - spectf_test.arff
-  - spectrometer.arff
-  - vehicle.arff
-  - vowel.arff
-  # 100000 <= instances * features < 1000000
-  - ada_agnostic.arff
-  - AR10P.arff
-  - colon.arff
-  - Embryonaldataset_c.arff
-  - GCM_Test.arff
-  - kr-vs-kp.arff
-  - leukemia.arff
-  - Leukemia_3c.arff
-  - leukemia_test_34x7129.arff
-  - leukemia_train_38x7129.arff
-  - mfeat-fourier.arff
-  - mfeat-pixel.arff
-  - pendigits.arff
-  - PIE10P.arff
-  - splice.arff
-  - TOX-171.arff
-  - waveform-5000.arff
-  # 1000000 <= instances * features < 10000000
-  - CLL-SUB-111.arff
-  - ECML90x27679.arff
-  - gina_agnostic.arff
-  - gina_prior.arff
-  - gina_prior2.arff
-  - oh0.wc.arff
-  - oh10.wc.arff
-  - oh15.wc.arff
-  - oh5.wc.arff
-  - SMK-CAN-187.arff
-  - sylva_agnostic.arff
-  - sylva_prior.arff
-  - tr11.wc.arff
-  - tr12.wc.arff
-  - tr23.wc.arff
-  - tr31.wc.arff
-  - tr41.wc.arff
-  - tr45.wc.arff
-  # 10000000 <= instances * features < 100000000
-  - wap.wc.arff
+  # all
+  - ada_agnostic.csv
+  - adult.csv
+  - agaricus-lepiota.csv
+  - allbp.csv
+  - allhyper.csv
+  - allhypo.csv
+  - allrep.csv
+  - analcatdata_aids.csv
+  - analcatdata_asbestos.csv
+  - analcatdata_authorship.csv
+  - analcatdata_bankruptcy.csv
+  - analcatdata_boxing1.csv
+  - analcatdata_boxing2.csv
+  - analcatdata_creditscore.csv
+  - analcatdata_cyyoung8092.csv
+  - analcatdata_cyyoung9302.csv
+  - analcatdata_dmft.csv
+  - analcatdata_fraud.csv
+  - analcatdata_germangss.csv
+  - analcatdata_happiness.csv
+  - analcatdata_japansolvent.csv
+  - analcatdata_lawsuit.csv
+  - ann-thyroid.csv
+  - anneal.csv
+  - AR10P.csv
+  - australian.csv
+  - auto.csv
+  - backache.csv
+  - balance-scale.csv
+  - biomed.csv
+  - breast.csv
+  - breast-cancer.csv
+  - breast-cancer-wisconsin.csv
+  - breast-w.csv
+  - buggyCrx.csv
+  - calendarDOW.csv
+  - car.csv
+  - car-evaluation.csv
+  - cars.csv
+  - cars1.csv
+  - chess.csv
+  - churn.csv
+  - clean1.csv
+  - clean2.csv
+  - cleve.csv
+  - cleveland.csv
+  - cleveland-nominal.csv
+  - CLL-SUB-111.csv
+  - cloud.csv
+  - cmc.csv
+  - colic.csv
+  - collins.csv
+  - colon.csv
+  - confidence.csv
+  - connect-4.csv
+  - corral.csv
+  - credit-a.csv
+  - credit-g.csv
+  - crx.csv
+  - dermatology.csv
+  - diabetes.csv
+  - dis.csv
+  - dna.csv
+  - ECML90x27679.csv
+  - ecoli.csv
+  - Embryonaldataset_c.csv
+  - flags.csv
+  - flare.csv
+  - GAMETES_Epistasis_2-Way_20atts_0.1H_EDM-1_1.csv
+  - GAMETES_Epistasis_2-Way_20atts_0.4H_EDM-1_1.csv
+  - GAMETES_Epistasis_2-Way_1000atts_0.4H_EDM-1_EDM-1_1.csv
+  - GAMETES_Epistasis_3-Way_20atts_0.2H_EDM-1_1.csv
+  - GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_50_EDM-2_001.csv
+  - GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_75_EDM-2_001.csv
+  - german.csv
+  - gina_agnostic.csv
+  - gina_prior.csv
+  - gina_prior2.csv
+  - glass.csv
+  - glass2.csv
+  - grub-damage.csv
+  - haberman.csv
+  - hayes-roth.csv
+  - heart-c.csv
+  - heart-h.csv
+  - heart-statlog.csv
+  - hepatitis.csv
+  - Hill_Valley_with_noise.csv
+  - Hill_Valley_without_noise.csv
+  - horse-colic.csv
+  - house-votes-84.csv
+  - hungarian.csv
+  - hypothyroid.csv
+  - ionosphere.csv
+  - iris.csv
+  - irish.csv
+  - kdd_JapaneseVowels.csv
+  - kdd_synthetic_control.csv
+  - kr-vs-kp.csv
+  - krkopt.csv
+  - labor.csv
+  - led7.csv
+  - led24.csv
+  - letter.csv
+  - leukemia.csv
+  - Leukemia_3c.csv
+  - liver-disorder.csv
+  - lupus.csv
+  - lymph.csv
+  - mfeat-factors.csv
+  - mfeat-fourier.csv
+  - mfeat-karhunen.csv
+  - mfeat-morphological.csv
+  - mfeat-pixel.csv
+  - mfeat-zernike.csv
+  - mnist.csv
+  - mofn-3-7-10.csv
+  - molecular-biology_promoters.csv
+  - monk1.csv
+  - monk2.csv
+  - monk3.csv
+  - mushroom.csv
+  - mux6.csv
+  - new-thyroid.csv
+  - nursery.csv
+  - oh0.wc.csv
+  - oh5.wc.csv
+  - oh10.wc.csv
+  - oh15.wc.csv
+  - optdigits.csv
+  - page-blocks.csv
+  - parity5+5.csv
+  - parity5.csv
+  - pasture.csv
+  - pendigits.csv
+  - PIE10P.csv
+  - pima.csv
+  - postoperative-patient-data.csv
+  - prnn_crabs.csv
+  - prnn_fglass.csv
+  - prnn_synth.csv
+  - profb.csv
+  - promoters.csv
+  - satimage.csv
+  - schizo.csv
+  - segmentation.csv
+  - shuttle.csv
+  - sleep.csv
+  - SMK-CAN-187.csv
+  - solar-flare_1.csv
+  - solar-flare_2.csv
+  - sonar.csv
+  - soybean.csv
+  - spambase.csv
+  - spect.csv
+  - spectf.csv
+  - spectrometer.csv
+  - splice.csv
+  - stats.txt
+  - sylva_agnostic.csv
+  - sylva_prior.csv
+  - tae.csv
+  - threeOf9.csv
+  - tic-tac-toe.csv
+  - tokyo1.csv
+  - TOX-171.csv
+  - tr11.wc.csv
+  - tr12.wc.csv
+  - tr23.wc.csv
+  - tr31.wc.csv
+  - tr41.wc.csv
+  - tr45.wc.csv
+  - vehicle.csv
+  - vote.csv
+  - vowel.csv
+  - wap.wc.csv
+  - waveform-21.csv
+  - waveform-40.csv
+  - white-clover.csv
+  - wine-quality-red.csv
+  - wine-quality-white.csv
+  - wine-recognition.csv
+  - xd6.csv
+  - yeast.csv
+  - zoo.csv

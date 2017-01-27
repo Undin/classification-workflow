@@ -195,7 +195,6 @@ datasets:
   - spectf.csv
   - spectrometer.csv
   - splice.csv
-  - stats.txt
   - sylva_agnostic.csv
   - sylva_prior.csv
   - tae.csv

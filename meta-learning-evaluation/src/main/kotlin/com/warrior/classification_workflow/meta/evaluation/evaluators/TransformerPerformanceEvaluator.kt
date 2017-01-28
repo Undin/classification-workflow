@@ -3,9 +3,7 @@ package com.warrior.classification_workflow.meta.evaluation.evaluators
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.warrior.classification_workflow.core.Classifier
-import com.warrior.classification_workflow.core.Transformer
-import com.warrior.classification_workflow.core.load
+import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity
 import com.warrior.classification_workflow.core.storage.SaveStrategy
 import com.warrior.classification_workflow.meta.evaluation.*
@@ -26,6 +24,8 @@ import java.util.concurrent.ForkJoinTask
 class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig, pool: ForkJoinPool)
     : AbstractPerformanceEvaluator(pool) {
 
+    private val MAX_INSTANCES = 10000
+
     override val saveStrategy: SaveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
     override fun getTasks(): List<ForkJoinTask<*>> {
@@ -44,7 +44,7 @@ class TransformerPerformanceEvaluator(private val config: TransformerPerfConfig,
 
                 if (needCalculate) {
                     logger.withLog("$dataset") {
-                        val data = load(dataset.absolutePath)
+                        val data = subInstances(load(dataset.absolutePath), MAX_INSTANCES, random)
                         config.transformers.forEachParallel { transformer ->
                             val transformerSet = datasetMap[transformer.name] ?: emptySet()
                             val classifiers = config.classifiers.filter { it.name !in transformerSet }

@@ -6,6 +6,7 @@ import com.warrior.classification_workflow.core.Classifier
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanceEntity
 import com.warrior.classification_workflow.core.storage.SaveStrategy
+import com.warrior.classification_workflow.core.subInstances
 import com.warrior.classification_workflow.meta.evaluation.ClassifierPerfConfig
 import com.warrior.classification_workflow.meta.evaluation.forEachParallel
 import com.warrior.classification_workflow.meta.evaluation.withLog
@@ -21,6 +22,8 @@ import java.util.concurrent.ForkJoinTask
 class ClassifierPerformanceEvaluator(private val config: ClassifierPerfConfig, pool: ForkJoinPool)
     : AbstractPerformanceEvaluator(pool) {
 
+    private val MAX_INSTANCES = 10000
+
     override val saveStrategy: SaveStrategy = SaveStrategy.fromString(config.saveStrategy, config.outFolder)
 
     override fun getTasks(): List<ForkJoinTask<*>> {
@@ -34,8 +37,8 @@ class ClassifierPerformanceEvaluator(private val config: ClassifierPerfConfig, p
                 val datasetSet = currentResults[dataset.nameWithoutExtension] ?: emptySet()
                 val classifiers = config.classifiers.filter { it.name !in datasetSet }
                 if (classifiers.isNotEmpty()) {
-                    logger.withLog("start $dataset") {
-                        val data = load(dataset.absolutePath)
+                    logger.withLog("$dataset") {
+                        val data = subInstances(load(dataset.absolutePath), MAX_INSTANCES, random)
                         classifiers.forEachParallel { calculate(it, data, random, saveStrategy) }
                     }
                 }

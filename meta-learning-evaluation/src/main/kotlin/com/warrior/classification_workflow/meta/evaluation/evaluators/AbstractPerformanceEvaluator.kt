@@ -13,14 +13,12 @@ import java.util.*
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.ForkJoinTask
 import java.util.stream.IntStream
-import java.util.stream.Stream
 
 /**
  * Created by warrior on 11/28/16.
  */
 abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Evaluator {
 
-    private val crossValidationIterations = 1
     private val crossValidationFolders = 10
 
     protected val logger: Logger = LogManager.getLogger(javaClass)
@@ -47,33 +45,27 @@ abstract class AbstractPerformanceEvaluator(private val pool: ForkJoinPool) : Ev
         val options = classifier.options.toArray()
         val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
 
-        val fullAggregation: AggregateableEvaluation = IntStream.range(0, crossValidationIterations)
-                .parallel()
-                .boxed()
-                .flatMap { parallelCrossValidation(data, wekaClassifier, random, crossValidationFolders) }
-                .collect(
-                        { AggregateableEvaluation(data) },
-                        { acc, o -> acc.aggregate(o) },
-                        { l, r -> l.aggregate(r) }
-                )
-        return fullAggregation.unweightedMacroFmeasure()
-    }
-
-    protected fun parallelCrossValidation(data: Instances, classifier: weka.classifiers.Classifier,
-                                          random: Random, numFolds: Int): Stream<Evaluation> {
         val shuffledData = Instances(data)
         shuffledData.randomize(random)
-        return IntStream.range(0, numFolds)
+
+        val fullAggregation: AggregateableEvaluation = IntStream.range(0, crossValidationFolders)
                 .parallel()
                 .mapToObj { fold ->
-                    val train = shuffledData.trainCV(numFolds, fold, random)
-                    val copiedClassifier = AbstractClassifier.makeCopy(classifier)
-                    copiedClassifier.buildClassifier(train)
-                    val test = shuffledData.testCV(numFolds, fold)
-                    val eval = Evaluation(shuffledData)
-                    eval.evaluateModel(copiedClassifier, test)
-                    eval
-                }
+                    logger.withLog("${classifier.name} on ${data.relationName()}: fold $fold") {
+                        val train = shuffledData.trainCV(crossValidationFolders, fold, random)
+                        val copiedClassifier = AbstractClassifier.makeCopy(wekaClassifier)
+                        copiedClassifier.buildClassifier(train)
+                        val test = shuffledData.testCV(crossValidationFolders, fold)
+                        val eval = Evaluation(shuffledData)
+                        eval.evaluateModel(copiedClassifier, test)
+                        eval
+                    }
+                }.collect(
+                    { AggregateableEvaluation(data) },
+                    { acc, o -> acc.aggregate(o) },
+                    { l, r -> l.aggregate(r) }
+                )
+        return fullAggregation.unweightedMacroFmeasure()
     }
 
     protected abstract fun getTasks(): List<ForkJoinTask<*>>

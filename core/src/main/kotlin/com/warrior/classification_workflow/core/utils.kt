@@ -1,6 +1,8 @@
 package com.warrior.classification_workflow.core
 
+import weka.core.Instance
 import weka.core.Instances
+import weka.core.Utils
 import weka.core.converters.*
 import weka.filters.Filter
 import weka.filters.unsupervised.attribute.Remove
@@ -64,4 +66,29 @@ fun save(dataSet: Instances, dst: String, saver: Saver = ArffSaver()) {
     saver.setInstances(dataSet)
     saver.setFile(File(dst))
     saver.writeBatch()
+}
+
+fun subInstances(data: Instances, maxInstances: Int, random: Random): Instances {
+    if (data.numInstances() <= maxInstances) {
+        return data
+    }
+
+    val instancesByClass = Array(data.numClasses()) { ArrayList<Instance>() }
+
+    for (instance in data) {
+        val classValue = instance.classValue()
+        if (!Utils.isMissingValue(classValue)) {
+            instancesByClass[classValue.toInt()].add(instance)
+        }
+    }
+    val sum = instancesByClass.sumBy { it.size }.toDouble()
+    val distribution = DoubleArray(data.numClasses()) { i -> instancesByClass[i].size / sum }
+
+    val subInstances = Instances(data, 0)
+    for ((i, list) in instancesByClass.withIndex()) {
+        val number = Math.min((distribution[i] * maxInstances).toInt(), list.size)
+        Collections.shuffle(list, random)
+        subInstances += list.take(number)
+    }
+    return subInstances
 }

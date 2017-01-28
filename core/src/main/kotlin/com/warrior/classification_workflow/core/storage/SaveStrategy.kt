@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonEncoding
 import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.warrior.classification_workflow.core.storage.mongo.MongoStorage
-import com.warrior.classification_workflow.core.storage.postgres.PostgresStorage
+import com.warrior.classification_workflow.core.storage.hibernate.HibernateStorage
 import java.io.Closeable
 import java.io.File
 
@@ -53,7 +53,7 @@ sealed class SaveStrategy : Closeable {
                     File(folder).mkdirs()
                     JsonSaveStrategy("$folder/result-${System.currentTimeMillis()}.json")
                 }
-                "db" -> DatabaseSaveStrategy(PostgresStorage())
+                "db" -> DatabaseSaveStrategy(HibernateStorage())
                 "mongo" -> DatabaseSaveStrategy(MongoStorage())
                 else -> throw IllegalArgumentException("unknown value for save strategy: $saveStrategy")
             }

@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.core.storage.postgres
+package com.warrior.classification_workflow.core.storage.hibernate
 
 import com.warrior.classification_workflow.core.storage.Storage
 import org.hibernate.Session
@@ -9,7 +9,7 @@ import org.hibernate.cfg.Configuration
 /**
  * Created by warrior on 1/27/17.
  */
-class PostgresStorage : Storage {
+class HibernateStorage : Storage {
 
     private val sessionFactory: SessionFactory
     private val session: ThreadLocal<Session>

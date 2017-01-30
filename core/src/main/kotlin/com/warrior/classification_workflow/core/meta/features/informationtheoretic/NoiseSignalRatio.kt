@@ -32,6 +32,10 @@ class NoiseSignalRatio : AbstractMetaFeatureExtractor(), MutualInformationCache,
     override fun compute(): Double {
         val mutualInfo = meanMutualInformation.compute()
         val meanEntropy = meanEntropy.compute()
-        return (meanEntropy - mutualInfo) / mutualInfo
+        return when {
+            meanEntropy == mutualInfo -> 0.0
+            mutualInfo == 0.0 -> Double.MAX_VALUE
+            else -> (meanEntropy - mutualInfo) / mutualInfo
+        }
     }
 }

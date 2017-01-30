@@ -31,5 +31,8 @@ class EquivalentNumberOfFeatures : AbstractMetaFeatureExtractor(), MutualInforma
         meanMutualInformation.setMutualInformationCache(cache)
     }
 
-    override fun compute(): Double = classEntropy.value / meanMutualInformation.compute()
+    override fun compute(): Double {
+        val meanMutualInformation = meanMutualInformation.compute()
+        return if (meanMutualInformation == 0.0) 0.0 else classEntropy.value / meanMutualInformation
+    }
 }

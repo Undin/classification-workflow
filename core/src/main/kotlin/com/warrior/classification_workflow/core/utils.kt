@@ -1,10 +1,9 @@
 package com.warrior.classification_workflow.core
 
-import weka.core.Instance
-import weka.core.Instances
-import weka.core.Utils
+import weka.core.*
 import weka.core.converters.*
 import weka.filters.Filter
+import weka.filters.unsupervised.attribute.NumericToNominal
 import weka.filters.unsupervised.attribute.Remove
 import java.io.File
 import java.util.*
@@ -22,8 +21,12 @@ fun load(path: String, removeUseless: Boolean = true): Instances {
     loader.setFile(dataFile)
 
 
-    val instances = ConverterUtils.DataSource.read(loader)
+    var instances = ConverterUtils.DataSource.read(loader)
     instances.setClassIndex(instances.numAttributes() - 1)
+    if (dataFile.extension == "csv") {
+        instances = numericToNominal(instances)
+    }
+
     return if (removeUseless) {
         val filteredInstances = removeUseless(instances)
         filteredInstances.setRelationName(instances.relationName())
@@ -40,6 +43,41 @@ private fun csvLoader(): AbstractFileLoader {
 }
 
 private fun arffLoader(): AbstractFileLoader = ArffLoader()
+
+private fun numericToNominal(data: Instances): Instances {
+    val indices = ArrayList<Int>()
+    for (attr in data.enumerateAttributes()) {
+        if (isNominal(attr, data)) {
+            indices += attr.index() + 1
+        }
+    }
+
+    val filter = NumericToNominal()
+    filter.attributeIndices = indices.joinToString(transform = Int::toString)
+    filter.setInputFormat(data)
+    return Filter.useFilter(data, filter).apply { setRelationName(data.relationName()) }
+}
+
+private fun isNominal(attribute: Attribute, data: Instances): Boolean {
+    if (attribute.isNominal) {
+        return true
+    }
+    if (!attribute.isNumeric) {
+        return false
+    }
+
+    val values = HashSet<Int>()
+    for (instance in data) {
+        val value = instance.value(attribute)
+        val intValue = value.toInt()
+        if (value == intValue.toDouble()) {
+            values += intValue
+        } else {
+            return false
+        }
+    }
+    return values.size <= 10
+}
 
 private fun removeUseless(instances: Instances): Instances {
     val firstInstance = instances[0]

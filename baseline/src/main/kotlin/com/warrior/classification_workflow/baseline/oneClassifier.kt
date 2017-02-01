@@ -3,6 +3,7 @@ package com.warrior.classification_workflow.baseline
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.warrior.classification_workflow.core.*
+import com.warrior.classification_workflow.core.storage.SaveStrategy
 import kotlinx.support.jdk8.collections.parallelStream
 import libsvm.svm
 import org.kohsuke.args4j.CmdLineException
@@ -43,11 +44,7 @@ private fun doClassification(config: Config) {
     val files = File("datasets").listFiles(ExtensionFileFilter("arff", "")) ?: return
 
     File(RESULT_FOLDER).mkdir()
-    val saveStrategy = when (config.saveStrategy) {
-        "json" -> SaveStrategy.JsonSaveStrategy("${RESULT_FOLDER}/result-${System.currentTimeMillis()}.json")
-        "database" -> SaveStrategy.DatabaseSaveStrategy()
-        else -> throw IllegalArgumentException("unknown value for save strategy: ${config.saveStrategy}")
-    }
+    val saveStrategy = SaveStrategy.fromString(config.saveStrategy)
     saveStrategy.use { saveStrategy ->
         val pool = ForkJoinPool(config.threads)
         val tasks = ArrayList<ForkJoinTask<*>>()

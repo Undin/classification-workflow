@@ -1,5 +1,11 @@
 package com.warrior.classification_workflow.core
 
+import kotlinx.support.jdk8.collections.parallelStream
+import org.apache.logging.log4j.Logger
+import org.apache.logging.log4j.util.Supplier
+import weka.classifiers.AbstractClassifier
+import weka.classifiers.AggregateableEvaluation
+import weka.classifiers.Evaluation
 import weka.core.*
 import weka.core.converters.*
 import weka.filters.Filter
@@ -7,6 +13,7 @@ import weka.filters.unsupervised.attribute.NumericToNominal
 import weka.filters.unsupervised.attribute.Remove
 import java.io.File
 import java.util.*
+import java.util.stream.IntStream
 
 /**
  * Created by warrior on 12/07/16.
@@ -129,4 +136,44 @@ fun subInstances(data: Instances, maxInstances: Int, random: Random): Instances 
         subInstances += list.take(number)
     }
     return subInstances
+}
+
+inline fun <T> Logger.withLog(message: String, block: () -> T): T {
+    info(Supplier { "start $message" })
+    val result = block()
+    info(Supplier { "end $message" })
+    return result
+}
+
+fun Map<String, String>.toArray(): Array<String>
+        = flatMap { listOf(it.key, it.value) }.toTypedArray()
+
+fun <T> Collection<T>.forEachParallel(action: (T) -> Unit)
+        = parallelStream().forEach { action(it) }
+
+fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int, random: Random, logger: Logger): Evaluation {
+    val options = classifier.options.toArray()
+    val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
+
+    val shuffledData = Instances(data)
+    shuffledData.randomize(random)
+
+    val fullAggregation: AggregateableEvaluation = IntStream.range(0, folds)
+            .parallel()
+            .mapToObj { fold ->
+                logger.withLog("${classifier.name} on ${data.relationName()}: fold $fold") {
+                    val train = shuffledData.trainCV(folds, fold, random)
+                    val copiedClassifier = AbstractClassifier.makeCopy(wekaClassifier)
+                    copiedClassifier.buildClassifier(train)
+                    val test = shuffledData.testCV(folds, fold)
+                    val eval = Evaluation(shuffledData)
+                    eval.evaluateModel(copiedClassifier, test)
+                    eval
+                }
+            }.collect(
+            { AggregateableEvaluation(data) },
+            { acc, o -> acc.aggregate(o) },
+            { l, r -> l.aggregate(r) }
+    )
+    return fullAggregation
 }

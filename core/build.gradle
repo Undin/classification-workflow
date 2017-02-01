@@ -2,6 +2,7 @@ apply plugin: 'kotlin'
 
 dependencies {
     compile libraries.kotlin
+    compile libraries.kotlinxSupportJdk8
 
     compile libraries.jackson
     compile libraries.jacksonKotlin

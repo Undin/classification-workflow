@@ -138,10 +138,10 @@ fun subInstances(data: Instances, maxInstances: Int, random: Random): Instances 
     return subInstances
 }
 
-inline fun <T> Logger.withLog(message: String, block: () -> T): T {
-    info(Supplier { "start $message" })
+inline fun <T> Logger?.withLog(message: String, block: () -> T): T {
+    this?.info(Supplier { "start $message" })
     val result = block()
-    info(Supplier { "end $message" })
+    this?.info(Supplier { "end $message" })
     return result
 }
 
@@ -151,7 +151,7 @@ fun Map<String, String>.toArray(): Array<String>
 fun <T> Collection<T>.forEachParallel(action: (T) -> Unit)
         = parallelStream().forEach { action(it) }
 
-fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int, random: Random, logger: Logger): Evaluation {
+fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int, random: Random, logger: Logger? = null): Evaluation {
     val options = classifier.options.toArray()
     val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
 

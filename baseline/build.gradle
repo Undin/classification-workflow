@@ -21,6 +21,7 @@ dependencies {
     compile libraries.postgresql
 
     compile libraries.args4j
+    compile libraries.commonsCli
     compile libraries.commonsCSV
 
     compile libraries.weka

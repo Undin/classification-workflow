@@ -26,10 +26,10 @@ data class TuningAlgorithm(
 data class Param(
         @JsonProperty("name") val name: String,
         @JsonProperty("type") val type: ParamType,
-        @JsonProperty("loose_start") val looseStart: Double,
-        @JsonProperty("loose_end") val looseEnd: Double,
-        @JsonProperty("loose_step") val looseStep: Double,
-        @JsonProperty("fine_step") val fineStep: Double
+        @JsonProperty("loose_start") val looseStart: String,
+        @JsonProperty("loose_end") val looseEnd: String,
+        @JsonProperty("loose_step") val looseStep: String,
+        @JsonProperty("fine_step") val fineStep: String
 )
 
 enum class ParamType {

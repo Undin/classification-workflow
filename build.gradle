@@ -49,5 +49,7 @@ ext.libraries = [
         xgboost                     : 'biz.k11i:xgboost-predictor:0.1.7',
         apacheMath                  : 'org.apache.commons:commons-math3:3.6.1',
 
+        antlr                       : 'org.antlr:antlr4:4.6',
+
         junit                       : 'junit:junit:4.12'
 ]

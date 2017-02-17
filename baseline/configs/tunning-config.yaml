@@ -25,6 +25,25 @@ algorithms:
         loose_step: 2
         fine_step: 0.25
 
+  - classifier:
+      name                : "RF"
+      type                : "Classifier"
+      classifier_class    : "weka.classifiers.trees.RandomForest"
+      classifier_options  : {}
+    params:
+      - name: -I
+        type: lin
+        loose_start: 10
+        loose_end: 300
+        loose_step: 10
+        fine_step: 1
+      - name: -K
+        type: lin
+        loose_start: 1
+        loose_end: round(2 * sqrt(attributes))
+        loose_step: round((end - start + 9) / 10)
+        fine_step: 1
+
 datasets:
   # all
   - ada_agnostic.csv

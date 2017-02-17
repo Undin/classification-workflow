@@ -13,6 +13,7 @@ shadowJar {
 generateGrammarSource {
     arguments += ["-visitor", "-no-listener"]
 }
+compileKotlin.dependsOn generateGrammarSource
 
 dependencies {
     compile project(':core')

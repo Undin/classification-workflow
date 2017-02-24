@@ -24,7 +24,7 @@ internal class WorkflowClassifier(
     private lateinit var builtFinalClassifier: weka.classifiers.Classifier
 
     override fun buildClassifier(data: Instances) {
-        val processingData = processInstances(data, true)
+        val processingData = processInstances(Instances(data), true)
         builtFinalClassifier = classifier()
         builtFinalClassifier.buildClassifier(processingData)
     }

@@ -38,8 +38,8 @@ class GeneticAlgorithm(
         }
     }
 
-    fun search(): Result {
-        val logs = File(config.logFolder, "${config.dataset}-${System.currentTimeMillis()}")
+    fun search(logPrefix: String): Result {
+        val logs = File(config.logFolder, "$logPrefix-${System.currentTimeMillis()}")
         logs.mkdir()
 
         val initialWorkflows = generate()

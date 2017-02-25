@@ -1,18 +1,19 @@
-dataset_folder: datasets
-dataset: zoo.arff
+dataset_folder: common-datasets
+dataset: analcatdata_dmft.csv
 log_folder: logs
+out_folder: results/master
 threads: 4
-cache_prefix_size: 8
+cache_prefix_size: 6
 
 meta_data_paths:
-  meta_features_path: results/meta-features/all-finite.json
+  meta_features_path: results/meta-features/meta-features-common.json
   classifier_performance_path: results/classifier_performance/classifier-performance-common.json
   transformer_performances_path: results/transformer_performance/transformer-performance-common.json
 
 params:
   population_size: 10
   generations: 10
-  max_workflow_size: 10
+  max_workflow_size: 6
   mutation_number: 5
   survived_part: 0.1
   mutation_probability: 0.3

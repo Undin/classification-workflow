@@ -159,8 +159,9 @@ class LocalComputationManager(
     private fun compute(workflow: Workflow, train: Instances, test: Instances): Double {
         val eval = Evaluation(train)
         val classifier = workflow.classifier()
-        classifier.buildClassifier(train)
+        // FIXME
         try {
+            classifier.buildClassifier(train)
             eval.evaluateModel(classifier, test)
         } catch (e: Exception) {
             logger.error(e.message, e)

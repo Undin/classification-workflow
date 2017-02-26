@@ -11,6 +11,7 @@ import weka.core.converters.*
 import weka.filters.Filter
 import weka.filters.unsupervised.attribute.NumericToNominal
 import weka.filters.unsupervised.attribute.Remove
+import weka.filters.unsupervised.attribute.SortLabels
 import java.io.File
 import java.util.*
 import java.util.stream.IntStream
@@ -27,12 +28,16 @@ fun load(path: String, removeUseless: Boolean = true): Instances {
     }
     loader.setFile(dataFile)
 
-
     var instances = ConverterUtils.DataSource.read(loader)
     instances.setClassIndex(instances.numAttributes() - 1)
     if (dataFile.extension == "csv") {
         instances = numericToNominal(instances)
     }
+
+    val sortLabels = SortLabels()
+    sortLabels.setInputFormat(instances)
+    sortLabels.attributeIndices = "last"
+    instances = Filter.useFilter(instances, sortLabels)
 
     return if (removeUseless) {
         val filteredInstances = removeUseless(instances)

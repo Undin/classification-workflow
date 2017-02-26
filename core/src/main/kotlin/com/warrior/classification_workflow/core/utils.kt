@@ -36,7 +36,6 @@ fun load(path: String, removeUseless: Boolean = true): Instances {
 
     val sortLabels = SortLabels()
     sortLabels.setInputFormat(instances)
-    sortLabels.attributeIndices = "last"
     instances = Filter.useFilter(instances, sortLabels)
 
     return if (removeUseless) {

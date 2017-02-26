@@ -33,7 +33,8 @@ class WorkflowConstructor(private val config: Config) {
     }
 
     fun construct(dataset: String) {
-        val datasetName = dataset.replaceAfterLast('.', "")
+        val index = dataset.lastIndexOf('.')
+        val datasetName = dataset.substring(0, index)
         val instances = load("${config.datasetFolder}/$dataset")
 
         instances.randomize(Random())

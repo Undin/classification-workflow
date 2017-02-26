@@ -230,7 +230,8 @@ class LocalComputationManager(
                     defaultSearch.numToSelect = 1
                     transformedData = attributeSelection(defaultSearch, evaluator, data)
                 } else {
-                    throw IllegalStateException("attribute selection must choose at least one non class attribute")
+                    logger.warn("attribute selection must choose at least one non class attribute. skip this transformer")
+                    transformedData = data
                 }
             }
             toCache(uuid, position, transformedData)

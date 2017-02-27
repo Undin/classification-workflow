@@ -114,10 +114,15 @@ class WorkflowConstructor(private val config: Config) {
     }
 
     private fun testWorkflow(workflow: Workflow, train: Instances, test: Instances): Double {
-        val classifier = workflow.classifier()
-        val eval = Evaluation(train)
-        classifier.buildClassifier(train)
-        eval.evaluateModel(classifier, test)
-        return eval.unweightedMacroFmeasure()
+        return try {
+            val classifier = workflow.classifier()
+            val eval = Evaluation(train)
+            classifier.buildClassifier(train)
+            eval.evaluateModel(classifier, test)
+            eval.unweightedMacroFmeasure()
+        } catch (e: Exception) {
+            logger.error(e)
+            0.0
+        }
     }
 }

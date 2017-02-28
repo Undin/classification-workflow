@@ -9,9 +9,7 @@ import weka.classifiers.Evaluation
 import weka.core.*
 import weka.core.converters.*
 import weka.filters.Filter
-import weka.filters.unsupervised.attribute.NumericToNominal
-import weka.filters.unsupervised.attribute.Remove
-import weka.filters.unsupervised.attribute.SortLabels
+import weka.filters.unsupervised.attribute.*
 import java.io.File
 import java.util.*
 import java.util.stream.IntStream
@@ -19,7 +17,7 @@ import java.util.stream.IntStream
 /**
  * Created by warrior on 12/07/16.
  */
-fun load(path: String, removeUseless: Boolean = true): Instances {
+fun load(path: String, removeUseless: Boolean = true, normalize: Boolean = true): Instances {
     val dataFile = File(path)
     val loader = when (dataFile.extension) {
         "arff" -> arffLoader()
@@ -29,22 +27,25 @@ fun load(path: String, removeUseless: Boolean = true): Instances {
     loader.setFile(dataFile)
 
     var instances = ConverterUtils.DataSource.read(loader)
+    val datasetName = instances.relationName()
+
     instances.setClassIndex(instances.numAttributes() - 1)
     if (dataFile.extension == "csv") {
         instances = numericToNominal(instances)
     }
 
-    val sortLabels = SortLabels()
-    sortLabels.setInputFormat(instances)
-    instances = Filter.useFilter(instances, sortLabels)
-
-    return if (removeUseless) {
-        val filteredInstances = removeUseless(instances)
-        filteredInstances.setRelationName(instances.relationName())
-        filteredInstances
-    } else {
-        instances
+    if (normalize) {
+        val normalizeFilter = Normalize()
+        normalizeFilter.setInputFormat(instances)
+        instances = Filter.useFilter(instances, normalizeFilter)
     }
+
+    if (removeUseless) {
+        instances = removeUseless(instances)
+    }
+
+    instances.setRelationName(datasetName)
+    return instances
 }
 
 private fun csvLoader(): AbstractFileLoader {

@@ -23,15 +23,6 @@ class WorkflowConstructor(private val config: Config) {
 
     private val logger = LogManager.getLogger(WorkflowConstructor::class.java)
 
-    fun construct(datasetName: String, trainDataset: String, testDataset: String) {
-        val train = load("${config.datasetFolder}/$trainDataset")
-        train.setRelationName(datasetName)
-        val test = load("${config.datasetFolder}/$testDataset")
-        test.setRelationName(datasetName)
-
-        construct(datasetName, train, test)
-    }
-
     fun construct(dataset: String) {
         val index = dataset.lastIndexOf('.')
         val datasetName = dataset.substring(0, index)
@@ -44,7 +35,7 @@ class WorkflowConstructor(private val config: Config) {
         construct(datasetName, train, test)
     }
 
-    private fun construct(datasetName: String, train: Instances, test: Instances) {
+    fun construct(datasetName: String, train: Instances, test: Instances) {
         val algorithmChooser = algorithmChooser(config, datasetName)
         val computationManager = computationManager(config, algorithmChooser, train)
         val ga = GeneticAlgorithm(config, computationManager)

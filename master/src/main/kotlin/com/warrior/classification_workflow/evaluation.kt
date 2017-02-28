@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.warrior.classification_workflow.core.load
+import weka.core.Instances
 import java.io.File
 
 /**
@@ -15,7 +17,20 @@ fun main(args: Array<String>) {
     val config: EvaluationConfig = yamlMapper.readValue(File(configPath))
 
     val constructor = WorkflowConstructor(config)
-    for (datasetName in config.datasets) {
-        constructor.construct(datasetName, "$datasetName-train.csv", "$datasetName-test.csv")
+    for (dataset in config.datasets) {
+        val instances = load("${config.datasetFolder}/$dataset")
+        val train = Instances(instances, 0)
+        val test = Instances(instances, 0)
+        val setNameAttributeIndex = instances.attribute("set_name").index()
+        for (instance in instances) {
+            if (instance.stringValue(setNameAttributeIndex) == "train") {
+                train += instance
+            } else {
+                test += instance
+            }
+        }
+        train.deleteAttributeAt(setNameAttributeIndex)
+        test.deleteAttributeAt(setNameAttributeIndex)
+        constructor.construct(instances.relationName(), train, test)
     }
 }

@@ -5,8 +5,6 @@ import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.ComputationManager.Mutation.*
 import com.warrior.classification_workflow.core.meta.features.CommonMetaFeatureExtractor
 import com.warrior.classification_workflow.meta.AlgorithmChooser
-import kotlinx.support.jdk8.collections.parallelStream
-import kotlinx.support.jdk8.streams.toList
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 import weka.attributeSelection.ASEvaluation
@@ -22,6 +20,7 @@ import weka.filters.supervised.attribute.AttributeSelection
 import java.util.*
 import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.atomic.AtomicInteger
+import kotlin.streams.toList
 
 /**
  * Created by warrior on 29/06/16.

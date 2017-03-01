@@ -18,7 +18,7 @@ compileKotlin.dependsOn generateGrammarSource
 dependencies {
     compile project(':core')
     compile libraries.kotlin
-    compile libraries.kotlinxSupportJdk8
+    compile libraries.kotlinReflect
 
     compile libraries.jacksonYaml
     compile libraries.jacksonKotlin

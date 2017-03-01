@@ -4,6 +4,7 @@ dependencies {
     compile project(':core')
 
     compile libraries.kotlin
+    compile libraries.kotlinReflect
 
     compile libraries.jackson
     compile libraries.jacksonKotlin

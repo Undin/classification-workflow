@@ -13,7 +13,7 @@ dependencies {
     compile project(':core')
 
     compile libraries.kotlin
-    compile libraries.kotlinxSupportJdk8
+    compile libraries.kotlinReflect
 
     compile libraries.weka
     compile libraries.wekaLibSVM

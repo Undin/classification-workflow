@@ -1,9 +1,10 @@
 buildscript {
+    ext.kotlinVersion = "1.1.0"
     repositories {
         jcenter()
     }
     dependencies {
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.0.6'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:' + kotlinVersion
         classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.4'
     }
 }
@@ -19,8 +20,8 @@ def versions = [
 ]
 
 ext.libraries = [
-        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib:1.0.6',
-        kotlinxSupportJdk8          : 'org.jetbrains.kotlinx:kotlinx-support-jdk8:0.3',
+        kotlin                      : 'org.jetbrains.kotlin:kotlin-stdlib-jre8:' + kotlinVersion,
+        kotlinReflect               : 'org.jetbrains.kotlin:kotlin-reflect:' + kotlinVersion,
 
         caffeine                    : 'com.github.ben-manes.caffeine:caffeine:2.3.5',
 

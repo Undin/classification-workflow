@@ -45,8 +45,8 @@ fun main(args: Array<String>) {
                         .start()
                 InputStreamReader(process.inputStream).forEachLine { line ->
                     println(line)
-                    saveResultInNeed(line, "Training score: ", datasetName, trainResults)
-                    saveResultInNeed(line, "Holdout score: ", datasetName, testResults)
+                    saveResultIfNeed(line, "Training score: ", datasetName, trainResults)
+                    saveResultIfNeed(line, "Holdout score: ", datasetName, testResults)
                 }
 
                 process.waitFor()
@@ -62,7 +62,7 @@ fun main(args: Array<String>) {
     threadPool.shutdown()
 }
 
-private fun saveResultInNeed(line: String, prefix: String, datasetName: String, folder: File) {
+private fun saveResultIfNeed(line: String, prefix: String, datasetName: String, folder: File) {
     if (line.startsWith(prefix)) {
         val score = line.removePrefix(prefix).toDouble()
         val result = ClassifierPerformanceEntity(datasetName, "tpot", score)

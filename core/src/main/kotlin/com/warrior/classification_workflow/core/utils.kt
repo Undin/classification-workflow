@@ -155,17 +155,15 @@ fun Map<String, String>.toArray(): Array<String>
 fun <T> Collection<T>.forEachParallel(action: (T) -> Unit)
         = parallelStream().forEach { action(it) }
 
-fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int, random: Random, logger: Logger? = null): Evaluation {
-    val options = classifier.options.toArray()
-    val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
-
+fun parallelCrossValidation(wekaClassifier: weka.classifiers.Classifier, name: String,
+                            data: Instances, folds: Int, random: Random, logger: Logger? = null): Evaluation {
     val shuffledData = Instances(data)
     shuffledData.randomize(random)
 
     val fullAggregation: AggregateableEvaluation = IntStream.range(0, folds)
             .parallel()
             .mapToObj { fold ->
-                logger.withLog("${classifier.name} on ${data.relationName()}: fold $fold") {
+                logger.withLog("$name on ${data.relationName()}: fold $fold") {
                     val train = shuffledData.trainCV(folds, fold, random)
                     val copiedClassifier = AbstractClassifier.makeCopy(wekaClassifier)
                     copiedClassifier.buildClassifier(train)
@@ -180,4 +178,10 @@ fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int,
             { l, r -> l.aggregate(r) }
     )
     return fullAggregation
+}
+
+fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int, random: Random, logger: Logger? = null): Evaluation {
+    val options = classifier.options.toArray()
+    val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
+    return parallelCrossValidation(wekaClassifier, classifier.name, data, folds, random, logger)
 }

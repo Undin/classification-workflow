@@ -16,6 +16,7 @@ import java.util.*
 class GeneticAlgorithm(
         val config: Config,
         val computationManager: ComputationManager,
+        val datasetName: String,
         val random: Random = Random()
 ) {
 
@@ -74,7 +75,7 @@ class GeneticAlgorithm(
         }
         logger.info(Supplier {
             val builder = StringBuilder()
-            builder.append("--- iteration $iteration ---\n")
+            builder.append("--- $datasetName: iteration $iteration ---\n")
             population.forEach {
                 builder.append(it.measure)
                         .append("\n")

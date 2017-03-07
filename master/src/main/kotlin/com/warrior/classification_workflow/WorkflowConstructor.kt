@@ -38,8 +38,8 @@ class WorkflowConstructor(private val config: Config) {
     fun construct(datasetName: String, train: Instances, test: Instances) {
         val algorithmChooser = algorithmChooser(config, datasetName)
         val computationManager = computationManager(config, algorithmChooser, train)
-        val ga = GeneticAlgorithm(config, computationManager)
-        svm.svm_set_print_string_function { it -> }
+        val ga = GeneticAlgorithm(config, computationManager, datasetName)
+        svm.svm_set_print_string_function { }
 
         val time = measureTimeMillis {
             val result = ga.search(datasetName)
@@ -52,7 +52,7 @@ class WorkflowConstructor(private val config: Config) {
                     trainScore = result.measure,
                     testScore = testScore)
             File(config.outFolder).mkdirs()
-            mapper.writeValue(File(config.outFolder, "master-$datasetName.json"), workflowPerformanceEntity)
+            mapper.writeValue(File(config.outFolder, "$datasetName.json"), workflowPerformanceEntity)
 
             logger.info(Supplier { result.workflow })
             logger.info("train score: ${result.measure}")

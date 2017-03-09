@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.warrior.classification_workflow.core.storage.SaveStrategy
@@ -23,31 +24,46 @@ fun main(args: Array<String>) {
 
     val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
     val config: TpotConfig = yamlMapper.readValue(File(args[0]))
+    val calculatedDatasets = calculatedDatasets(config.currentResults)
+
     File(config.pipelineFolder).mkdirs()
 
     val saveStrategy = SaveStrategy.fromString("json", "results/tpot")
     val threadPool = Executors.newFixedThreadPool(config.threads)
 
     saveStrategy.use {
-        val futures = config.datasets.map { dataset ->
-            val datasetName = File(dataset).nameWithoutExtension
-            threadPool.submit {
-                try {
-                    println("start: $dataset")
-                    val process = launchProcess(config, dataset, datasetName)
-                    val entity = performanceEntity(process, datasetName)
-                    saveStrategy.save(entity)
-                    process.waitFor()
-                } catch (e: Exception) {
-                    e.printStackTrace()
+        val futures = config.datasets
+                .filter { it !in calculatedDatasets }
+                .map { dataset ->
+                    val datasetName = File(dataset).nameWithoutExtension
+                    threadPool.submit {
+                        try {
+                            println("start: $dataset")
+                            val process = launchProcess(config, dataset, datasetName)
+                            val entity = performanceEntity(process, datasetName)
+                            saveStrategy.save(entity)
+                            process.waitFor()
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+                        }
+                    }
                 }
-            }
-        }
 
         for (f in futures) {
             f.get()
         }
         threadPool.shutdown()
+    }
+}
+
+private fun calculatedDatasets(results: String): Set<String> {
+    val mapper = jacksonObjectMapper()
+    return try {
+        val results: List<TpotPerformanceEntity> = mapper.readValue(File(results))
+        results.map { it.datasetName }.toSet()
+    } catch (e: Exception) {
+        e.printStackTrace()
+        emptySet()
     }
 }
 
@@ -99,5 +115,6 @@ data class TpotConfig(
         @JsonProperty("dataset_folder") val datasetFolder: String,
         @JsonProperty("output_folder") val outputFolder: String,
         @JsonProperty("pipeline_folder") val pipelineFolder: String,
-        @JsonProperty("datasets") val datasets: List<String>
+        @JsonProperty("datasets") val datasets: List<String>,
+        @JsonProperty("current_results") val currentResults: String
 )

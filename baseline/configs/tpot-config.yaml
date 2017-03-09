@@ -5,6 +5,7 @@ random_seed: 13
 output_folder: results/tpot
 pipeline_folder: tpot-pipelines
 dataset_folder: common-datasets
+current_results: results/tpot/tpot-common.json
 datasets:
   # all
   - ada_agnostic.csv

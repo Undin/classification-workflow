@@ -52,5 +52,7 @@ ext.libraries = [
 
         antlr                       : 'org.antlr:antlr4:4.6',
 
+        poiXml                      : 'org.apache.poi:poi-ooxml:3.15',
+
         junit                       : 'junit:junit:4.12'
 ]

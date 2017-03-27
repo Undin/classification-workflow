@@ -3,7 +3,7 @@ package com.warrior.classification_workflow.reports
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.mongodb.MongoClient
 import com.warrior.classification_workflow.WorkflowPerformanceEntity
-import com.warrior.classification_workflow.baseline.single.SingleClassifierTuningEntity
+import com.warrior.classification_workflow.baseline.single.SingleClassifierPerformanceEntity
 import com.warrior.classification_workflow.baseline.tpot.TpotPerformanceEntity
 import org.apache.poi.xssf.usermodel.*
 import org.jongo.Jongo
@@ -261,7 +261,7 @@ private fun tpotBaselineReport(jongo: Jongo, workflowResults: Map<String, Pair<D
 }
 
 private fun singleClassifierReport(jongo: Jongo, workflowResults: Map<String, Pair<Double, Double>>) {
-    val collection = jongo.getCollection(SingleClassifierTuningEntity::class.simpleName)
+    val collection = jongo.getCollection(SingleClassifierPerformanceEntity::class.simpleName)
     val rfResults = collection.loadResults("RF")
     val svmResults = collection.loadResults("SVM")
 
@@ -271,25 +271,23 @@ private fun singleClassifierReport(jongo: Jongo, workflowResults: Map<String, Pa
     firstRow.createCell(0).setCellValue("Dataset Name")
     firstRow.createCell(1).setCellValue("RF")
     firstRow.createCell(2).setCellValue("SVM")
-    firstRow.createCell(3).setCellValue("Workflow (Train)")
-    firstRow.createCell(4).setCellValue("Workflow (Test)")
+    firstRow.createCell(3).setCellValue("Workflow (Test)")
 
     val font = workbook.createFont()
     font.bold = true
 
     var rowIndex = 1
     for (datasetName in DATASETS) {
-        workflowResults[datasetName]?.also { (train, test) ->
+        workflowResults[datasetName]?.also { (_, test) ->
             val rfScore = rfResults[datasetName]!!
             val svmScore = svmResults[datasetName]!!
-            val max = maxOf(rfScore, svmScore, maxOf(train, test))
+            val max = maxOf(rfScore, svmScore, test)
 
             val row = sheet.createRow(rowIndex++)
             row.createCell(0).setCellValue(datasetName)
             row.createCell(1, rfScore, max, font)
             row.createCell(2, svmScore, max, font)
-            row.createCell(3, train, max, font)
-            row.createCell(4, test, max, font)
+            row.createCell(3, test, max, font)
         }
     }
 
@@ -317,9 +315,9 @@ private fun Double.round(precision: Int): Double {
 
 private fun MongoCollection.loadResults(classifierName: String): Map<String, Double> {
     val cursor = find("{classifier_name: \"$classifierName\"}")
-            .`as`(SingleClassifierTuningEntity::class.java)
-    return cursor.use { it.associateBy(SingleClassifierTuningEntity::datasetName,
-            SingleClassifierTuningEntity::score) }
+            .`as`(SingleClassifierPerformanceEntity::class.java)
+    return cursor.use { it.associateBy(SingleClassifierPerformanceEntity::datasetName,
+            SingleClassifierPerformanceEntity::testScore) }
 }
 
 private fun createJongo(dbName: String): Jongo {

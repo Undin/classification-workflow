@@ -18,7 +18,7 @@ import kotlin.system.exitProcess
  */
 fun main(args: Array<String>) {
     if (args.size != 1) {
-        System.err.println("usage: java -jar config-file.yaml")
+        System.err.println("usage: java -classpath jarfile.jar com.warrior.classification_workflow.baseline.tpot.TpotKt config-file.yaml")
         exitProcess(1)
     }
 

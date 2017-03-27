@@ -1,0 +1,7 @@
+threads: 3
+dataset_folder: evaluation-datasets-13
+output_folder: results/single-classifier-performance/
+tuning-results:
+  - results/single_algorithm_tuning/rf-tuning.json
+  - results/single_algorithm_tuning/svm-tuning.json
+current_results: null

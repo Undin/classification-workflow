@@ -4,14 +4,12 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.warrior.classification_workflow.baseline.normalize
 import com.warrior.classification_workflow.core.load
 import com.warrior.classification_workflow.core.storage.SaveStrategy
 import com.warrior.classification_workflow.core.subInstances
 import libsvm.svm
 import org.apache.commons.cli.*
-import weka.core.Instances
-import weka.filters.Filter
-import weka.filters.unsupervised.attribute.Normalize
 import java.io.File
 import java.util.*
 import java.util.concurrent.ForkJoinPool
@@ -44,14 +42,6 @@ fun main(args: Array<String>) {
             }
         }
     }
-}
-
-private fun Instances.normalize(): Instances {
-    val normalize = Normalize()
-    normalize.setInputFormat(this)
-    val normalizedData = Filter.useFilter(this, normalize)
-    normalizedData.setRelationName(relationName())
-    return normalizedData
 }
 
 private fun parseArgs(args: Array<String>): String {

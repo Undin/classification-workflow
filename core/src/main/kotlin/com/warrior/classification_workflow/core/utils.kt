@@ -142,6 +142,14 @@ fun subInstances(data: Instances, maxInstances: Int, random: Random): Instances 
     return subInstances
 }
 
+fun Instances.normalize(): Instances {
+    val normalize = Normalize()
+    normalize.setInputFormat(this)
+    val normalizedData = Filter.useFilter(this, normalize)
+    normalizedData.setRelationName(relationName())
+    return normalizedData
+}
+
 inline fun <T> Logger?.withLog(message: String, block: () -> T): T {
     this?.info(Supplier { "start $message" })
     val result = block()

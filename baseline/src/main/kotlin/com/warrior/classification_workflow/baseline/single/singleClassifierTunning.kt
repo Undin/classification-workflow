@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
-import com.warrior.classification_workflow.baseline.normalize
 import com.warrior.classification_workflow.core.load
+import com.warrior.classification_workflow.core.normalize
 import com.warrior.classification_workflow.core.storage.SaveStrategy
 import com.warrior.classification_workflow.core.subInstances
 import libsvm.svm

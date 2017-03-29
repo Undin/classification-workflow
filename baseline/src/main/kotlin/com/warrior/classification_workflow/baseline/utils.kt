@@ -22,11 +22,3 @@ internal fun <T> Session.saveInTransaction(t: T) {
         }
     }
 }
-
-fun Instances.normalize(): Instances {
-    val normalize = Normalize()
-    normalize.setInputFormat(this)
-    val normalizedData = Filter.useFilter(this, normalize)
-    normalizedData.setRelationName(relationName())
-    return normalizedData
-}

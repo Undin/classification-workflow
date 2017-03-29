@@ -2,6 +2,7 @@ package com.warrior.classification_workflow
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.warrior.classification_workflow.core.PerformanceEntity
 import com.warrior.classification_workflow.core.Workflow
 
 /**
@@ -13,4 +14,7 @@ data class WorkflowPerformanceEntity(
         @JsonProperty("workflow") val workflow: Workflow,
         @JsonProperty("score_train") val trainScore: Double,
         @JsonProperty("score_test") val testScore: Double
-)
+) : PerformanceEntity {
+    override fun name(): String = datasetName
+    override fun score(): Double = testScore
+}

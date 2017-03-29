@@ -5,9 +5,10 @@ import com.mongodb.MongoClient
 import com.warrior.classification_workflow.WorkflowPerformanceEntity
 import com.warrior.classification_workflow.baseline.single.SingleClassifierPerformanceEntity
 import com.warrior.classification_workflow.baseline.tpot.TpotPerformanceEntity
+import com.warrior.classification_workflow.core.PerformanceEntity
+import com.warrior.classification_workflow.stacking.WorkflowStakingPerformanceEntity
 import org.apache.poi.xssf.usermodel.*
 import org.jongo.Jongo
-import org.jongo.MongoCollection
 import org.jongo.marshall.jackson.JacksonMapper
 import java.io.FileOutputStream
 
@@ -205,65 +206,12 @@ private val DATASETS = listOf(
 fun main(args: Array<String>) {
     val jongo = createJongo("master")
 
-    val workflowCollection = jongo.getCollection(WorkflowPerformanceEntity::class.simpleName)
-    val workflowResults = workflowCollection.find()
-            .`as`(WorkflowPerformanceEntity::class.java)
-            .use { cursor ->
-        cursor.associateBy(WorkflowPerformanceEntity::datasetName) {
-            it.trainScore to it.testScore
-        }
-    }
-
-    singleClassifierReport(jongo, workflowResults)
-    tpotBaselineReport(jongo, workflowResults)
-}
-
-private fun tpotBaselineReport(jongo: Jongo, workflowResults: Map<String, Pair<Double, Double>>) {
-    val tpotCollection = jongo.getCollection(TpotPerformanceEntity::class.simpleName)
-    val tpotResults = tpotCollection.find()
-            .`as`(TpotPerformanceEntity::class.java)
-            .use { cursor ->
-                cursor.associateBy(TpotPerformanceEntity::datasetName) {
-                    it.trainScore to it.testScore
-                }
-            }
-    val workbook = XSSFWorkbook()
-    val sheet = workbook.createSheet()
-    val firstRow = sheet.createRow(0)
-    firstRow.createCell(0).setCellValue("Dataset Name")
-    firstRow.createCell(1).setCellValue("TPOT (Train)")
-    firstRow.createCell(2).setCellValue("TPOT (Test)")
-    firstRow.createCell(3).setCellValue("Workflow (Train)")
-    firstRow.createCell(4).setCellValue("Workflow (Test)")
-
-    val font = workbook.createFont()
-    font.bold = true
-
-    var rowIndex = 1
-    for (datasetName in DATASETS) {
-        if (datasetName in workflowResults && datasetName in tpotResults) {
-            val (train, test) = workflowResults[datasetName]!!
-            val (tpotTrain, tpotTest) = tpotResults[datasetName]!!
-
-            val max = maxOf(test, tpotTest)
-            val row = sheet.createRow(rowIndex++)
-            row.createCell(0).setCellValue(datasetName)
-            row.createCell(1, tpotTrain, Double.MAX_VALUE, font)
-            row.createCell(2, tpotTest, max, font)
-            row.createCell(3, train, Double.MAX_VALUE, font)
-            row.createCell(4, test, max, font)
-        }
-    }
-
-    FileOutputStream("tpot-baseline.xlsx")
-            .buffered()
-            .use(workbook::write)
-}
-
-private fun singleClassifierReport(jongo: Jongo, workflowResults: Map<String, Pair<Double, Double>>) {
-    val collection = jongo.getCollection(SingleClassifierPerformanceEntity::class.simpleName)
-    val rfResults = collection.loadResults("RF")
-    val svmResults = collection.loadResults("SVM")
+    val rfResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"RF\"}")
+    val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"SVM\"}")
+    val tpotResults = jongo.loadPerformanceResult<TpotPerformanceEntity>()
+    val workflowResults = jongo.loadPerformanceResult<WorkflowPerformanceEntity>()
+    val workflowStackingResults = jongo.loadPerformanceResult<WorkflowStakingPerformanceEntity>()
+    val resultList = listOf(rfResult, svmResult, tpotResults, workflowResults, workflowStackingResults)
 
     val workbook = XSSFWorkbook()
     val sheet = workbook.createSheet()
@@ -271,29 +219,40 @@ private fun singleClassifierReport(jongo: Jongo, workflowResults: Map<String, Pa
     firstRow.createCell(0).setCellValue("Dataset Name")
     firstRow.createCell(1).setCellValue("RF")
     firstRow.createCell(2).setCellValue("SVM")
-    firstRow.createCell(3).setCellValue("Workflow (Test)")
+    firstRow.createCell(3).setCellValue("Tpot")
+    firstRow.createCell(4).setCellValue("Workflow")
+    firstRow.createCell(5).setCellValue("Workflow stacking")
 
     val font = workbook.createFont()
     font.bold = true
 
     var rowIndex = 1
     for (datasetName in DATASETS) {
-        workflowResults[datasetName]?.also { (_, test) ->
-            val rfScore = rfResults[datasetName]!!
-            val svmScore = svmResults[datasetName]!!
-            val max = maxOf(rfScore, svmScore, test)
+        val row = sheet.createRow(rowIndex++)
+        row.createCell(0).setCellValue(datasetName)
 
-            val row = sheet.createRow(rowIndex++)
-            row.createCell(0).setCellValue(datasetName)
-            row.createCell(1, rfScore, max, font)
-            row.createCell(2, svmScore, max, font)
-            row.createCell(3, test, max, font)
+        val datasetResults = resultList.map { it.getOrDefault(datasetName, -1.0) }
+        val bestResult = datasetResults.max()!!
+
+        for ((i, result) in datasetResults.withIndex()) {
+            if (result != -1.0) {
+                row.createCell(i + 1, result, bestResult, font)
+            } else {
+                row.createCell(i + 1).setCellValue("-")
+            }
         }
     }
 
-    FileOutputStream("single-classifier-baseline.xlsx")
+    FileOutputStream("report.xlsx")
             .buffered()
             .use(workbook::write)
+}
+
+inline private fun <reified T : PerformanceEntity> Jongo.loadPerformanceResult(query: String = "{}"): Map<String, Double> {
+    val collection = getCollection(T::class.java.simpleName)
+    return collection.find(query).`as`(T::class.java).use { cursor ->
+        cursor.associateBy(PerformanceEntity::name, PerformanceEntity::score)
+    }
 }
 
 private fun XSSFRow.createCell(columnIndex: Int, value: Double, max: Double, font: XSSFFont) {
@@ -311,13 +270,6 @@ private fun XSSFRow.createCell(columnIndex: Int, value: Double, max: Double, fon
 private fun Double.round(precision: Int): Double {
     val shift = Math.pow(10.0, precision.toDouble())
     return (this * shift).toInt() / shift
-}
-
-private fun MongoCollection.loadResults(classifierName: String): Map<String, Double> {
-    val cursor = find("{classifier_name: \"$classifierName\"}")
-            .`as`(SingleClassifierPerformanceEntity::class.java)
-    return cursor.use { it.associateBy(SingleClassifierPerformanceEntity::datasetName,
-            SingleClassifierPerformanceEntity::testScore) }
 }
 
 private fun createJongo(dbName: String): Jongo {

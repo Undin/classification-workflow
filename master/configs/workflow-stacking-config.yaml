@@ -1,0 +1,4 @@
+threads: 4
+workflow-results: logs-remote
+dataset_folder: evaluation-datasets-13
+output_folder: results/workflow-staking

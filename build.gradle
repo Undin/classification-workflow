@@ -1,5 +1,5 @@
 buildscript {
-    ext.kotlinVersion = "1.1.0"
+    ext.kotlinVersion = '1.1.1'
     repositories {
         jcenter()
     }
@@ -12,11 +12,12 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        mavenLocal()
     }
 }
 
 def versions = [
-        jackson                     : '2.8.5'
+        jackson                     : '2.8.7'
 ]
 
 ext.libraries = [
@@ -47,7 +48,7 @@ ext.libraries = [
         wekaLS                      : 'nz.ac.waikato.cms.weka:linearForwardSelection:1.0.2',
         wekaDbScan                  : 'nz.ac.waikato.cms.weka:optics_dbScan:1.0.4',
         wekaXMeans                  : 'nz.ac.waikato.cms.weka:XMeans:1.0.4',
-        xgboost                     : 'biz.k11i:xgboost-predictor:0.1.7',
+        xgboost                     : 'ml.dmlc:xgboost4j:0.7',
         apacheMath                  : 'org.apache.commons:commons-math3:3.6.1',
 
         antlr                       : 'org.antlr:antlr4:4.6',

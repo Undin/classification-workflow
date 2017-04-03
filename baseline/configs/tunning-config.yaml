@@ -44,6 +44,32 @@ algorithms:
         loose_step: round((end - start + 9) / 10)
         fine_step: 1
 
+  - classifier:
+      name                : "XGB"
+      type                : "Classifier"
+      classifier_class    : "com.warrior.classification_workflow.baseline.single.xgboost.XGBClassifier"
+      classifier_options  :
+        -R: "500"
+    params:
+      - name: -D
+        type: lin
+        loose_start: 1
+        loose_end: 10
+        loose_step: 2
+        fine_step: 1
+      - name: -W
+        type: lin
+        loose_start: 1
+        loose_end: 4
+        loose_step: 1
+        fine_step: 1
+      - name: -G
+        type: lin
+        loose_start: 0
+        loose_end: 1
+        loose_step: 0.1
+        fine_step: 0.05
+
 datasets:
   # all
   - ada_agnostic.csv

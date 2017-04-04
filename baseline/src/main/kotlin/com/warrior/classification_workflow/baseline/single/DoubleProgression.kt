@@ -18,13 +18,13 @@ open class DoubleProgressionIterator(
 ) : Iterator<Double> {
 
     private var next = start
-    private var hasNext: Boolean = start < end
+    private var hasNext: Boolean = start <= end
 
     override fun hasNext(): Boolean = hasNext
 
     override fun next(): Double {
         val value = next
-        if (value >= end) {
+        if (value + step > end) {
             hasNext = false
         } else {
             next += step

@@ -60,7 +60,7 @@ algorithms:
       - name: -W
         type: lin
         loose_start: 1
-        loose_end: 4
+        loose_end: 3
         loose_step: 1
         fine_step: 1
       - name: -G

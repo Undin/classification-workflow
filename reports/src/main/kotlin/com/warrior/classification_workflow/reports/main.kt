@@ -6,7 +6,7 @@ import com.warrior.classification_workflow.WorkflowPerformanceEntity
 import com.warrior.classification_workflow.baseline.single.SingleClassifierPerformanceEntity
 import com.warrior.classification_workflow.baseline.tpot.TpotPerformanceEntity
 import com.warrior.classification_workflow.core.PerformanceEntity
-import com.warrior.classification_workflow.stacking.WorkflowStakingPerformanceEntity
+import com.warrior.classification_workflow.stacking.WorkflowStackingPerformanceEntity
 import org.apache.poi.xssf.usermodel.*
 import org.jongo.Jongo
 import org.jongo.marshall.jackson.JacksonMapper
@@ -210,7 +210,7 @@ fun main(args: Array<String>) {
     val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"SVM\"}")
     val tpotResults = jongo.loadPerformanceResult<TpotPerformanceEntity>()
     val workflowResults = jongo.loadPerformanceResult<WorkflowPerformanceEntity>()
-    val workflowStackingResults = jongo.loadPerformanceResult<WorkflowStakingPerformanceEntity>()
+    val workflowStackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>()
     val resultList = listOf(rfResult, svmResult, tpotResults, workflowResults, workflowStackingResults)
 
     val workbook = XSSFWorkbook()

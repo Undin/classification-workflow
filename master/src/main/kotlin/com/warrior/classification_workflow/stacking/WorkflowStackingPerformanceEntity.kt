@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.warrior.classification_workflow.core.PerformanceEntity
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-data class WorkflowStakingPerformanceEntity(
+data class WorkflowStackingPerformanceEntity(
         @JsonProperty("dataset_name") val datasetName: String,
         @JsonProperty("score_test") val testScore: Double
 ) : PerformanceEntity {

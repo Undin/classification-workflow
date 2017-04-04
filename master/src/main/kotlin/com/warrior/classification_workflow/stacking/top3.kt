@@ -66,7 +66,7 @@ fun main(args: Array<String>) {
             val datasetPath = "${config.datasetFolder}/$datasetName.csv"
             try {
                 val score = measurePerformance(datasetPath, workflows, config.threads)
-                val entity = WorkflowStakingPerformanceEntity(datasetName, score)
+                val entity = WorkflowStackingPerformanceEntity(datasetName, score)
                 mapper.writeValue(resultFile, entity)
             } catch (e: Exception) {
                 logger.error(e.message, e)

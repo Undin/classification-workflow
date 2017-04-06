@@ -13,7 +13,6 @@ import libsvm.svm
 import org.apache.logging.log4j.LogManager
 import weka.classifiers.evaluation.Evaluation
 import weka.classifiers.meta.Stacking
-import weka.classifiers.trees.RandomForest
 import weka.core.Instances
 import java.io.File
 import java.util.*
@@ -65,8 +64,8 @@ fun main(args: Array<String>) {
             logger.info("start $datasetName")
             val datasetPath = "${config.datasetFolder}/$datasetName.csv"
             try {
-                val score = measurePerformance(datasetPath, workflows, config.threads)
-                val entity = WorkflowStackingPerformanceEntity(datasetName, score)
+                val score = measurePerformance(datasetPath, workflows, config.metaClassifier, config.threads)
+                val entity = WorkflowStackingPerformanceEntity(datasetName, config.metaClassifier, score)
                 mapper.writeValue(resultFile, entity)
             } catch (e: Exception) {
                 logger.error(e.message, e)
@@ -75,7 +74,7 @@ fun main(args: Array<String>) {
     }
 }
 
-private fun measurePerformance(datasetPath: String, workflows: List<Workflow>, threads: Int): Double {
+private fun measurePerformance(datasetPath: String, workflows: List<Workflow>, metaClassifier: Classifier, threads: Int): Double {
     val instances = load(datasetPath).normalize()
     val train = Instances(instances, 0)
     val test = Instances(instances, 0)
@@ -94,9 +93,7 @@ private fun measurePerformance(datasetPath: String, workflows: List<Workflow>, t
 
     val stacking = Stacking()
     stacking.classifiers = workflows.map { it.classifier() }.toTypedArray()
-    val randomForest = RandomForest()
-    randomForest.numIterations = 100
-    stacking.metaClassifier = randomForest
+    stacking.metaClassifier = metaClassifier()
     stacking.numExecutionSlots = threads
     stacking.buildClassifier(subTrain)
 
@@ -107,6 +104,7 @@ private fun measurePerformance(datasetPath: String, workflows: List<Workflow>, t
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 private data class WorkflowStakingConfig(
+        @JsonProperty("meta_classifier") val metaClassifier: Classifier,
         @JsonProperty("threads") val threads: Int,
         @JsonProperty("workflow-results") val workflowResults: String,
         @JsonProperty("dataset_folder") val datasetFolder: String,

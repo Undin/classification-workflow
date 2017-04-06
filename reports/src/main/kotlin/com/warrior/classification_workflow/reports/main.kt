@@ -210,8 +210,15 @@ fun main(args: Array<String>) {
     val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"SVM\"}")
     val tpotResults = jongo.loadPerformanceResult<TpotPerformanceEntity>()
     val workflowResults = jongo.loadPerformanceResult<WorkflowPerformanceEntity>()
-    val workflowStackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>()
-    val resultList = listOf(rfResult, svmResult, tpotResults, workflowResults, workflowStackingResults)
+    val workflowRFStackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("{meta_classifier.name: \"RF\"}")
+    val workflowLogRL2StackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("{meta_classifier.name: \"LogR-L2\"}")
+
+    val resultList = listOf(rfResult,
+            svmResult,
+            tpotResults,
+            workflowResults,
+            workflowRFStackingResults,
+            workflowLogRL2StackingResults)
 
     val workbook = XSSFWorkbook()
     val sheet = workbook.createSheet()
@@ -221,7 +228,8 @@ fun main(args: Array<String>) {
     firstRow.createCell(2).setCellValue("SVM")
     firstRow.createCell(3).setCellValue("Tpot")
     firstRow.createCell(4).setCellValue("Workflow")
-    firstRow.createCell(5).setCellValue("Workflow stacking")
+    firstRow.createCell(5).setCellValue("Workflow stacking (RF)")
+    firstRow.createCell(6).setCellValue("Workflow stacking (LogR-L2)")
 
     val font = workbook.createFont()
     font.bold = true

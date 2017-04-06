@@ -1,4 +1,11 @@
+meta_classifier:
+  type                : "Classifier"
+  name                : "LogR-L2"
+  classifier_class    : "weka.classifiers.functions.LibLINEAR"
+  classifier_options  :
+    -S: "0"
 threads: 4
 workflow-results: logs-remote
 dataset_folder: evaluation-datasets-13
-output_folder: results/workflow-staking
+output_folder: results/workflow-staking-LogR-L2
+

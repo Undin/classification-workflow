@@ -2,6 +2,7 @@ package com.warrior.classification_workflow.stacking
 
 import com.warrior.classification_workflow.core.Workflow
 import com.warrior.classification_workflow.core.WorkflowClassifier
+import com.warrior.classification_workflow.core.indexOfMaxValue
 import weka.classifiers.meta.Stacking
 import weka.core.*
 
@@ -22,7 +23,7 @@ class WorkflowStacking : Stacking() {
         for (classifier in workflowClassifiers) {
             val results = classifier.classify(instance)
             for (res in results) {
-                values[index++] = res
+                values[index++] = res.indexOfMaxValue().toDouble()
             }
         }
         values[index] = instance.classValue()

@@ -193,3 +193,5 @@ fun parallelCrossValidation(classifier: Classifier, data: Instances, folds: Int,
     val wekaClassifier = AbstractClassifier.forName(classifier.className, options)
     return parallelCrossValidation(wekaClassifier, classifier.name, data, folds, random, logger)
 }
+
+fun DoubleArray.indexOfMaxValue(): Int = withIndex().maxBy { it.value }!!.index

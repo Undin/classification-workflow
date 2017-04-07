@@ -30,17 +30,20 @@ class WorkflowClassifier(
         builtFinalClassifier.buildClassifier(processingData)
     }
 
-    override fun classifyInstance(instance: Instance): Double = classify(instance).last()
+    override fun distributionForInstance(instance: Instance): DoubleArray = classify(instance).last()
 
-    fun classify(instance: Instance): List<Double> {
-        val classes = ArrayList<Double>()
+    fun classify(instance: Instance): List<DoubleArray> {
+        val distributions = ArrayList<DoubleArray>()
         var currentData = Instances(instance.dataset(), 0)
         currentData.add(instance)
         for ((i, algo) in algorithms.withIndex()) {
             when (algo) {
                 is Classifier -> {
                     val classifier = builtClassifiers[i]!!
-                    classes += addClassificationsResult(classifier, currentData, i)[0]
+                    val distribution = classifier.distributionForInstance(currentData[0])
+                    val index = insertClassAttribute(currentData, classifier, i)
+                    currentData[0].setValue(index, distribution.indexOfMaxValue().toDouble())
+                    distributions += distribution
                 }
                 is Transformer -> {
                     currentData = builtTransformers[i]?.transformedData(currentData) ?: currentData
@@ -49,8 +52,8 @@ class WorkflowClassifier(
                 }
             }
         }
-        classes += builtFinalClassifier.classifyInstance(currentData[0])
-        return classes
+        distributions += builtFinalClassifier.distributionForInstance(currentData[0])
+        return distributions
     }
 
     private fun buildWorkflow(data: Instances): Instances {
@@ -88,20 +91,24 @@ class WorkflowClassifier(
     }
 
     private fun addClassificationsResult(builtClassifier: weka.classifiers.Classifier,
-                                         instances: Instances, iteration: Int): DoubleArray {
+                                         instances: Instances, iteration: Int) {
         val classificationResults = DoubleArray(instances.size)
         for ((i, inst) in instances.withIndex()) {
             classificationResults[i] = builtClassifier.classifyInstance(inst)
         }
 
-        val index = instances.classIndex()
-        val attrs = instances.classAttribute().copy("${builtClassifier.javaClass.simpleName}-$iteration")
-        instances.insertAttributeAt(attrs, index)
-
+        val index = insertClassAttribute(instances, builtClassifier, iteration)
         for ((i, inst) in instances.withIndex()) {
             inst.setValue(index, classificationResults[i])
         }
-        return classificationResults
+    }
+
+    private fun insertClassAttribute(instances: Instances, builtClassifier: weka.classifiers.Classifier,
+                                     iteration: Int): Int {
+        val index = instances.classIndex()
+        val attrs = instances.classAttribute().copy("${builtClassifier.javaClass.simpleName}-$iteration")
+        instances.insertAttributeAt(attrs, index)
+        return index
     }
 
     private fun filter(instances: Instances, indices: IntArray): Instances {

@@ -1,3 +1,4 @@
+stacking_type: manual
 meta_classifier:
   type                : "Classifier"
   name                : "LogR-L2"
@@ -5,7 +6,7 @@ meta_classifier:
   classifier_options  :
     -S: "0"
 threads: 4
-workflow-results: logs-remote
+workflow-results: logs-test
 dataset_folder: evaluation-datasets-13
-output_folder: results/workflow-staking-LogR-L2
+output_folder: results/workflow-staking-manual-LogR-L2
 

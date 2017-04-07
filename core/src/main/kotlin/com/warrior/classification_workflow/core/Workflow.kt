@@ -35,7 +35,7 @@ class Workflow(
         this.extractor?.set(extractor)
     }
 
-    fun classifier(): weka.classifiers.Classifier = WorkflowClassifier(algorithms, classifier)
+    fun classifier(): WorkflowClassifier = WorkflowClassifier(algorithms, classifier)
 
     override fun toString(): String {
         return "Workflow(" +

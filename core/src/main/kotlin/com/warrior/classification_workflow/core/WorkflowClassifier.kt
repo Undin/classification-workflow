@@ -9,11 +9,12 @@ import weka.core.Utils
 import weka.filters.Filter
 import weka.filters.unsupervised.attribute.Remove
 import java.util.*
+import kotlin.collections.ArrayList
 
 /**
  * Created by warrior on 12/12/16.
  */
-internal class WorkflowClassifier(
+class WorkflowClassifier(
         private val algorithms: List<Algorithm>,
         private val classifier: Classifier
 ) : AbstractClassifier() {
@@ -24,56 +25,61 @@ internal class WorkflowClassifier(
     private lateinit var builtFinalClassifier: weka.classifiers.Classifier
 
     override fun buildClassifier(data: Instances) {
-        val processingData = processInstances(Instances(data), true)
+        val processingData = buildWorkflow(Instances(data))
         builtFinalClassifier = classifier()
         builtFinalClassifier.buildClassifier(processingData)
     }
 
-    override fun classifyInstance(instance: Instance): Double {
-        val currentData = Instances(instance.dataset(), 0)
+    override fun classifyInstance(instance: Instance): Double = classify(instance).last()
+
+    fun classify(instance: Instance): List<Double> {
+        val classes = ArrayList<Double>()
+        var currentData = Instances(instance.dataset(), 0)
         currentData.add(instance)
-        val processingData = processInstances(currentData, false)
-        return builtFinalClassifier.classifyInstance(processingData[0])
+        for ((i, algo) in algorithms.withIndex()) {
+            when (algo) {
+                is Classifier -> {
+                    val classifier = builtClassifiers[i]!!
+                    classes += addClassificationsResult(classifier, currentData, i)[0]
+                }
+                is Transformer -> {
+                    currentData = builtTransformers[i]?.transformedData(currentData) ?: currentData
+                    val indices = buildIndices[i]!!
+                    currentData = filter(currentData, indices)
+                }
+            }
+        }
+        classes += builtFinalClassifier.classifyInstance(currentData[0])
+        return classes
     }
 
-    private fun processInstances(data: Instances, needBuildFirst: Boolean): Instances {
+    private fun buildWorkflow(data: Instances): Instances {
         var currentData = data
         for ((i, algo) in algorithms.withIndex()) {
             when (algo) {
                 is Classifier -> {
-                    val classifier = if (needBuildFirst) {
-                        val c = algo()
-                        c.buildClassifier(currentData)
-                        builtClassifiers[i] = c
-                        c
-                    } else {
-                        builtClassifiers[i]!!
-                    }
+                    val classifier = algo()
+                    classifier.buildClassifier(currentData)
+                    builtClassifiers[i] = classifier
                     addClassificationsResult(classifier, currentData, i)
                 }
                 is Transformer -> {
-                    if (needBuildFirst) {
-                        val (search, eval) = algo()
-                        if (eval is AttributeTransformer) {
-                            eval.buildEvaluator(currentData)
-                            currentData = eval.transformedData(currentData)
-                            val indices = usefulAttributes(currentData)
-                            currentData = filter(currentData, indices)
-                            builtTransformers[i] = eval
-                            buildIndices[i] = indices
-                        } else {
-                            val attributeSelection = AttributeSelection()
-                            attributeSelection.setSearch(search)
-                            attributeSelection.setEvaluator(eval)
-                            attributeSelection.SelectAttributes(currentData)
-                            val indices = attributeSelection.selectedAttributes()
-                            currentData = filter(currentData, indices)
-                            buildIndices[i] = indices
-                        }
-                    } else {
-                        currentData = builtTransformers[i]?.transformedData(currentData) ?: currentData
-                        val indices = buildIndices[i]!!
+                    val (search, eval) = algo()
+                    if (eval is AttributeTransformer) {
+                        eval.buildEvaluator(currentData)
+                        currentData = eval.transformedData(currentData)
+                        val indices = usefulAttributes(currentData)
                         currentData = filter(currentData, indices)
+                        builtTransformers[i] = eval
+                        buildIndices[i] = indices
+                    } else {
+                        val attributeSelection = AttributeSelection()
+                        attributeSelection.setSearch(search)
+                        attributeSelection.setEvaluator(eval)
+                        attributeSelection.SelectAttributes(currentData)
+                        val indices = attributeSelection.selectedAttributes()
+                        currentData = filter(currentData, indices)
+                        buildIndices[i] = indices
                     }
                 }
             }
@@ -81,7 +87,8 @@ internal class WorkflowClassifier(
         return currentData
     }
 
-    private fun addClassificationsResult(builtClassifier: weka.classifiers.Classifier, instances: Instances, iteration: Int) {
+    private fun addClassificationsResult(builtClassifier: weka.classifiers.Classifier,
+                                         instances: Instances, iteration: Int): DoubleArray {
         val classificationResults = DoubleArray(instances.size)
         for ((i, inst) in instances.withIndex()) {
             classificationResults[i] = builtClassifier.classifyInstance(inst)
@@ -94,6 +101,7 @@ internal class WorkflowClassifier(
         for ((i, inst) in instances.withIndex()) {
             inst.setValue(index, classificationResults[i])
         }
+        return classificationResults
     }
 
     private fun filter(instances: Instances, indices: IntArray): Instances {

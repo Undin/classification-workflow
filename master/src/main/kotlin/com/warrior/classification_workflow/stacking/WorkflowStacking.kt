@@ -2,7 +2,6 @@ package com.warrior.classification_workflow.stacking
 
 import com.warrior.classification_workflow.core.Workflow
 import com.warrior.classification_workflow.core.WorkflowClassifier
-import com.warrior.classification_workflow.core.indexOfMaxValue
 import weka.classifiers.meta.Stacking
 import weka.core.*
 
@@ -21,9 +20,11 @@ class WorkflowStacking : Stacking() {
         val values = DoubleArray(m_MetaFormat!!.numAttributes())
         var index = 0
         for (classifier in workflowClassifiers) {
-            val results = classifier.classify(instance)
-            for (res in results) {
-                values[index++] = res.indexOfMaxValue().toDouble()
+            val distributions = classifier.classify(instance)
+            for (distribution in distributions) {
+                for (probability in distribution) {
+                    values[index++] = probability
+                }
             }
         }
         values[index] = instance.classValue()
@@ -37,8 +38,9 @@ class WorkflowStacking : Stacking() {
         for (workflow in workflows) {
             for (algo in workflow.allAlgorithms) {
                 if (algo is com.warrior.classification_workflow.core.Classifier) {
-                    val values = List(instances.numClasses()) { i -> instances.classAttribute().value(i) }
-                    attributes += Attribute("${algo.name}-${attributes.size}", values)
+                    for (i in 0 until instances.numClasses()) {
+                        attributes += Attribute("${algo.name}-${attributes.size}")
+                    }
                 }
             }
         }

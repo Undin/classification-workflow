@@ -6,7 +6,19 @@ meta_classifier:
   classifier_options  :
     -S: "0"
 threads: 4
-workflow-results: logs-test
+workflow-results: logs-remote
 dataset_folder: evaluation-datasets-13
 output_folder: results/workflow-staking-manual-LogR-L2
+datasets:
+  - allbp
+  - cmc
+  - credit-g
+  - flare
+  - german
+  - parity5+5
+  - solar-flare_2
+  - tokyo1
+  - vehicle
+  - wine-quality-red
+  - yeast
 

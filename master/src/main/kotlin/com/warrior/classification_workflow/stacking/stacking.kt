@@ -28,11 +28,12 @@ fun main(args: Array<String>) {
         println("usage: java -classpath jarfile.jar com.warrior.classification_workflow.stacking.StackingKt config-file.yaml")
         exitProcess(1)
     }
-    val logger = LogManager.getLogger("Top3")
+    val logger = LogManager.getLogger("Staking")
     val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
     val config: WorkflowStakingConfig = yamlMapper.readValue(File(args[0]))
 
     val folders = File(config.workflowResults).listFiles() ?: exitProcess(0)
+    val datasets = config.datasets.toSet()
 
     val mapper = jacksonObjectMapper()
 
@@ -45,6 +46,7 @@ fun main(args: Array<String>) {
                 val time = matcher.group(2).toLong()
                 Triple(file, datasetName, time)
             }
+            .filter { (_, dataset, _) -> dataset in datasets }
             .groupBy({ it.second }) { (file, _, time) -> file to time }
             .mapValues { (_, v) ->
                 val folder = v.maxBy { it.second }!!.first
@@ -65,13 +67,13 @@ fun main(args: Array<String>) {
             val datasetPath = "${config.datasetFolder}/$datasetName.csv"
             try {
                 val classifier = when (config.stackingType) {
-                    StakingType.WEKA -> {
+                    "weka" -> {
                         val stacking = Stacking()
                         stacking.classifiers = workflows.map { it.classifier() }.toTypedArray()
                         stacking
 
                     }
-                    StakingType.MANUAL -> {
+                    else -> {
                         val stacking = WorkflowStacking()
                         stacking.setWorkflows(workflows)
                         stacking
@@ -113,10 +115,11 @@ private fun measurePerformance(datasetPath: String, classifier: weka.classifiers
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 private data class WorkflowStakingConfig(
-        @JsonProperty("stacking_type") val stackingType: StakingType,
+        @JsonProperty("stacking_type") val stackingType: String,
         @JsonProperty("meta_classifier") val metaClassifier: Classifier,
         @JsonProperty("threads") val threads: Int,
         @JsonProperty("workflow-results") val workflowResults: String,
+        @JsonProperty("output_folder") val outputFolder: String,
         @JsonProperty("dataset_folder") val datasetFolder: String,
-        @JsonProperty("output_folder") val outputFolder: String
+        @JsonProperty("datasets") val datasets: List<String>
 )

@@ -10,7 +10,7 @@ data class WorkflowStackingPerformanceEntity(
         @JsonProperty("dataset_name") val datasetName: String,
         @JsonProperty("meta_classifier") val metaClassifier: Classifier,
         @JsonProperty("score_test") val testScore: Double,
-        @JsonProperty("stacking_type") val stackingType: StakingType
+        @JsonProperty("stacking_type") val stackingType: String
 ) : PerformanceEntity {
     override fun name(): String = datasetName
     override fun score(): Double = testScore

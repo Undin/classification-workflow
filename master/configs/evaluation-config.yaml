@@ -1,0 +1,303 @@
+dataset_folder: evaluation-datasets-13
+log_folder: logs
+out_folder: results/evaluation
+threads: 20
+cache_prefix_size: 6
+
+meta_data_paths:
+  meta_features_path: results/meta-features/meta-features-common.json
+  classifier_performance_path: results/classifier_performance/classifier-performance-common.json
+  transformer_performances_path: results/transformer_performance/transformer-performance-common.json
+
+params:
+  population_size: 10
+  generations: 10
+  max_workflow_size: 6
+  mutation_number: 5
+  survived_part: 0.1
+  mutation_probability: 0.3
+  tournament_probability: 0.8
+  point_crossover_probability: 0.5
+  structure_mutation_probability: 0.8
+
+classifiers:
+  - name                : "NaiveBayes"
+    classifier_class    : "weka.classifiers.bayes.NaiveBayes"
+    classifier_options  : {}
+
+  - name                : "KNN"
+    classifier_class    : "weka.classifiers.lazy.IBk"
+    classifier_options  :
+      -K: ["1", "3", "5", "10", "15"]
+
+  - name                : "SVM"
+    classifier_class    : "weka.classifiers.functions.LibSVM"
+    classifier_options  :
+      -C: ["0.1", "0.5", "1.0", "2", "5", "10", "15"]
+      -G: ["0.0001", "0.001", "0.01", "0.1", "0.5"]
+      -E: ["0.0001", "0.001", "0.01"]
+
+  - name                : "C4.5"
+    classifier_class    : "weka.classifiers.trees.J48"
+    classifier_options  :
+      -M: ["1", "2", "5", "10", "20"]
+
+  - name                : "LogR-L2"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: ["0"]
+
+  - name                : "LogR-L1"
+    classifier_class    : "weka.classifiers.functions.LibLINEAR"
+    classifier_options  :
+      -S: ["6"]
+
+transformers:
+  - name                : "PCA"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.PrincipalComponents"
+      evaluation_options: {}
+
+  - name                : "CFS-SFS"
+    search:
+      search_class      : "weka.attributeSelection.BestFirst"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.CfsSubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-LS"
+    search:
+      search_class      : "weka.attributeSelection.LinearForwardSelection"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Cons-SWS"
+    search:
+      search_class      : "weka.attributeSelection.GreedyStepwise"
+      search_options    : {}
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ConsistencySubsetEval"
+      evaluation_options: {}
+
+  - name                : "Relief-F"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: ["0.01"]
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.ReliefFAttributeEval"
+      evaluation_options: {}
+
+  - name                : "Signific"
+    search:
+      search_class      : "weka.attributeSelection.Ranker"
+      search_options    :
+        -T: ["0.01"]
+    evaluation:
+      evaluation_class  : "weka.attributeSelection.SignificanceAttributeEval"
+      evaluation_options: {}
+
+datasets:
+# test
+  - allbp
+  - cmc
+  - credit-g
+  - flare
+  - german
+  - parity5+5
+  - solar-flare_2
+  - tokyo1
+  - vehicle
+  - wine-quality-red
+  - yeast
+# all
+#  - ada_agnostic
+#  - adult
+#  - agaricus-lepiota
+#  - allbp
+#  - allhyper
+#  - allhypo
+#  - allrep
+#  - analcatdata_aids
+#  - analcatdata_asbestos
+#  - analcatdata_authorship
+#  - analcatdata_bankruptcy
+#  - analcatdata_boxing1
+#  - analcatdata_boxing2
+#  - analcatdata_creditscore
+#  - analcatdata_cyyoung8092
+#  - analcatdata_cyyoung9302
+#  - analcatdata_dmft
+#  - analcatdata_fraud
+#  - analcatdata_germangss
+#  - analcatdata_happiness
+#  - analcatdata_japansolvent
+#  - analcatdata_lawsuit
+#  - ann-thyroid
+#  - anneal
+#  - AR10P
+#  - australian
+#  - auto
+#  - backache
+#  - balance-scale
+#  - biomed
+#  - breast
+#  - breast-cancer
+#  - breast-cancer-wisconsin
+#  - breast-w
+#  - buggyCrx
+#  - calendarDOW
+#  - car
+#  - car-evaluation
+#  - cars
+#  - cars1
+#  - chess
+#  - churn
+#  - clean1
+#  - clean2
+#  - cleve
+#  - cleveland
+#  - cleveland-nominal
+#  - CLL-SUB-111
+#  - cloud
+#  - cmc
+#  - colic
+#  - collins
+#  - colon
+#  - confidence
+#  - connect-4
+#  - corral
+#  - credit-a
+#  - credit-g
+#  - crx
+#  - dermatology
+#  - diabetes
+#  - dis
+#  - dna
+#  - ECML90x27679
+#  - ecoli
+#  - Embryonaldataset_c
+#  - flags
+#  - flare
+#  - GAMETES_Epistasis_2-Way_20atts_0.1H_EDM-1_1
+#  - GAMETES_Epistasis_2-Way_20atts_0.4H_EDM-1_1
+#  - GAMETES_Epistasis_2-Way_1000atts_0.4H_EDM-1_EDM-1_1
+#  - GAMETES_Epistasis_3-Way_20atts_0.2H_EDM-1_1
+#  - GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_50_EDM-2_001
+#  - GAMETES_Heterogeneity_20atts_1600_Het_0.4_0.2_75_EDM-2_001
+#  - german
+#  - gina_agnostic
+#  - gina_prior
+#  - gina_prior2
+#  - glass
+#  - glass2
+#  - grub-damage
+#  - haberman
+#  - hayes-roth
+#  - heart-c
+#  - heart-h
+#  - heart-statlog
+#  - hepatitis
+#  - Hill_Valley_with_noise
+#  - Hill_Valley_without_noise
+#  - horse-colic
+#  - house-votes-84
+#  - hungarian
+#  - hypothyroid
+#  - ionosphere
+#  - iris
+#  - irish
+#  - kdd_JapaneseVowels
+#  - kdd_synthetic_control
+#  - kr-vs-kp
+#  - krkopt
+#  - labor
+#  - led7
+#  - led24
+#  - letter
+#  - leukemia
+#  - Leukemia_3c
+#  - liver-disorder
+#  - lupus
+#  - lymph
+#  - mfeat-factors
+#  - mfeat-fourier
+#  - mfeat-karhunen
+#  - mfeat-morphological
+#  - mfeat-pixel
+#  - mfeat-zernike
+#  - mnist
+#  - mofn-3-7-10
+#  - molecular-biology_promoters
+#  - monk1
+#  - monk2
+#  - monk3
+#  - mushroom
+#  - mux6
+#  - new-thyroid
+#  - nursery
+#  - oh0.wc
+#  - oh5.wc
+#  - oh10.wc
+#  - oh15.wc
+#  - optdigits
+#  - page-blocks
+#  - parity5+5
+#  - parity5
+#  - pasture
+#  - pendigits
+#  - PIE10P
+#  - pima
+#  - postoperative-patient-data
+#  - prnn_crabs
+#  - prnn_fglass
+#  - prnn_synth
+#  - profb
+#  - promoters
+#  - satimage
+#  - schizo
+#  - segmentation
+#  - shuttle
+#  - sleep
+#  - SMK-CAN-187
+#  - solar-flare_1
+#  - solar-flare_2
+#  - sonar
+#  - soybean
+#  - spambase
+#  - spect
+#  - spectf
+#  - spectrometer
+#  - splice
+#  - sylva_agnostic
+#  - sylva_prior
+#  - tae
+#  - threeOf9
+#  - tic-tac-toe
+#  - tokyo1
+#  - TOX-171
+#  - tr11.wc
+#  - tr12.wc
+#  - tr23.wc
+#  - tr31.wc
+#  - tr41.wc
+#  - tr45.wc
+#  - vehicle
+#  - vote
+#  - vowel
+#  - wap.wc
+#  - waveform-21
+#  - waveform-40
+#  - white-clover
+#  - wine-quality-red
+#  - wine-quality-white
+#  - wine-recognition
+#  - xd6
+#  - yeast
+#  - zoo

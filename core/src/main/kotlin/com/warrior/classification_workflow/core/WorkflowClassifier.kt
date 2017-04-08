@@ -16,7 +16,8 @@ import kotlin.collections.ArrayList
  */
 class WorkflowClassifier(
         private val algorithms: List<Algorithm>,
-        private val classifier: Classifier
+        private val classifier: Classifier,
+        private val random: Random = Random()
 ) : AbstractClassifier() {
 
     private val builtClassifiers: MutableMap<Int, weka.classifiers.Classifier> = HashMap()
@@ -25,7 +26,10 @@ class WorkflowClassifier(
     private lateinit var builtFinalClassifier: weka.classifiers.Classifier
 
     override fun buildClassifier(data: Instances) {
-        val processingData = buildWorkflow(Instances(data))
+        val newData = Instances(data)
+        newData.randomize(random)
+        newData.stratify(NUM_FOLDS)
+        val processingData = buildWorkflow(newData)
         builtFinalClassifier = classifier()
         builtFinalClassifier.buildClassifier(processingData)
     }
@@ -58,49 +62,64 @@ class WorkflowClassifier(
 
     private fun buildWorkflow(data: Instances): Instances {
         var currentData = data
-        for ((i, algo) in algorithms.withIndex()) {
-            when (algo) {
-                is Classifier -> {
-                    val classifier = algo()
-                    classifier.buildClassifier(currentData)
-                    builtClassifiers[i] = classifier
-                    addClassificationsResult(classifier, currentData, i)
-                }
-                is Transformer -> {
-                    val (search, eval) = algo()
-                    if (eval is AttributeTransformer) {
-                        eval.buildEvaluator(currentData)
-                        currentData = eval.transformedData(currentData)
-                        val indices = usefulAttributes(currentData)
-                        currentData = filter(currentData, indices)
-                        builtTransformers[i] = eval
-                        buildIndices[i] = indices
-                    } else {
-                        val attributeSelection = AttributeSelection()
-                        attributeSelection.setSearch(search)
-                        attributeSelection.setEvaluator(eval)
-                        attributeSelection.SelectAttributes(currentData)
-                        val indices = attributeSelection.selectedAttributes()
-                        currentData = filter(currentData, indices)
-                        buildIndices[i] = indices
-                    }
-                }
+        for ((iteration, algo) in algorithms.withIndex()) {
+            currentData = when (algo) {
+                is Classifier -> applyClassifier(algo, currentData, iteration)
+                is Transformer -> applyTransformer(algo, currentData, iteration)
+                else -> throw IllegalStateException("unknown algorithm")
             }
         }
         return currentData
     }
 
-    private fun addClassificationsResult(builtClassifier: weka.classifiers.Classifier,
-                                         instances: Instances, iteration: Int) {
-        val classificationResults = DoubleArray(instances.size)
-        for ((i, inst) in instances.withIndex()) {
-            classificationResults[i] = builtClassifier.classifyInstance(inst)
+    private fun applyTransformer(algo: Transformer, data: Instances, iteration: Int): Instances {
+        var currentData = data
+        val (search, eval) = algo()
+        if (eval is AttributeTransformer) {
+            eval.buildEvaluator(currentData)
+            currentData = eval.transformedData(currentData)
+            val indices = usefulAttributes(currentData)
+            currentData = filter(currentData, indices)
+            builtTransformers[iteration] = eval
+            buildIndices[iteration] = indices
+        } else {
+            val attributeSelection = AttributeSelection()
+            attributeSelection.setSearch(search)
+            attributeSelection.setEvaluator(eval)
+            attributeSelection.SelectAttributes(currentData)
+            val indices = attributeSelection.selectedAttributes()
+            currentData = filter(currentData, indices)
+            buildIndices[iteration] = indices
+        }
+        return currentData
+    }
+
+    private fun applyClassifier(algo: Classifier, currentData: Instances, iteration: Int): Instances {
+        val classifier = algo()
+
+        // generate values for new attribute
+        val classificationResults = DoubleArray(currentData.size)
+        var resultIndex = 0
+        for (foldIndex in 0 until NUM_FOLDS) {
+            val train = currentData.trainCV(NUM_FOLDS, foldIndex)
+            val test = currentData.testCV(NUM_FOLDS, foldIndex)
+            classifier.buildClassifier(train)
+            for (inst in test) {
+                classificationResults[resultIndex++] = classifier.classifyInstance(inst)
+            }
         }
 
-        val index = insertClassAttribute(instances, builtClassifier, iteration)
-        for ((i, inst) in instances.withIndex()) {
+        // build classifier on all data
+        classifier.buildClassifier(currentData)
+        builtClassifiers[iteration] = classifier
+
+        // insert new attribute with classifier results
+        val index = insertClassAttribute(currentData, classifier, iteration)
+        for ((i, inst) in currentData.withIndex()) {
             inst.setValue(index, classificationResults[i])
         }
+
+        return currentData
     }
 
     private fun insertClassAttribute(instances: Instances, builtClassifier: weka.classifiers.Classifier,
@@ -153,5 +172,9 @@ class WorkflowClassifier(
             }
         }
         return usefulAttributes.toIntArray()
+    }
+
+    companion object {
+        private const val NUM_FOLDS = 5
     }
 }

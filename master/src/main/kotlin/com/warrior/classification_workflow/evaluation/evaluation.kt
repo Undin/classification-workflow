@@ -21,7 +21,7 @@ fun main(args: Array<String>) {
 
     val constructor = WorkflowConstructor(config)
     for (dataset in config.datasets) {
-        val instances = load("${config.datasetFolder}/$dataset")
+        val instances = load("${config.datasetFolder}/$dataset.csv")
         val train = Instances(instances, 0)
         val test = Instances(instances, 0)
         val setNameAttributeIndex = instances.attribute("set_name").index()

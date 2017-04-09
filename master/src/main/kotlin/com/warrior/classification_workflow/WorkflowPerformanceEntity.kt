@@ -13,7 +13,8 @@ data class WorkflowPerformanceEntity(
         @JsonProperty("dataset_name") val datasetName: String,
         @JsonProperty("workflow") val workflow: Workflow,
         @JsonProperty("score_train") val trainScore: Double,
-        @JsonProperty("score_test") val testScore: Double
+        @JsonProperty("score_test") val testScore: Double,
+        @JsonProperty("version") val version: String = "v1"
 ) : PerformanceEntity {
     override fun name(): String = datasetName
     override fun score(): Double = testScore

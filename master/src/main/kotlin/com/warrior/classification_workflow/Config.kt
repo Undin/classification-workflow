@@ -10,6 +10,7 @@ import org.apache.commons.cli.*
  * Created by warrior on 27/08/16.
  */
 interface Config {
+    val version: String
     val datasetFolder: String
     val threads: Int
     val cachePrefixSize: Int
@@ -23,6 +24,7 @@ interface Config {
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class SingleDataConfig(
+        @JsonProperty("version") override val version: String,
         @JsonProperty("dataset_folder") override val datasetFolder: String,
         @JsonProperty("threads") override val threads: Int,
         @JsonProperty("cache_prefix_size") override val cachePrefixSize: Int,
@@ -37,6 +39,7 @@ data class SingleDataConfig(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class EvaluationConfig(
+        @JsonProperty("version") override val version: String,
         @JsonProperty("dataset_folder") override val datasetFolder: String,
         @JsonProperty("threads") override val threads: Int,
         @JsonProperty("cache_prefix_size") override val cachePrefixSize: Int,

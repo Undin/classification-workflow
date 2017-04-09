@@ -47,6 +47,7 @@ class WorkflowConstructor(private val config: Config) {
 
             val mapper = jacksonObjectMapper()
             val workflowPerformanceEntity = WorkflowPerformanceEntity(
+                    version = config.version,
                     datasetName = datasetName,
                     workflow = result.workflow,
                     trainScore = result.measure,

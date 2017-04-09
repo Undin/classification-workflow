@@ -41,7 +41,7 @@ class GeneticAlgorithm(
 
     fun search(logPrefix: String): Result {
         val logs = File(config.logFolder, "$logPrefix-${System.currentTimeMillis()}")
-        logs.mkdir()
+        logs.mkdirs()
 
         val initialWorkflows = generate()
         var population = computationManager.evaluate(initialWorkflows)

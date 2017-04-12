@@ -108,15 +108,29 @@ transformers:
 datasets:
 # test
   - allbp
+  - analcatdata_dmft
+  - biomed
+  - balance-scale
+  - breast-cancer
   - cmc
   - credit-g
+  - diabetes
   - flare
+  - GAMETES_Epistasis_2-Way_20atts_0.1H_EDM-1_1
   - german
-  - parity5+5
+  - heart-c
+  - Hill_Valley_with_noise
+  - Hill_Valley_without_noise
+  - hypothyroid
+  - mfeat-morphological
+  - mfeat-zernike
+  - pima
   - solar-flare_2
+  - tic-tac-toe
   - tokyo1
   - vehicle
   - wine-quality-red
+  - xd6
   - yeast
 # all
 #  - ada_agnostic

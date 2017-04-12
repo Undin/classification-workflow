@@ -206,19 +206,30 @@ private val DATASETS = listOf(
 fun main(args: Array<String>) {
     val jongo = createJongo("master")
 
-    val rfResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"RF\"}")
-    val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("{classifier_name: \"SVM\"}")
+    val rfResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "RF"}""")
+    val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "SVM"}""")
+    val xgbResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "XGB"}""")
     val tpotResults = jongo.loadPerformanceResult<TpotPerformanceEntity>()
     val workflowResults = jongo.loadPerformanceResult<WorkflowPerformanceEntity>()
-    val workflowRFStackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("{meta_classifier.name: \"RF\"}")
-    val workflowLogRL2StackingResults = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("{meta_classifier.name: \"LogR-L2\"}")
+    val wekaStackingRF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "weka"}""")
+    val wekaStackingLogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "weka"}""")
+    val stackingV1RF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual"}""")
+    val stackingV1LogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual"}""")
+    val stackingV2RF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual-v2"}""")
+    val stackingV2LogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual-v2"}""")
 
     val resultList = listOf(rfResult,
             svmResult,
+            xgbResult,
             tpotResults,
             workflowResults,
-            workflowRFStackingResults,
-            workflowLogRL2StackingResults)
+            wekaStackingRF,
+            wekaStackingLogRL2,
+            stackingV1RF,
+            stackingV1LogRL2,
+            stackingV2RF,
+            stackingV2LogRL2
+    )
 
     val workbook = XSSFWorkbook()
     val sheet = workbook.createSheet()
@@ -226,10 +237,15 @@ fun main(args: Array<String>) {
     firstRow.createCell(0).setCellValue("Dataset Name")
     firstRow.createCell(1).setCellValue("RF")
     firstRow.createCell(2).setCellValue("SVM")
-    firstRow.createCell(3).setCellValue("Tpot")
-    firstRow.createCell(4).setCellValue("Workflow")
-    firstRow.createCell(5).setCellValue("Workflow stacking (RF)")
-    firstRow.createCell(6).setCellValue("Workflow stacking (LogR-L2)")
+    firstRow.createCell(3).setCellValue("XGB")
+    firstRow.createCell(4).setCellValue("Tpot")
+    firstRow.createCell(5).setCellValue("Workflow")
+    firstRow.createCell(6).setCellValue("Stacking weka (RF)")
+    firstRow.createCell(7).setCellValue("Stacking weka (LogR-L2)")
+    firstRow.createCell(8).setCellValue("Stacking v1 (RF)")
+    firstRow.createCell(9).setCellValue("Stacking v1 (LogR-L2)")
+    firstRow.createCell(10).setCellValue("Stacking v2 (RF)")
+    firstRow.createCell(11).setCellValue("Stacking v2 (LogR-L2)")
 
     val font = workbook.createFont()
     font.bold = true

@@ -10,8 +10,6 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.warrior.classification_workflow.core.*
 import com.warrior.classification_workflow.core.storage.SaveStrategy
 import weka.classifiers.Evaluation
-import weka.classifiers.functions.LibSVM
-import weka.classifiers.trees.RandomForest
 import weka.core.Instances
 import java.io.File
 import java.util.*
@@ -44,12 +42,12 @@ fun main(args: Array<String>) {
     saveStrategy.use {
         val futures = config.tuningResults
                 .flatMap { mapper.readValue<List<SingleClassifierTuningEntity>>(File(it)) }
-                .filter { (classifierName, datasetName) -> Pair(datasetName, classifierName) !in currentResults }
-                .map { (classifierName, datasetName, params) ->
+                .filter { (datasetName, classifierName) -> Pair(datasetName, classifierName) !in currentResults }
+                .map { (datasetName, classifierName, className, params) ->
                     threadPool.submit {
                         try {
                             println("start $classifierName on $datasetName")
-                            val entity = measurePerformance(config.datasetFolder, datasetName, classifierName, params)
+                            val entity = measurePerformance(config.datasetFolder, datasetName, classifierName, className, params)
                             saveStrategy.save(entity)
                             println("end $classifierName on $datasetName")
                         } catch (e: Exception) {
@@ -68,18 +66,13 @@ fun main(args: Array<String>) {
 private fun measurePerformance(datasetFolder: String,
                                datasetName: String,
                                classifierName: String,
+                               className: String,
                                params: Map<String, Double>): SingleClassifierPerformanceEntity {
     val options = params.mapValuesTo(HashMap()) {
         val value = if (classifierName == "SVM") Math.pow(2.0, it.value) else it.value
         // try to use Int for integer params
         val intValue = value.toInt()
         if (intValue.toDouble() == value) intValue.toString() else value.toString()
-    }
-
-    val className = when (classifierName) {
-        "RF" -> RandomForest::class.qualifiedName!!
-        "SVM" -> LibSVM::class.qualifiedName!!
-        else -> throw IllegalStateException("unknown classifier name")
     }
 
     val classifier = Classifier(classifierName, className, options).invoke()

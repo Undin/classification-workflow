@@ -37,7 +37,12 @@ fun main(args: Array<String>) {
             for ((baseClassifier, params) in config.algorithms) {
                 val search = TwoStepGridSearch(baseClassifier, data, 10, pool, random)
                 val (bestParams, score) = search.search(params)
-                val result = SingleClassifierTuningEntity(baseClassifier.name, datasetName, bestParams, score)
+                val result = SingleClassifierTuningEntity(
+                        datasetName = datasetName,
+                        classifierName = baseClassifier.name,
+                        className = baseClassifier.className,
+                        bestParams = bestParams,
+                        score = score)
                 saveStrategy.save(result)
             }
         }

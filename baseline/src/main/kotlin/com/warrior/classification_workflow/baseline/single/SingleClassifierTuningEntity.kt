@@ -9,8 +9,9 @@ import com.warrior.classification_workflow.core.PerformanceEntity
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 data class SingleClassifierTuningEntity(
-        @JsonProperty("classifier_name") val classifierName: String,
         @JsonProperty("dataset_name") val datasetName: String,
+        @JsonProperty("classifier_name") val classifierName: String,
+        @JsonProperty("classifier_class") val className: String,
         @JsonProperty("best_params") val bestParams: Map<String, Double>,
         @JsonProperty("score") val score: Double
 ) : PerformanceEntity {

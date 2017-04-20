@@ -206,23 +206,29 @@ private val DATASETS = listOf(
 fun main(args: Array<String>) {
     val jongo = createJongo("master")
 
-    val rfResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "RF"}""")
-    val svmResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "SVM"}""")
-    val xgbResult = jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "XGB"}""")
-    val tpotResults = jongo.loadPerformanceResult<TpotPerformanceEntity>()
-    val workflowResults = jongo.loadPerformanceResult<WorkflowPerformanceEntity>()
-    val wekaStackingRF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "weka"}""")
-    val wekaStackingLogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "weka"}""")
-    val stackingV1RF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual"}""")
-    val stackingV1LogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual"}""")
-    val stackingV2RF = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual-v2"}""")
-    val stackingV2LogRL2 = jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual-v2"}""")
+    val rfResult = "RF" to jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "RF"}""")
+    val svmResult = "SVM" to jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "SVM"}""")
+    val xgbResult = "XGB" to jongo.loadPerformanceResult<SingleClassifierPerformanceEntity>("""{classifier_name: "XGB"}""")
+    val tpotResults = "Tpot" to jongo.loadPerformanceResult<TpotPerformanceEntity>()
+    val workflowV1Results = "Workflow v1" to jongo.loadPerformanceResult<WorkflowPerformanceEntity>("""{version: "v1"}""")
+    val workflowV2Results = "Workflow v2" to jongo.loadPerformanceResult<WorkflowPerformanceEntity>("""{version: "v2"}""")
+    val workflowV2NoMutationsResults = "Workflow v2 no mut" to jongo.loadPerformanceResult<WorkflowPerformanceEntity>("""{version: "v2-no-param-mutations"}""")
+    val workflowV2NoMutationsSize4Results = "Workflow v2 no mut size 4" to jongo.loadPerformanceResult<WorkflowPerformanceEntity>("""{version: "v2-no-param-mutations-workflow-size-4"}""")
+    val wekaStackingRF = "Stacking weka (RF)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "weka"}""")
+    val wekaStackingLogRL2 = "Stacking weka (LogR-L2)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "weka"}""")
+    val stackingV1RF = "Stacking v1 (RF)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual"}""")
+    val stackingV1LogRL2 = "Stacking v1 (LogR-L2)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual"}""")
+    val stackingV2RF = "Stacking v2 (RF)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "RF", stacking_type: "manual-v2"}""")
+    val stackingV2LogRL2 = "Stacking v2 (LogR-L2)" to jongo.loadPerformanceResult<WorkflowStackingPerformanceEntity>("""{meta_classifier.name: "LogR-L2", stacking_type: "manual-v2"}""")
 
     val resultList = listOf(rfResult,
             svmResult,
             xgbResult,
             tpotResults,
-            workflowResults,
+            workflowV1Results,
+            workflowV2Results,
+            workflowV2NoMutationsResults,
+            workflowV2NoMutationsSize4Results,
             wekaStackingRF,
             wekaStackingLogRL2,
             stackingV1RF,
@@ -235,17 +241,9 @@ fun main(args: Array<String>) {
     val sheet = workbook.createSheet()
     val firstRow = sheet.createRow(0)
     firstRow.createCell(0).setCellValue("Dataset Name")
-    firstRow.createCell(1).setCellValue("RF")
-    firstRow.createCell(2).setCellValue("SVM")
-    firstRow.createCell(3).setCellValue("XGB")
-    firstRow.createCell(4).setCellValue("Tpot")
-    firstRow.createCell(5).setCellValue("Workflow")
-    firstRow.createCell(6).setCellValue("Stacking weka (RF)")
-    firstRow.createCell(7).setCellValue("Stacking weka (LogR-L2)")
-    firstRow.createCell(8).setCellValue("Stacking v1 (RF)")
-    firstRow.createCell(9).setCellValue("Stacking v1 (LogR-L2)")
-    firstRow.createCell(10).setCellValue("Stacking v2 (RF)")
-    firstRow.createCell(11).setCellValue("Stacking v2 (LogR-L2)")
+    for ((index, result) in resultList.withIndex()) {
+        firstRow.createCell(index + 1).setCellValue(result.first)
+    }
 
     val font = workbook.createFont()
     font.bold = true
@@ -255,7 +253,7 @@ fun main(args: Array<String>) {
         val row = sheet.createRow(rowIndex++)
         row.createCell(0).setCellValue(datasetName)
 
-        val datasetResults = resultList.map { it.getOrDefault(datasetName, -1.0) }
+        val datasetResults = resultList.map { it.second.getOrDefault(datasetName, -1.0) }
         val bestResult = datasetResults.max()!!
 
         for ((i, result) in datasetResults.withIndex()) {

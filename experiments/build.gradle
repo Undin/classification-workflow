@@ -1,7 +1,7 @@
 apply plugin: 'kotlin'
 
 dependencies {
-    compile project(':core')
+    compile project(':master')
 
     compile libraries.kotlin
     compile libraries.kotlinReflect

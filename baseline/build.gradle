@@ -32,6 +32,7 @@ dependencies {
 
     compile libraries.weka
     compile libraries.wekaLibSVM
+    compile libraries.wekaMultiSearch
     compile libraries.xgboost
 
     antlr libraries.antlr

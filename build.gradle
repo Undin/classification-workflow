@@ -48,6 +48,7 @@ ext.libraries = [
         wekaLS                      : 'nz.ac.waikato.cms.weka:linearForwardSelection:1.0.2',
         wekaDbScan                  : 'nz.ac.waikato.cms.weka:optics_dbScan:1.0.4',
         wekaXMeans                  : 'nz.ac.waikato.cms.weka:XMeans:1.0.4',
+        wekaMultiSearch             : 'com.github.fracpete:multisearch-weka-package:2017.3.28',
         xgboost                     : 'ml.dmlc:xgboost4j:0.7',
         apacheMath                  : 'org.apache.commons:commons-math3:3.6.1',
 

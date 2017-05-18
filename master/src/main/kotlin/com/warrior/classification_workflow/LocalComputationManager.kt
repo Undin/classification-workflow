@@ -25,7 +25,7 @@ import kotlin.streams.toList
 /**
  * Created by warrior on 29/06/16.
  */
-class LocalComputationManager(
+open class LocalComputationManager(
         instances: Instances,
         private val algorithmChooser: AlgorithmChooser,
         private val classifiersMap: Map<String, ClassifierConfiguration>,
@@ -155,7 +155,7 @@ class LocalComputationManager(
         }
     }
 
-    private fun compute(workflow: Workflow, train: Instances, test: Instances): Double {
+    open protected fun compute(workflow: Workflow, train: Instances, test: Instances): Double {
         val eval = Evaluation(train)
         val classifier = workflow.classifier()
         // FIXME

@@ -14,13 +14,13 @@ meta_data_paths:
 params:
   population_size: 10
   generations: 10
-  max_workflow_size: 6
+  max_workflow_size: 4
   mutation_number: 5
   survived_part: 0.1
   mutation_probability: 0.3
   tournament_probability: 0.8
   point_crossover_probability: 0.5
-  structure_mutation_probability: 0.8
+  structure_mutation_probability: 1.0
 
 classifiers:
   - name                : "NaiveBayes"

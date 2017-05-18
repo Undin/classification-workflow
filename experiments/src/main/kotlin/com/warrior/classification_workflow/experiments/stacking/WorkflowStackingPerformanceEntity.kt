@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.stacking
+package com.warrior.classification_workflow.experiments.stacking
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty

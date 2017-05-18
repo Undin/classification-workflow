@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.stacking
+package com.warrior.classification_workflow.experiments.stacking
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
@@ -25,7 +25,7 @@ private val RANDOM = Random()
 
 fun main(args: Array<String>) {
     if (args.size != 1) {
-        println("usage: java -classpath jarfile.jar com.warrior.classification_workflow.stacking.StackingKt config-file.yaml")
+        println("usage: java -classpath jarfile.jar com.warrior.classification_workflow.experiments.stacking.StackingKt config-file.yaml")
         exitProcess(1)
     }
     val logger = LogManager.getLogger("Staking")

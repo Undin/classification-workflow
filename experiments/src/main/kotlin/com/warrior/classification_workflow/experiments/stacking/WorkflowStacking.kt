@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.stacking
+package com.warrior.classification_workflow.experiments.stacking
 
 import com.warrior.classification_workflow.core.Workflow
 import com.warrior.classification_workflow.core.WorkflowClassifier

@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.experiments
+package com.warrior.classification_workflow.experiments.clustering
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue

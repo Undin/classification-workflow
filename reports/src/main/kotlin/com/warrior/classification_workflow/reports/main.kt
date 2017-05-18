@@ -6,7 +6,7 @@ import com.warrior.classification_workflow.WorkflowPerformanceEntity
 import com.warrior.classification_workflow.baseline.single.SingleClassifierPerformanceEntity
 import com.warrior.classification_workflow.baseline.tpot.TpotPerformanceEntity
 import com.warrior.classification_workflow.core.PerformanceEntity
-import com.warrior.classification_workflow.stacking.WorkflowStackingPerformanceEntity
+import com.warrior.classification_workflow.experiments.stacking.WorkflowStackingPerformanceEntity
 import org.apache.poi.xssf.usermodel.*
 import org.jongo.Jongo
 import org.jongo.marshall.jackson.JacksonMapper

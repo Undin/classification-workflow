@@ -1,4 +1,4 @@
-package com.warrior.classification_workflow.evaluation
+package com.warrior.classification_workflow.experiments.evaluation
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory

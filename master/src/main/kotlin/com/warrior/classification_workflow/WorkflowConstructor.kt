@@ -10,6 +10,8 @@ import com.warrior.classification_workflow.core.meta.entity.ClassifierPerformanc
 import com.warrior.classification_workflow.core.meta.entity.MetaFeaturesEntity
 import com.warrior.classification_workflow.core.meta.entity.TransformerPerformanceEntity
 import com.warrior.classification_workflow.meta.AlgorithmChooser
+import com.warrior.classification_workflow.meta.Selector
+import com.warrior.classification_workflow.meta.SoftMaxSelector
 import libsvm.svm
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.util.Supplier
@@ -19,7 +21,7 @@ import java.io.File
 import java.util.*
 import kotlin.system.measureTimeMillis
 
-class WorkflowConstructor(private val config: Config) {
+open class WorkflowConstructor(private val config: Config) {
 
     private val logger = LogManager.getLogger(WorkflowConstructor::class.java)
 
@@ -62,7 +64,7 @@ class WorkflowConstructor(private val config: Config) {
         logger.info("computation time: $time")
     }
 
-    private fun algorithmChooser(config: Config, datasetName: String): AlgorithmChooser {
+    open protected fun algorithmChooser(config: Config, datasetName: String): AlgorithmChooser {
         val jsonMapper = jacksonObjectMapper()
         val paths = config.metaDataPaths
         val metaFeatures: List<MetaFeaturesEntity> = jsonMapper.readValue(File(paths.metaFeaturesPath))
@@ -81,12 +83,15 @@ class WorkflowConstructor(private val config: Config) {
                 transformers = transformers,
                 metaFeatures = metaFeatures,
                 classifierPerformance = classifierPerformance,
-                transformerPerformance = transformerPerformance
+                transformerPerformance = transformerPerformance,
+                selector = selector()
         )
         return algorithmChooser
     }
 
-    private fun computationManager(config: Config, algorithmChooser: AlgorithmChooser, instances: Instances): LocalComputationManager {
+    open protected fun selector(): Selector = SoftMaxSelector()
+
+    open protected fun computationManager(config: Config, algorithmChooser: AlgorithmChooser, instances: Instances): LocalComputationManager {
         val classifierMap = config.classifiers.associateBy { it.name }
         val transformerMap = config.transformers.associateBy { it.name }
         val cache: Cache<String, MutableMap<Int, Instances>> = Caffeine.newBuilder()

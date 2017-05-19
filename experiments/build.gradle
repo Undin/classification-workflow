@@ -1,4 +1,12 @@
 apply plugin: 'kotlin'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    classifier = null
+    manifest {
+        attributes 'Main-Class' : 'com.warrior.classification_workflow.experiments.evaluation.Evaluation.ktKt'
+    }
+}
 
 dependencies {
     compile project(':master')

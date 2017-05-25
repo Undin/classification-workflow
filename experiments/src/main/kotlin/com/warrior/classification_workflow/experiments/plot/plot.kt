@@ -131,7 +131,8 @@ private fun computationManager(config: Config, algorithmChooser: AlgorithmChoose
     val computationManager = CPUTimeComputationManager(
             output = output,
             instances = instances,
-            algorithmChooser = algorithmChooser,
+            generationAlgorithmChooser = algorithmChooser,
+            mutationAlgorithmChooser = algorithmChooser,
             classifiersMap = classifierMap,
             transformersMap = transformerMap,
             cache = cache,

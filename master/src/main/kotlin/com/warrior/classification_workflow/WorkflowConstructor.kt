@@ -38,8 +38,9 @@ open class WorkflowConstructor(private val config: Config) {
     }
 
     fun construct(datasetName: String, train: Instances, test: Instances) {
-        val algorithmChooser = algorithmChooser(config, datasetName)
-        val computationManager = computationManager(config, algorithmChooser, train)
+        val generationAlgorithmChooser = generationAlgorithmChooser(config, datasetName)
+        val mutationAlgorithmChooser = mutationAlgorithmChooser(config, datasetName)
+        val computationManager = computationManager(config, generationAlgorithmChooser, mutationAlgorithmChooser, train)
         val ga = GeneticAlgorithm(config, computationManager, datasetName)
         svm.svm_set_print_string_function { }
 
@@ -64,7 +65,7 @@ open class WorkflowConstructor(private val config: Config) {
         logger.info("computation time: $time")
     }
 
-    open protected fun algorithmChooser(config: Config, datasetName: String): AlgorithmChooser {
+    open protected fun algorithmChooser(config: Config, datasetName: String, selector: Selector): AlgorithmChooser {
         val jsonMapper = jacksonObjectMapper()
         val paths = config.metaDataPaths
         val metaFeatures: List<MetaFeaturesEntity> = jsonMapper.readValue(File(paths.metaFeaturesPath))
@@ -84,14 +85,22 @@ open class WorkflowConstructor(private val config: Config) {
                 metaFeatures = metaFeatures,
                 classifierPerformance = classifierPerformance,
                 transformerPerformance = transformerPerformance,
-                selector = selector()
+                selector = selector
         )
         return algorithmChooser
     }
 
-    open protected fun selector(): Selector = SoftMaxSelector()
+    open protected fun generationAlgorithmChooser(config: Config, datasetName: String): AlgorithmChooser =
+            algorithmChooser(config, datasetName, generationSelector())
 
-    open protected fun computationManager(config: Config, algorithmChooser: AlgorithmChooser, instances: Instances): LocalComputationManager {
+    open protected fun mutationAlgorithmChooser(config: Config, datasetName: String): AlgorithmChooser =
+            algorithmChooser(config, datasetName, mutationSelector())
+
+    open protected fun generationSelector(): Selector = SoftMaxSelector()
+    open protected fun mutationSelector(): Selector = SoftMaxSelector()
+
+    open protected fun computationManager(config: Config, generationAlgorithmChooser: AlgorithmChooser,
+                                          mutationAlgorithmChooser: AlgorithmChooser, instances: Instances): LocalComputationManager {
         val classifierMap = config.classifiers.associateBy { it.name }
         val transformerMap = config.transformers.associateBy { it.name }
         val cache: Cache<String, MutableMap<Int, Instances>> = Caffeine.newBuilder()
@@ -100,7 +109,8 @@ open class WorkflowConstructor(private val config: Config) {
 
         val computationManager = LocalComputationManager(
                 instances = instances,
-                algorithmChooser = algorithmChooser,
+                generationAlgorithmChooser = generationAlgorithmChooser,
+                mutationAlgorithmChooser = mutationAlgorithmChooser,
                 classifiersMap = classifierMap,
                 transformersMap = transformerMap,
                 cache = cache,

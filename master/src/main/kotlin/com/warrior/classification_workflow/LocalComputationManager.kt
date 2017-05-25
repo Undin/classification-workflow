@@ -27,7 +27,8 @@ import kotlin.streams.toList
  */
 open class LocalComputationManager(
         instances: Instances,
-        private val algorithmChooser: AlgorithmChooser,
+        private val generationAlgorithmChooser: AlgorithmChooser,
+        private val mutationAlgorithmChooser: AlgorithmChooser,
         private val classifiersMap: Map<String, ClassifierConfiguration>,
         private val transformersMap: Map<String, TransformerConfiguration>,
         private val cache: Cache<String, MutableMap<Int, Instances>>,
@@ -59,9 +60,7 @@ open class LocalComputationManager(
     override fun generate(count: Int, sizes: List<Int>): List<Workflow> {
         return submit {
             sizes.parallelStream()
-                    .map { size ->
-                        generateSuffix(randomUUID(), train, ArrayList(), size, CommonMetaFeatureExtractor())
-                    }
+                    .map { generateSuffix(generationAlgorithmChooser, randomUUID(), train, ArrayList(), it, CommonMetaFeatureExtractor()) }
                     .toList()
         }
     }
@@ -93,7 +92,7 @@ open class LocalComputationManager(
             toCache(newUuid, position, data)
 
         }
-        return generateSuffix(newUuid, data, algorithms, size, extractor)
+        return generateSuffix(mutationAlgorithmChooser, newUuid, data, algorithms, size, extractor)
     }
 
     private fun hyperparamMutation(workflow: Workflow): Workflow {
@@ -125,7 +124,10 @@ open class LocalComputationManager(
         return Workflow(newUuid, newAlgorithms)
     }
 
-    private fun generateSuffix(uuid: String, currentData: Instances, algorithms: MutableList<Algorithm>, size: Int, extractor: CommonMetaFeatureExtractor): Workflow {
+    private fun generateSuffix(algorithmChooser: AlgorithmChooser,
+                               uuid: String, currentData: Instances,
+                               algorithms: MutableList<Algorithm>, size: Int,
+                               extractor: CommonMetaFeatureExtractor): Workflow {
         var data = currentData
         for (i in algorithms.size until size) {
             while (true) {

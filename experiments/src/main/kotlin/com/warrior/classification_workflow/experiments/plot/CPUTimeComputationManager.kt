@@ -13,13 +13,14 @@ import java.lang.management.ManagementFactory
 class CPUTimeComputationManager(
         private val output: MutableList<Result>,
         instances: Instances,
-        algorithmChooser: AlgorithmChooser,
+        generationAlgorithmChooser: AlgorithmChooser,
+        mutationAlgorithmChooser: AlgorithmChooser,
         classifiersMap: Map<String, ClassifierConfiguration>,
         transformersMap: Map<String, TransformerConfiguration>,
         cache: Cache<String, MutableMap<Int, Instances>>,
-        cachePrefixSize: Int, threads: Int
-) : LocalComputationManager(instances, algorithmChooser, classifiersMap,
-        transformersMap, cache, cachePrefixSize, threads) {
+        cachePrefixSize: Int,
+        threads: Int
+) : LocalComputationManager(instances, generationAlgorithmChooser, mutationAlgorithmChooser, classifiersMap, transformersMap, cache, cachePrefixSize, threads) {
 
     private val osMXBean = ManagementFactory.getOperatingSystemMXBean() as OperatingSystemMXBean
     private val startCPUTime = osMXBean.processCpuTime

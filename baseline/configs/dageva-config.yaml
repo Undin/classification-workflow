@@ -3,7 +3,7 @@ server:
   script: /Users/warrior/Programming/master/dag-evaluate/xmlrpc_interface.py
   log_folder: /Users/warrior/Programming/master/dag-evaluate/logs
   port: 12345
-  worker: 4
+  workers: 4
 
 
 jar: /Users/warrior/Programming/master/dageva/release/0.4/dageva.jar

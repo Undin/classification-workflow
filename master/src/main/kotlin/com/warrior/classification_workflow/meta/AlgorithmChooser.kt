@@ -10,7 +10,7 @@ import java.util.*
 /**
  * Created by warrior on 11/29/16.
  */
-class AlgorithmChooser(
+open class AlgorithmChooser(
         private val datasets: Set<String>,
         private val classifiers: Set<String>,
         private val transformers: Set<String>,
@@ -26,11 +26,11 @@ class AlgorithmChooser(
     private val metaFeaturesList: List<Pair<String, DoubleArray>>
     private val metaFeaturesMinMax: Array<MinMax>
     // classifier -> dataset -> value
-    private val classifierPerformanceMap: Map<String, Map<String, Double>>
+    protected val classifierPerformanceMap: Map<String, Map<String, Double>>
     // transformer -> dataset -> value
-    private val transformerPerformanceMap: Map<String, Map<String, Double>>
+    protected val transformerPerformanceMap: Map<String, Map<String, Double>>
     // algorithm -> dataset -> value
-    private val algorithmsPerformanceMap: Map<String, Map<String, Double>>
+    protected val algorithmsPerformanceMap: Map<String, Map<String, Double>>
 
     init {
         metaFeatures.requireNotEmpty("meta feature list")
@@ -101,11 +101,11 @@ class AlgorithmChooser(
         return transformerPerformanceMap
     }
 
-    fun chooseAlgorithm(extractor: CommonMetaFeatureExtractor, data: Instances): String = select(extractor, data, algorithmsPerformanceMap)
+    open fun chooseAlgorithm(extractor: CommonMetaFeatureExtractor, data: Instances): String = select(extractor, data, algorithmsPerformanceMap)
 
-    fun chooseClassifier(extractor: CommonMetaFeatureExtractor, data: Instances): String = select(extractor, data, classifierPerformanceMap)
+    open fun chooseClassifier(extractor: CommonMetaFeatureExtractor, data: Instances): String = select(extractor, data, classifierPerformanceMap)
 
-    private fun select(extractor: CommonMetaFeatureExtractor, data: Instances, performanceMap: Map<String, Map<String, Double>>): String {
+    protected fun select(extractor: CommonMetaFeatureExtractor, data: Instances, performanceMap: Map<String, Map<String, Double>>): String {
         val metaFeatures = extractor.extract(data).toDoubleArray()
         val nearestDatasets = findNearests(metaFeatures)
         val revertDistanceSum = nearestDatasets.map { 1 / it.distance }.sum()

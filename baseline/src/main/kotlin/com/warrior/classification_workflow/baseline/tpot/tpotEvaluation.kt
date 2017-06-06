@@ -44,7 +44,7 @@ fun tpotEvaluation(config: TpotConfig) {
     }
 }
 
-fun readConfig(args: Array<String>, mainClass: String): TpotConfig {
+internal fun readConfig(args: Array<String>, mainClass: String): TpotConfig {
     if (args.size != 1) {
         System.err.println("usage: java -classpath jarfile.jar $mainClass config-file.yaml")
         exitProcess(1)

@@ -37,16 +37,18 @@ open class WorkflowConstructor(private val config: Config) {
         construct(datasetName, train, test)
     }
 
-    fun construct(datasetName: String, train: Instances, test: Instances) {
+    fun construct(datasetName: String, train: Instances, test: Instances): Pair<Double, Double> {
         val generationAlgorithmChooser = generationAlgorithmChooser(config, datasetName)
         val mutationAlgorithmChooser = mutationAlgorithmChooser(config, datasetName)
         val computationManager = computationManager(config, generationAlgorithmChooser, mutationAlgorithmChooser, train)
         val ga = GeneticAlgorithm(config, computationManager, datasetName)
         svm.svm_set_print_string_function { }
 
+        var score: Pair<Double, Double>? = null
         val time = measureTimeMillis {
             val result = ga.search(datasetName)
             val testScore = testWorkflow(result.workflow, train, test)
+            score = result.measure to testScore
 
             val mapper = jacksonObjectMapper()
             val workflowPerformanceEntity = WorkflowPerformanceEntity(
@@ -63,6 +65,7 @@ open class WorkflowConstructor(private val config: Config) {
             logger.info("test score: $testScore")
         }
         logger.info("computation time: $time")
+        return score!!
     }
 
     open protected fun algorithmChooser(config: Config, datasetName: String, selector: Selector): AlgorithmChooser {

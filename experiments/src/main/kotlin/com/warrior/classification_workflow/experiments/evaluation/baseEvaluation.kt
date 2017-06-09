@@ -12,9 +12,7 @@ import weka.core.Instances
 import java.io.File
 
 fun evaluation(args: Array<String>, constructorFactory: (EvaluationConfig) -> WorkflowConstructor) {
-    val configPath = parseArgs(args)
-    val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
-    val config: EvaluationConfig = yamlMapper.readValue(File(configPath))
+    val config = readConfig(args)
 
     val constructor = constructorFactory(config)
     for (dataset in config.datasets) {
@@ -33,4 +31,10 @@ fun evaluation(args: Array<String>, constructorFactory: (EvaluationConfig) -> Wo
         test.deleteAttributeAt(setNameAttributeIndex)
         constructor.construct(instances.relationName(), train, test)
     }
+}
+
+fun readConfig(args: Array<String>): EvaluationConfig {
+    val configPath = parseArgs(args)
+    val yamlMapper = ObjectMapper(YAMLFactory()).registerKotlinModule()
+    return yamlMapper.readValue(File(configPath))
 }
